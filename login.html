@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Sign In/Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    
+
+    
+    <style>
+    /* General Setup */
+:root {
+    --primary-purple: #5c35c6;
+    --dark-purple: #422691;
+    --light-gray: #f2f2f2;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-gray); /* Light gray background for the page */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Card Container Styling */
+.form-card {
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    display: flex;
+    width: 850px; /* Adjust width as needed */
+    max-width: 90%;
+    overflow: hidden; /* Crucial for containing the abstract shape */
+}
+
+/* --- Sign In Panel (Left Side) --- */
+.sign-in-panel {
+    width: 50%;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.title {
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* Social Icons */
+.social-login {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.social-icon {
+    border: 1px solid var(--light-gray);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #fff;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.social-icon:hover {
+    background-color: var(--light-gray);
+}
+
+.email-password-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    background-color: var(--light-gray);
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.forgot-password {
+    color: #888;
+    font-size: 0.8em;
+    text-decoration: none;
+    margin: 10px 0 25px;
+    align-self: flex-start;
+}
+
+.sign-in-btn {
+    background-color: var(--primary-purple);
+    color: #fff;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    transition: transform 0.1s ease-in;
+    cursor: pointer;
+}
+
+.sign-in-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Sign Up Panel (Right Side) --- */
+.sign-up-panel {
+    width: 50%;
+    background-color: var(--primary-purple);
+    position: relative;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* For stacking context */
+}
+
+/* Abstract Shape using a pseudo-element on the panel */
+.abstract-shape {
+    position: absolute;
+    top: -50px; /* Adjust for position */
+    right: -25%; /* Move it partially off-screen */
+    width: 150%;
+    height: 150%;
+    background: linear-gradient(135deg, var(--dark-purple), var(--primary-purple) 70%); /* Gradient for depth */
+    border-radius: 50%; /* Make it a large circle */
+    transform: rotate(20deg); /* Rotate for the specific curve */
+    z-index: 2; /* Place it behind the content */
+    opacity: 0.8; /* Slight transparency for effect */
+}
+
+.sign-up-content {
+    text-align: center;
+    z-index: 10; /* Ensure content is above the abstract shape */
+    padding: 0 40px;
+}
+
+.sign-up-content h1 {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.sign-up-content p {
+    font-size: 0.9em;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.sign-up-btn {
+    background-color: transparent;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 10px 45px;
+    border: 2px solid #fff; /* White border for the ghost button */
+    border-radius: 20px;
+    letter-spacing: 1px;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+
+.sign-up-btn:hover {
+    background-color: #fff;
+    color: var(--primary-purple);
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+    .form-card {
+        flex-direction: column;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .sign-in-panel,
+    .sign-up-panel {
+        width: 100%;
+        padding: 40px 30px;
+    }
+
+    /* Hide the abstract shape on small screens for a cleaner stack */
+    .abstract-shape {
+        display: none;
+    }
+}
+    
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="sign-in-panel">
+                <h2 class="title">Sign In</h2>
+                
+                <div class="social-login">
+                    <button class="social-icon google"><i class="fab fa-google-plus-g"></i></button>
+                    <button class="social-icon facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="social-icon twitter"><i class="fab fa-twitter"></i></button>
+                    <button class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></button>
+                </div>
+                
+                <p class="email-password-text">or use your email password</p>
+                
+                <form>
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <a href="#" class="forgot-password">Forgot Your Password?</a>
+                    <button type="submit" class="sign-in-btn">SIGN IN</button>
+                </form>
+            </div>
+            
+            <div class="sign-up-panel">
+                <div class="abstract-shape"></div>
+                <div class="sign-up-content">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <button class="sign-up-btn">SIGN UP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
