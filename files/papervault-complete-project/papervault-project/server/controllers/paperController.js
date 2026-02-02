@@ -1,67 +1,65 @@
 const Paper = require('../models/Paper');
+const User = require('../models/User');
+const Review = require('../models/Review');
+const { Op } = require('sequelize');
 
 // @desc    Get all papers with filters
 // @route   GET /api/papers
 // @access  Public
 exports.getPapers = async (req, res, next) => {
   try {
-    // Copy req.query
-    const reqQuery = { ...req.query };
+    // Build where clause from query parameters
+    const where = {};
+    const { category, year, semester, subject, examType, examYear, search } = req.query;
 
-    // Fields to exclude from filtering
-    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
-
-    // Loop over removeFields and delete them from reqQuery
-    removeFields.forEach(param => delete reqQuery[param]);
-
-    // Create query string
-    let queryStr = JSON.stringify(reqQuery);
-
-    // Create operators ($gt, $gte, etc)
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-
-    // Finding resource
-    let query = Paper.find(JSON.parse(queryStr));
+    if (category) where.category = category;
+    if (year) where.year = parseInt(year);
+    if (semester) where.semester = parseInt(semester);
+    if (subject) where.subject = { [Op.like]: `%${subject}%` };
+    if (examType) where.examType = examType;
+    if (examYear) where.examYear = parseInt(examYear);
 
     // Search functionality
-    if (req.query.search) {
-      query = query.find({ $text: { $search: req.query.search } });
-    }
-
-    // Select fields
-    if (req.query.select) {
-      const fields = req.query.select.split(',').join(' ');
-      query = query.select(fields);
+    if (search) {
+      where[Op.or] = [
+        { title: { [Op.like]: `%${search}%` } },
+        { subject: { [Op.like]: `%${search}%` } }
+      ];
     }
 
     // Sort
+    let order = [['createdAt', 'DESC']];
     if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createdAt');
+      const sortFields = req.query.sort.split(',').map(field => {
+        if (field.startsWith('-')) {
+          return [field.substring(1), 'DESC'];
+        }
+        return [field, 'ASC'];
+      });
+      order = sortFields;
     }
 
     // Pagination
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 12;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = await Paper.countDocuments(JSON.parse(queryStr));
+    const offset = (page - 1) * limit;
 
-    query = query.skip(startIndex).limit(limit);
-
-    // Populate uploadedBy
-    query = query.populate({
-      path: 'uploadedBy',
-      select: 'name email'
+    // Execute query with count
+    const { count: total, rows: papers } = await Paper.findAndCountAll({
+      where,
+      order,
+      limit,
+      offset,
+      include: [{
+        model: User,
+        as: 'uploadedBy',
+        attributes: ['id', 'name', 'email']
+      }]
     });
-
-    // Execute query
-    const papers = await query;
 
     // Pagination result
     const pagination = {};
+    const endIndex = page * limit;
 
     if (endIndex < total) {
       pagination.next = {
@@ -70,7 +68,7 @@ exports.getPapers = async (req, res, next) => {
       };
     }
 
-    if (startIndex > 0) {
+    if (offset > 0) {
       pagination.prev = {
         page: page - 1,
         limit
@@ -94,9 +92,24 @@ exports.getPapers = async (req, res, next) => {
 // @access  Public
 exports.getPaper = async (req, res, next) => {
   try {
-    const paper = await Paper.findById(req.params.id)
-      .populate('uploadedBy', 'name email')
-      .populate('reviews');
+    const paper = await Paper.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          as: 'uploadedBy',
+          attributes: ['id', 'name', 'email']
+        },
+        {
+          model: Review,
+          as: 'reviews',
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', 'name']
+          }]
+        }
+      ]
+    });
 
     if (!paper) {
       return res.status(404).json({
@@ -123,7 +136,7 @@ exports.getPaper = async (req, res, next) => {
 exports.createPaper = async (req, res, next) => {
   try {
     // Add user to req.body
-    req.body.uploadedBy = req.user.id;
+    req.body.uploadedById = req.user.id;
 
     const paper = await Paper.create(req.body);
 
@@ -141,7 +154,7 @@ exports.createPaper = async (req, res, next) => {
 // @access  Private/Admin
 exports.updatePaper = async (req, res, next) => {
   try {
-    let paper = await Paper.findById(req.params.id);
+    let paper = await Paper.findByPk(req.params.id);
 
     if (!paper) {
       return res.status(404).json({
@@ -150,10 +163,7 @@ exports.updatePaper = async (req, res, next) => {
       });
     }
 
-    paper = await Paper.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    await paper.update(req.body);
 
     res.status(200).json({
       success: true,
@@ -169,7 +179,7 @@ exports.updatePaper = async (req, res, next) => {
 // @access  Private/Admin
 exports.deletePaper = async (req, res, next) => {
   try {
-    const paper = await Paper.findById(req.params.id);
+    const paper = await Paper.findByPk(req.params.id);
 
     if (!paper) {
       return res.status(404).json({
@@ -186,7 +196,7 @@ exports.deletePaper = async (req, res, next) => {
       await cloudinary.uploader.destroy(paper.solutionPublicId);
     }
 
-    await paper.remove();
+    await paper.destroy();
 
     res.status(200).json({
       success: true,
@@ -202,7 +212,7 @@ exports.deletePaper = async (req, res, next) => {
 // @access  Public
 exports.downloadPaper = async (req, res, next) => {
   try {
-    const paper = await Paper.findById(req.params.id);
+    const paper = await Paper.findByPk(req.params.id);
 
     if (!paper) {
       return res.status(404).json({
@@ -216,14 +226,10 @@ exports.downloadPaper = async (req, res, next) => {
 
     // If user is logged in, add to download history
     if (req.user) {
-      const User = require('../models/User');
-      await User.findByIdAndUpdate(req.user.id, {
-        $push: {
-          downloadHistory: {
-            paperId: paper._id,
-            downloadedAt: Date.now()
-          }
-        }
+      const DownloadHistory = require('../models/DownloadHistory');
+      await DownloadHistory.create({
+        userId: req.user.id,
+        paperId: paper.id
       });
     }
 

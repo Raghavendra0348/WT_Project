@@ -4,14 +4,17 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
+// Connect to MySQL
 connectDB();
+
+// Setup model associations
+require('./models/associations');
 
 // Initialize Express app
 const app = express();

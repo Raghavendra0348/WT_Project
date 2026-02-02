@@ -1,74 +1,96 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const ReviewSchema = new mongoose.Schema({
+const Review = sequelize.define('Review', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   paperId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Paper',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'papers',
+      key: 'id'
+    },
+    field: 'paper_id'
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'user_id'
   },
   rating: {
-    type: Number,
-    required: [true, 'Please provide a rating'],
-    min: 1,
-    max: 5
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please provide a rating' },
+      min: { args: [1], msg: 'Rating must be at least 1' },
+      max: { args: [5], msg: 'Rating cannot be more than 5' }
+    }
   },
   comment: {
-    type: String,
-    maxlength: [500, 'Comment cannot be more than 500 characters']
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    validate: {
+      len: { args: [0, 500], msg: 'Comment cannot be more than 500 characters' }
+    }
   },
   helpful: {
-    type: Number,
-    default: 0
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
 }, {
-  timestamps: true
+  tableName: 'reviews',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    {
+      unique: true,
+      fields: ['paper_id', 'user_id']
+    }
+  ],
+  hooks: {
+    afterCreate: async (review) => {
+      await Review.updatePaperRating(review.paperId);
+    },
+    afterUpdate: async (review) => {
+      await Review.updatePaperRating(review.paperId);
+    },
+    afterDestroy: async (review) => {
+      await Review.updatePaperRating(review.paperId);
+    }
+  }
 });
 
-// Prevent user from submitting more than one review per paper
-ReviewSchema.index({ paperId: 1, userId: 1 }, { unique: true });
-
-// Static method to get average rating
-ReviewSchema.statics.getAverageRating = async function(paperId) {
-  const obj = await this.aggregate([
-    {
-      $match: { paperId }
-    },
-    {
-      $group: {
-        _id: '$paperId',
-        averageRating: { $avg: '$rating' },
-        numReviews: { $sum: 1 }
-      }
-    }
-  ]);
-
+// Static method to update paper's average rating
+Review.updatePaperRating = async function (paperId) {
   try {
-    await this.model('Paper').findByIdAndUpdate(paperId, {
-      averageRating: obj[0]?.averageRating || 0,
-      numReviews: obj[0]?.numReviews || 0
+    const Paper = require('./Paper');
+    const result = await Review.findAll({
+      where: { paperId },
+      attributes: [
+        [sequelize.fn('AVG', sequelize.col('rating')), 'averageRating'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'numReviews']
+      ],
+      raw: true
     });
+
+    await Paper.update(
+      {
+        averageRating: result[0]?.averageRating || 0,
+        numReviews: result[0]?.numReviews || 0
+      },
+      { where: { id: paperId } }
+    );
   } catch (err) {
-    console.error(err);
+    console.error('Error updating paper rating:', err);
   }
 };
 
-// Call getAverageRating after save
-ReviewSchema.post('save', function() {
-  this.constructor.getAverageRating(this.paperId);
-});
-
-// Call getAverageRating before remove
-ReviewSchema.pre('remove', function() {
-  this.constructor.getAverageRating(this.paperId);
-});
-
-module.exports = mongoose.model('Review', ReviewSchema);
+module.exports = Review;

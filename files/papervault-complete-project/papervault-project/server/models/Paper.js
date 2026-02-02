@@ -1,122 +1,158 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const PaperSchema = new mongoose.Schema({
+const Paper = sequelize.define('Paper', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   title: {
-    type: String,
-    required: [true, 'Please provide a title'],
-    trim: true,
-    maxlength: [200, 'Title cannot be more than 200 characters']
+    type: DataTypes.STRING(200),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please provide a title' },
+      len: { args: [1, 200], msg: 'Title cannot be more than 200 characters' }
+    }
   },
   category: {
-    type: String,
-    required: [true, 'Please select a category'],
-    enum: ['intermediate', 'engineering']
+    type: DataTypes.ENUM('intermediate', 'engineering'),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please select a category' }
+    }
   },
   course: {
-    type: String,
-    required: [true, 'Please specify the course']
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify the course' }
+    }
   },
   year: {
-    type: Number,
-    required: [true, 'Please specify the year'],
-    min: 1,
-    max: 4
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify the year' },
+      min: { args: [1], msg: 'Year must be at least 1' },
+      max: { args: [4], msg: 'Year cannot be more than 4' }
+    }
   },
   semester: {
-    type: Number,
-    required: [true, 'Please specify the semester'],
-    min: 1,
-    max: 2
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify the semester' },
+      min: { args: [1], msg: 'Semester must be at least 1' },
+      max: { args: [2], msg: 'Semester cannot be more than 2' }
+    }
   },
   subject: {
-    type: String,
-    required: [true, 'Please specify the subject'],
-    trim: true
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify the subject' }
+    }
   },
   examType: {
-    type: String,
-    required: [true, 'Please specify exam type'],
-    enum: ['midterm', 'final', 'model']
+    type: DataTypes.ENUM('midterm', 'final', 'model'),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify exam type' }
+    }
   },
   examYear: {
-    type: Number,
-    required: [true, 'Please specify exam year']
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please specify exam year' }
+    }
   },
   fileUrl: {
-    type: String,
-    required: [true, 'Please upload a file']
+    type: DataTypes.STRING(500),
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Please upload a file' }
+    }
   },
   filePublicId: {
-    type: String,
-    required: true
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   fileSize: {
-    type: Number,
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-  thumbnailUrl: String,
+  thumbnailUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true
+  },
   hasSolution: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
-  solutionUrl: String,
-  solutionPublicId: String,
-  tags: [String],
+  solutionUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true
+  },
+  solutionPublicId: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  tags: {
+    type: DataTypes.JSON,
+    defaultValue: [],
+    get() {
+      const value = this.getDataValue('tags');
+      return value ? value : [];
+    }
+  },
   downloads: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   views: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   averageRating: {
-    type: Number,
-    default: 0
+    type: DataTypes.DECIMAL(3, 2),
+    defaultValue: 0
   },
   numReviews: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
-  uploadedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  uploadedById: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
   }
 }, {
+  tableName: 'papers',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  underscored: true,
+  indexes: [
+    { fields: ['category', 'year', 'semester'] },
+    { fields: ['subject'] },
+    { fields: ['exam_type'] },
+    { type: 'FULLTEXT', fields: ['title', 'subject'] }
+  ]
 });
 
-// Create indexes for faster queries
-PaperSchema.index({ category: 1, year: 1, semester: 1 });
-PaperSchema.index({ subject: 1 });
-PaperSchema.index({ examType: 1 });
-PaperSchema.index({ title: 'text', subject: 'text', tags: 'text' });
-
-// Virtual for reviews
-PaperSchema.virtual('reviews', {
-  ref: 'Review',
-  localField: '_id',
-  foreignField: 'paperId',
-  justOne: false
-});
-
-// Increment downloads
-PaperSchema.methods.incrementDownloads = async function() {
+// Instance method: Increment downloads
+Paper.prototype.incrementDownloads = async function () {
   this.downloads += 1;
   await this.save();
 };
 
-// Increment views
-PaperSchema.methods.incrementViews = async function() {
+// Instance method: Increment views
+Paper.prototype.incrementViews = async function () {
   this.views += 1;
   await this.save();
 };
 
-module.exports = mongoose.model('Paper', PaperSchema);
+module.exports = Paper;

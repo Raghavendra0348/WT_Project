@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const { Op } = require('sequelize');
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -26,7 +27,7 @@ exports.register = async (req, res, next) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -55,7 +56,7 @@ exports.login = async (req, res, next) => {
     }
 
     // Check for user (include password for comparison)
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.scope('withPassword').findOne({ where: { email } });
 
     if (!user) {
       return res.status(401).json({
@@ -81,7 +82,7 @@ exports.login = async (req, res, next) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -99,7 +100,7 @@ exports.login = async (req, res, next) => {
 // @access  Private
 exports.getMe = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findByPk(req.user.id);
 
     res.status(200).json({
       success: true,
@@ -115,7 +116,9 @@ exports.getMe = async (req, res, next) => {
 // @access  Public
 exports.forgotPassword = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.scope('withPassword').findOne({
+      where: { email: req.body.email }
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -127,7 +130,7 @@ exports.forgotPassword = async (req, res, next) => {
     // Get reset token
     const resetToken = user.getResetPasswordToken();
 
-    await user.save({ validateBeforeSave: false });
+    await user.save();
 
     // Create reset url
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
@@ -147,10 +150,10 @@ exports.forgotPassword = async (req, res, next) => {
       });
     } catch (err) {
       console.log(err);
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
+      user.resetPasswordToken = null;
+      user.resetPasswordExpire = null;
 
-      await user.save({ validateBeforeSave: false });
+      await user.save();
 
       return res.status(500).json({
         success: false,
@@ -173,9 +176,11 @@ exports.resetPassword = async (req, res, next) => {
       .update(req.params.resettoken)
       .digest('hex');
 
-    const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() }
+    const user = await User.scope('withPassword').findOne({
+      where: {
+        resetPasswordToken,
+        resetPasswordExpire: { [Op.gt]: new Date() }
+      }
     });
 
     if (!user) {
@@ -187,8 +192,8 @@ exports.resetPassword = async (req, res, next) => {
 
     // Set new password
     user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpire = null;
     await user.save();
 
     // Create token
