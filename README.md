@@ -1,40 +1,54 @@
-# 📚 PaperVault - Question Paper Repository
+# 📚 PaperVault - RGUKT Question Paper Repository
 
-A full-stack MERN application for managing and accessing question papers for Intermediate and Engineering students.
+A full-stack web application for managing and accessing question papers for RGUKT students (PUC 1, PUC 2 & Engineering) across all campuses.
 
 ## 🚀 Features
 
+### For Students
 - 📄 Browse and download question papers
-- 🔍 Advanced search and filtering
+- 🔍 Advanced search and filtering by course, campus, exam type, and year
 - 👤 User authentication and profiles
 - 🔖 Bookmark favorite papers
 - 📊 Download history tracking
 - ⭐ Rate and review papers
-- 🎯 Admin panel for managing papers
 - 📱 Fully responsive design
+
+### For Admins
+- 🎯 Admin dashboard for managing papers
+- 📤 Upload new question papers
+- 👥 User management
+- 📊 Platform statistics
+
+### Campus Support
+- RK Valley
+- Nuzvid
+- Ongole
+- Srikakulam
+- Basar
 
 ## 🛠️ Tech Stack
 
 **Frontend:**
-- React.js
-- React Router
-- Axios
-- React Toastify
-- React PDF Viewer
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Responsive Design
 
 **Backend:**
 - Node.js
 - Express.js
-- MongoDB with Mongoose
+- Sequelize ORM
+- MySQL Database
 - JWT Authentication
 - Multer for file uploads
 - Cloudinary for file storage
+- Nodemailer for emails
 
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
 - Node.js (v14 or higher)
-- MongoDB (v4.4 or higher)
+- MySQL (v8.0 or higher)
 - npm or yarn
 
 ## 🔧 Installation
@@ -52,52 +66,57 @@ cd papervault
 # Install server dependencies
 cd server
 npm install
-
-# Install client dependencies
-cd ../client
-npm install
 ```
 
 ### 3. Environment Variables
 
-**Server (.env)**
 Create a `.env` file in the `server` directory:
 
 ```env
 NODE_ENV=development
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/papervault
+
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=papervault
+
+# JWT Configuration
 JWT_SECRET=your_secret_key_here
 JWT_EXPIRE=30d
 
+# Cloudinary Configuration
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
+# Email Configuration
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password
 FROM_NAME=PaperVault
 
+# Client URL
 CLIENT_URL=http://localhost:3000
 ```
 
-**Client (.env)**
-Create a `.env` file in the `client` directory:
+### 4. Set up MySQL Database
 
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_CLOUDINARY_CLOUD_NAME=your_cloud_name
+```sql
+CREATE DATABASE papervault;
 ```
 
-### 4. Set up Cloudinary
+The tables will be automatically created by Sequelize when the server starts.
+
+### 5. Set up Cloudinary
 
 1. Sign up at [Cloudinary](https://cloudinary.com/)
 2. Get your Cloud Name, API Key, and API Secret
 3. Add them to your server `.env` file
 
-### 5. Set up Email (Gmail example)
+### 6. Set up Email (Gmail example)
 
 1. Enable 2-Step Verification in your Google Account
 2. Generate an App Password
@@ -107,34 +126,30 @@ REACT_APP_CLOUDINARY_CLOUD_NAME=your_cloud_name
 
 ### Development Mode
 
-**Terminal 1 - Start MongoDB:**
-```bash
-mongod
-```
-
-**Terminal 2 - Start Backend:**
+**Terminal 1 - Start Backend:**
 ```bash
 cd server
 npm run dev
 ```
 
-**Terminal 3 - Start Frontend:**
+**Terminal 2 - Serve Frontend:**
+You can use any static file server (e.g., Live Server extension in VS Code) to serve the frontend folder.
+
 ```bash
-cd client
-npm start
+# Using Python's built-in server
+cd frontend
+python -m http.server 3000
+
+# Or using Node.js http-server
+npx http-server frontend -p 3000
 ```
 
-The application will open at `http://localhost:3000`
+The application will be available at `http://localhost:3000`
 
-### Production Build
+### Production Mode
 
 ```bash
-# Build frontend
-cd client
-npm run build
-
-# Start server
-cd ../server
+cd server
 npm start
 ```
 
@@ -142,27 +157,87 @@ npm start
 
 ```
 papervault/
-├── client/                 # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── pages/        # Page components
-│   │   ├── context/      # Context API
-│   │   ├── services/     # API services
-│   │   ├── utils/        # Utility functions
-│   │   └── styles/       # CSS files
-│   └── package.json
+├── frontend/                    # Frontend Application (HTML/CSS/JS)
+│   ├── index.html              # Landing page
+│   ├── login.html              # Login page
+│   ├── register.html           # Registration page
+│   ├── forgot-password.html    # Password recovery
+│   ├── question-papers-dashboard.html  # Main dashboard
+│   ├── browse-papers.html      # Papers listing
+│   ├── advanced-search.html    # Advanced search
+│   ├── bookmarks.html          # User bookmarks
+│   ├── my-downloads.html       # Download history
+│   ├── my-profile.html         # User profile
+│   ├── view-history.html       # View history
+│   ├── settings.html           # User settings
+│   ├── upload-paper.html       # Upload papers
+│   ├── about.html              # About page
+│   ├── contact.html            # Contact page
+│   │
+│   ├── admin/                  # Admin Panel
+│   │   ├── dashboard.html      # Admin dashboard
+│   │   ├── papers.html         # Manage papers
+│   │   └── upload.html         # Upload papers
+│   │
+│   ├── css/
+│   │   └── styles.css          # Main stylesheet
+│   │
+│   └── js/                     # JavaScript modules
+│       ├── api.js              # API service layer
+│       ├── auth.js             # Authentication utilities
+│       ├── config.js           # Configuration
+│       ├── home.js             # Landing page logic
+│       ├── login.js            # Login page logic
+│       ├── register.js         # Registration logic
+│       ├── papers.js           # Papers listing logic
+│       ├── paper-detail.js     # Paper details logic
+│       ├── contact.js          # Contact form logic
+│       ├── forgot-password.js  # Password recovery logic
+│       │
+│       └── admin/              # Admin JS modules
+│           ├── dashboard.js    # Admin dashboard logic
+│           ├── papers.js       # Manage papers logic
+│           └── upload.js       # Upload papers logic
 │
-├── server/                # Node.js backend
-│   ├── config/           # Configuration files
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware
-│   ├── models/           # Mongoose models
-│   ├── routes/           # API routes
-│   ├── utils/            # Utility functions
-│   └── server.js         # Entry point
+├── server/                     # Backend Application (Node.js/Express)
+│   ├── server.js               # Main server entry point
+│   ├── package.json            # Node.js dependencies
+│   │
+│   ├── config/                 # Configuration files
+│   │   ├── db.js               # MySQL/Sequelize connection
+│   │   └── cloudinary.js       # Cloudinary setup
+│   │
+│   ├── models/                 # Database models (Sequelize)
+│   │   ├── User.js             # User model
+│   │   ├── Paper.js            # Question paper model
+│   │   ├── Bookmark.js         # Bookmark model
+│   │   ├── DownloadHistory.js  # Download tracking
+│   │   ├── Review.js           # Paper reviews
+│   │   └── associations.js     # Model relationships
+│   │
+│   ├── controllers/            # Business logic
+│   │   ├── authController.js   # Authentication controller
+│   │   └── paperController.js  # Papers CRUD controller
+│   │
+│   ├── routes/                 # API routes
+│   │   ├── auth.js             # Auth routes
+│   │   ├── papers.js           # Papers routes
+│   │   ├── upload.js           # Upload routes
+│   │   ├── users.js            # User routes
+│   │   └── admin.js            # Admin routes
+│   │
+│   ├── middleware/             # Express middleware
+│   │   ├── auth.js             # JWT authentication
+│   │   ├── errorHandler.js     # Error handling
+│   │   └── upload.js           # File upload (Multer)
+│   │
+│   └── utils/                  # Utility functions
+│       └── sendEmail.js        # Email service
 │
-└── README.md
+├── BACKEND_STATUS.md           # Backend development status
+├── FRONTEND_STATUS.md          # Frontend development status
+├── PROJECT_STRUCTURE.md        # Detailed project structure
+└── README.md                   # Project documentation
 ```
 
 ## 📚 API Endpoints
@@ -198,14 +273,10 @@ papervault/
 
 ## 🎨 Default Admin Account
 
-After setting up, create an admin user manually in MongoDB:
+After setting up, create an admin user by updating a user's role in the database:
 
-```javascript
-// In MongoDB shell or Compass
-db.users.updateOne(
-  { email: "admin@example.com" },
-  { $set: { role: "admin" } }
-)
+```sql
+UPDATE Users SET role = 'admin' WHERE email = 'admin@example.com';
 ```
 
 ## 🔐 Security Features
@@ -215,9 +286,10 @@ db.users.updateOne(
 - Protected routes
 - Role-based authorization
 - File type validation
-- Request validation
+- Request validation with express-validator
 - Security headers (Helmet)
 - CORS configuration
+- Request compression
 
 ## 📱 Responsive Design
 
@@ -229,9 +301,10 @@ The application is fully responsive and works on:
 
 ## 🐛 Troubleshooting
 
-**MongoDB Connection Error:**
-- Ensure MongoDB is running: `mongod`
-- Check MONGO_URI in .env file
+**MySQL Connection Error:**
+- Ensure MySQL is running
+- Check database credentials in .env file
+- Verify the database exists
 
 **Port Already in Use:**
 - Kill the process using the port: `lsof -ti:5000 | xargs kill -9`
@@ -241,6 +314,10 @@ The application is fully responsive and works on:
 - Check Cloudinary credentials
 - Ensure uploads/ directory exists
 - Check file size limits (default 10MB)
+
+**Sequelize Errors:**
+- Run `npm install` to ensure all dependencies are installed
+- Check model associations in `models/associations.js`
 
 ## 🤝 Contributing
 
@@ -256,13 +333,13 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Your Name - [your-email@example.com](mailto:your-email@example.com)
+RGUKT Students
 
 ## 🙏 Acknowledgments
 
-- React Documentation
 - Express.js Documentation
-- MongoDB Documentation
+- Sequelize Documentation
+- MySQL Documentation
 - Cloudinary
 - All contributors
 
