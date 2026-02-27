@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Browse Papers - PaperVault</title>
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+                rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <style>
+                :root {
+                        --indigo: #4F35D2;
+                        --indigo-light: #6B52E8;
+                        --violet: #7C3AED;
+                        --accent: #F59E0B;
+                        --accent2: #10B981;
+                        --bg: #F4F3FF;
+                        --surface: #FFFFFF;
+                        --text: #1A1340;
+                        --muted: #7B7A99;
+                        --border: #E5E3F7;
+                        --sidebar-w: 240px;
+                }
+
+                * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                }
+
+                body {
+                        font-family: 'DM Sans', sans-serif;
+                        background: var(--bg);
+                        color: var(--text);
+                        min-height: 100vh;
+                        display: flex;
+                }
+
+                /* Sidebar */
+                .sidebar {
+                        width: var(--sidebar-w);
+                        background: var(--indigo);
+                        padding: 24px 14px;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        bottom: 0;
+                        overflow-y: auto;
+                }
+
+                .logo-area {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 0 10px;
+                        margin-bottom: 28px;
+                }
+
+                .logo-icon {
+                        background: rgba(255, 255, 255, 0.18);
+                        border-radius: 14px;
+                        width: 44px;
+                        height: 44px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                }
+
+                .logo-text {
+                        font-family: 'Syne', sans-serif;
+                        font-size: 18px;
+                        font-weight: 800;
+                        color: #fff;
+                        line-height: 1.2;
+                }
+
+                .logo-sub {
+                        font-size: 10px;
+                        color: rgba(255, 255, 255, 0.55);
+                }
+
+                .nav-label {
+                        font-size: 10px;
+                        font-weight: 700;
+                        color: rgba(255, 255, 255, 0.35);
+                        text-transform: uppercase;
+                        padding: 16px 14px 8px;
+                }
+
+                .nav-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding: 10px 14px;
+                        border-radius: 12px;
+                        color: rgba(255, 255, 255, 0.65);
+                        font-size: 13.5px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        margin-bottom: 2px;
+                        text-decoration: none;
+                }
+
+                .nav-item:hover {
+                        background: rgba(255, 255, 255, 0.12);
+                        color: #fff;
+                }
+
+                .nav-item.active {
+                        background: rgba(255, 255, 255, 0.22);
+                        color: #fff;
+                        font-weight: 700;
+                }
+
+                .nav-item i {
+                        font-size: 17px;
+                        width: 20px;
+                }
+
+                /* Main Content */
+                .main-content {
+                        margin-left: var(--sidebar-w);
+                        flex: 1;
+                        padding: 32px;
+                        overflow-y: auto;
+                }
+
+                .page-header {
+                        margin-bottom: 32px;
+                }
+
+                .page-title {
+                        font-family: 'Syne', sans-serif;
+                        font-size: 32px;
+                        font-weight: 800;
+                        color: var(--text);
+                        margin-bottom: 8px;
+                }
+
+                .page-subtitle {
+                        color: var(--muted);
+                        font-size: 15px;
+                }
+
+                /* Filters */
+                .filters-row {
+                        display: flex;
+                        gap: 12px;
+                        margin-bottom: 24px;
+                        flex-wrap: wrap;
+                }
+
+                .filter-group {
+                        flex: 1;
+                        min-width: 200px;
+                }
+
+                .filter-label {
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: var(--muted);
+                        margin-bottom: 6px;
+                        display: block;
+                }
+
+                .filter-select {
+                        width: 100%;
+                        padding: 10px 14px;
+                        border: 1.5px solid var(--border);
+                        border-radius: 10px;
+                        background: var(--surface);
+                        font-size: 14px;
+                        color: var(--text);
+                        cursor: pointer;
+                }
+
+                .filter-select:focus {
+                        outline: none;
+                        border-color: var(--indigo);
+                }
+
+                .search-box {
+                        position: relative;
+                        flex: 2;
+                        min-width: 300px;
+                }
+
+                .search-box input {
+                        width: 100%;
+                        padding: 10px 14px 10px 44px;
+                        border: 1.5px solid var(--border);
+                        border-radius: 10px;
+                        font-size: 14px;
+                        background: var(--surface);
+                }
+
+                .search-box i {
+                        position: absolute;
+                        left: 16px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: var(--muted);
+                }
+
+                /* Papers Grid */
+                .papers-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                        gap: 20px;
+                }
+
+                .paper-card {
+                        background: var(--surface);
+                        border: 1.5px solid var(--border);
+                        border-radius: 16px;
+                        padding: 20px;
+                        transition: all 0.3s;
+                        cursor: pointer;
+                }
+
+                .paper-card:hover {
+                        border-color: var(--indigo);
+                        box-shadow: 0 8px 20px rgba(79, 53, 210, 0.12);
+                        transform: translateY(-2px);
+                }
+
+                .paper-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: start;
+                        margin-bottom: 12px;
+                }
+
+                .paper-subject {
+                        font-weight: 700;
+                        font-size: 16px;
+                        color: var(--text);
+                        margin-bottom: 4px;
+                }
+
+                .paper-meta {
+                        font-size: 13px;
+                        color: var(--muted);
+                }
+
+                .paper-tags {
+                        display: flex;
+                        gap: 6px;
+                        margin-bottom: 14px;
+                        flex-wrap: wrap;
+                }
+
+                .tag {
+                        padding: 4px 10px;
+                        border-radius: 6px;
+                        font-size: 11px;
+                        font-weight: 600;
+                }
+
+                .tag-branch {
+                        background: rgba(79, 53, 210, 0.1);
+                        color: var(--indigo);
+                }
+
+                .tag-exam {
+                        background: rgba(124, 58, 237, 0.1);
+                        color: var(--violet);
+                }
+
+                .tag-year {
+                        background: rgba(245, 158, 11, 0.1);
+                        color: var(--accent);
+                }
+
+                .paper-stats {
+                        display: flex;
+                        gap: 16px;
+                        font-size: 13px;
+                        color: var(--muted);
+                        margin-bottom: 14px;
+                }
+
+                .stat {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                }
+
+                .paper-actions {
+                        display: flex;
+                        gap: 8px;
+                }
+
+                .btn {
+                        padding: 8px 16px;
+                        border-radius: 8px;
+                        font-size: 13px;
+                        font-weight: 600;
+                        border: none;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                }
+
+                .btn-primary {
+                        background: var(--indigo);
+                        color: white;
+                        flex: 1;
+                }
+
+                .btn-primary:hover {
+                        background: var(--indigo-light);
+                }
+
+                .btn-icon {
+                        width: 36px;
+                        height: 36px;
+                        padding: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: var(--bg);
+                        color: var(--text);
+                }
+
+                .btn-icon:hover {
+                        background: var(--indigo);
+                        color: white;
+                }
+
+                /* Logout */
+                .logout-btn {
+                        margin-top: auto;
+                        padding: 12px 14px;
+                        background: rgba(239, 68, 68, 0.15);
+                        color: #EF4444;
+                        border: none;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        width: 100%;
+                }
+
+                @media (max-width: 768px) {
+                        .sidebar {
+                                transform: translateX(-100%);
+                        }
+
+                        .main-content {
+                                margin-left: 0;
+                        }
+
+                        .papers-grid {
+                                grid-template-columns: 1fr;
+                        }
+                }
+        </style>
+</head>
+
+<body>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+                <div class="logo-area">
+                        <div class="logo-icon">
+                                <i class="bi bi-journal-bookmark-fill" style="font-size: 24px; color: white;"></i>
+                        </div>
+                        <div>
+                                <div class="logo-text">PaperVault</div>
+                                <div class="logo-sub">RGUKT Paper Repository</div>
+                        </div>
+                </div>
+
+                <div class="nav-label">Main</div>
+                <a class="nav-item" href="question-papers-dashboard.html">
+                        <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                </a>
+                <a class="nav-item active" href="browse-papers.html">
+                        <i class="bi bi-file-earmark-text"></i> Browse Papers
+                </a>
+                <a class="nav-item" href="upload-paper.html">
+                        <i class="bi bi-cloud-arrow-up"></i> Upload Paper
+                </a>
+                <a class="nav-item" href="advanced-search.html">
+                        <i class="bi bi-search"></i> Advanced Search
+                </a>
+
+                <div class="nav-label">Library</div>
+                <a class="nav-item" href="bookmarks.html">
+                        <i class="bi bi-bookmark-heart"></i> Bookmarks
+                </a>
+                <a class="nav-item" href="my-downloads.html">
+                        <i class="bi bi-download"></i> My Downloads
+                </a>
+                <a class="nav-item" href="view-history.html">
+                        <i class="bi bi-clock-history"></i> View History
+                </a>
+
+                <div class="nav-label">Account</div>
+                <a class="nav-item" href="my-profile.html">
+                        <i class="bi bi-person-circle"></i> My Profile
+                </a>
+                <a class="nav-item" href="settings.html">
+                        <i class="bi bi-gear"></i> Settings
+                </a>
+
+                <button class="logout-btn" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+                <div class="page-header">
+                        <h1 class="page-title">Browse Question Papers</h1>
+                        <p class="page-subtitle">Explore all available papers across PUC 1, PUC 2 & Engineering</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-row">
+                        <div class="search-box">
+                                <i class="bi bi-search"></i>
+                                <input type="text" placeholder="Search by subject, branch, or keyword..."
+                                        id="searchInput">
+                        </div>
+
+                        <div class="filter-group">
+                                <label class="filter-label">Category</label>
+                                <select class="filter-select" id="categoryFilter">
+                                        <option value="all">All Categories</option>
+                                        <option value="puc1">PUC 1</option>
+                                        <option value="puc2">PUC 2</option>
+                                        <option value="engg">Engineering</option>
+                                </select>
+                        </div>
+
+                        <div class="filter-group">
+                                <label class="filter-label">Branch</label>
+                                <select class="filter-select" id="branchFilter">
+                                        <option value="all">All Branches</option>
+                                        <option value="CSE">CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="ME">ME</option>
+                                        <option value="CE">CE</option>
+                                        <option value="CHE">CHE</option>
+                                        <option value="MME">MME</option>
+                                </select>
+                        </div>
+
+                        <div class="filter-group">
+                                <label class="filter-label">Exam Type</label>
+                                <select class="filter-select" id="examFilter">
+                                        <option value="all">All Exams</option>
+                                        <option value="Mid-1">Mid-1</option>
+                                        <option value="Mid-2">Mid-2</option>
+                                        <option value="End Sem">End Sem</option>
+                                        <option value="Supply">Supply</option>
+                                </select>
+                        </div>
+
+                        <div class="filter-group">
+                                <label class="filter-label">Academic Year</label>
+                                <select class="filter-select" id="yearFilter">
+                                        <option value="all">All Years</option>
+                                        <option value="2024-25">2024-25</option>
+                                        <option value="2023-24">2023-24</option>
+                                        <option value="2022-23">2022-23</option>
+                                </select>
+                        </div>
+                </div>
+
+                <!-- Papers Grid -->
+                <div class="papers-grid" id="papersGrid">
+                        <!-- Papers will be rendered here -->
+                </div>
+        </div>
+
+        <script>
+                // Sample paper data
+                const papers = [
+                        { id: 1, subject: 'Data Structures', branch: 'CSE', year: '2nd', examType: 'Mid-1', academicYear: '2024-25', views: 234, downloads: 89, category: 'engg' },
+                        { id: 2, subject: 'Mathematics IIA', branch: 'PUC-2', year: 'PUC-2', examType: 'End Sem', academicYear: '2024-25', views: 456, downloads: 178, category: 'puc2' },
+                        { id: 3, subject: 'Physics IA', branch: 'PUC-1', year: 'PUC-1', examType: 'Mid-2', academicYear: '2023-24', views: 189, downloads: 67, category: 'puc1' },
+                        { id: 4, subject: 'Digital Electronics', branch: 'ECE', year: '3rd', examType: 'End Sem', academicYear: '2023-24', views: 312, downloads: 145, category: 'engg' },
+                        { id: 5, subject: 'Chemistry IB', branch: 'PUC-1', year: 'PUC-1', examType: 'Mid-1', academicYear: '2024-25', views: 276, downloads: 98, category: 'puc1' },
+                        { id: 6, subject: 'Operating Systems', branch: 'CSE', year: '3rd', examType: 'Mid-2', academicYear: '2024-25', views: 389, downloads: 156, category: 'engg' },
+                        { id: 7, subject: 'Electrical Machines', branch: 'EEE', year: '4th', examType: 'Supply', academicYear: '2023-24', views: 156, downloads: 45, category: 'engg' },
+                        { id: 8, subject: 'English IB', branch: 'PUC-2', year: 'PUC-2', examType: 'Mid-1', academicYear: '2024-25', views: 423, downloads: 189, category: 'puc2' },
+                ];
+
+                function renderPapers(filteredPapers) {
+                        const grid = document.getElementById('papersGrid');
+
+                        if (filteredPapers.length === 0) {
+                                grid.innerHTML = '<div style="text-align: center; padding: 60px; color: var(--muted);">No papers found matching your filters</div>';
+                                return;
+                        }
+
+                        grid.innerHTML = filteredPapers.map(paper => `
+    <div class="paper-card">
+      <div class="paper-header">
+        <div>
+          <div class="paper-subject">${paper.subject}</div>
+          <div class="paper-meta">${paper.year} · ${paper.academicYear}</div>
+        </div>
+      </div>
+      
+      <div class="paper-tags">
+        <span class="tag tag-branch">${paper.branch}</span>
+        <span class="tag tag-exam">${paper.examType}</span>
+        <span class="tag tag-year">${paper.academicYear}</span>
+      </div>
+      
+      <div class="paper-stats">
+        <span class="stat"><i class="bi bi-eye"></i> ${paper.views}</span>
+        <span class="stat"><i class="bi bi-download"></i> ${paper.downloads}</span>
+      </div>
+      
+      <div class="paper-actions">
+        <button class="btn btn-primary" onclick="downloadPaper(${paper.id})">
+          <i class="bi bi-download"></i> Download
+        </button>
+        <button class="btn btn-icon" onclick="bookmarkPaper(${paper.id})" title="Bookmark">
+          <i class="bi bi-bookmark"></i>
+        </button>
+        <button class="btn btn-icon" onclick="viewPaper(${paper.id})" title="Preview">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+                }
+
+                function filterPapers() {
+                        const search = document.getElementById('searchInput').value.toLowerCase();
+                        const category = document.getElementById('categoryFilter').value;
+                        const branch = document.getElementById('branchFilter').value;
+                        const exam = document.getElementById('examFilter').value;
+                        const year = document.getElementById('yearFilter').value;
+
+                        let filtered = papers.filter(paper => {
+                                const matchSearch = paper.subject.toLowerCase().includes(search) || paper.branch.toLowerCase().includes(search);
+                                const matchCategory = category === 'all' || paper.category === category;
+                                const matchBranch = branch === 'all' || paper.branch === branch;
+                                const matchExam = exam === 'all' || paper.examType === exam;
+                                const matchYear = year === 'all' || paper.academicYear === year;
+
+                                return matchSearch && matchCategory && matchBranch && matchExam && matchYear;
+                        });
+
+                        renderPapers(filtered);
+                }
+
+                // Event listeners
+                document.getElementById('searchInput').addEventListener('input', filterPapers);
+                document.getElementById('categoryFilter').addEventListener('change', filterPapers);
+                document.getElementById('branchFilter').addEventListener('change', filterPapers);
+                document.getElementById('examFilter').addEventListener('change', filterPapers);
+                document.getElementById('yearFilter').addEventListener('change', filterPapers);
+
+                function downloadPaper(id) {
+                        alert(`Downloading paper ${id}...`);
+                }
+
+                function bookmarkPaper(id) {
+                        alert(`Bookmarked paper ${id}`);
+                }
+
+                function viewPaper(id) {
+                        alert(`Viewing paper ${id}...`);
+                }
+
+                function logout() {
+                        if (confirm('Are you sure you want to logout?')) {
+                                localStorage.clear();
+                                window.location.href = 'login.html';
+                        }
+                }
+
+                // Initial render
+                renderPapers(papers);
+        </script>
+
+</body>
+
+</html>

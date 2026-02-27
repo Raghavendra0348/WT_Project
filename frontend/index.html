@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PaperVault - Question Paper Repository</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <!-- Anime.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/styles.css">
+        <style>
+                /* ========== ENHANCED ANIMATIONS CSS ========== */
+
+                /* Floating Animation */
+                @keyframes float {
+
+                        0%,
+                        100% {
+                                transform: translateY(0px);
+                        }
+
+                        50% {
+                                transform: translateY(-20px);
+                        }
+                }
+
+                .floating {
+                        animation: float 6s ease-in-out infinite;
+                }
+
+                /* Gradient Text Animation */
+                .gradient-text {
+                        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 40%, #a78bfa 60%, #6366f1 100%);
+                        background-size: 200% auto;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradientShift 4s ease infinite;
+                }
+
+                @keyframes gradientShift {
+
+                        0%,
+                        100% {
+                                background-position: 0% center;
+                        }
+
+                        50% {
+                                background-position: 200% center;
+                        }
+                }
+
+                /* Hero Section */
+                .hero-section {
+                        position: relative;
+                        overflow: hidden;
+                }
+
+                .hero-section::after {
+                        content: '';
+                        position: absolute;
+                        top: -50%;
+                        right: -20%;
+                        width: 600px;
+                        height: 600px;
+                        background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+                        border-radius: 50%;
+                        pointer-events: none;
+                }
+
+                .hero-section .container {
+                        position: relative;
+                        z-index: 1;
+                }
+
+                /* Scroll Progress Bar */
+                .scroll-progress {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 0%;
+                        height: 4px;
+                        background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+                        z-index: 9999;
+                        transition: width 0.1s ease;
+                }
+
+                /* Hero Content Animation */
+                .hero-content {
+                        opacity: 0;
+                }
+
+                .hero-badge {
+                        opacity: 0;
+                        transform: translateY(20px);
+                }
+
+                .hero-title {
+                        opacity: 0;
+                        transform: translateY(30px);
+                }
+
+                .hero-description {
+                        opacity: 0;
+                        transform: translateY(30px);
+                }
+
+                .hero-buttons {
+                        opacity: 0;
+                        transform: translateY(30px);
+                }
+
+                .hero-stats {
+                        opacity: 0;
+                        transform: translateY(30px);
+                }
+
+                .hero-image {
+                        opacity: 0;
+                        transform: translateX(50px);
+                }
+
+                /* Stats Counter Animation */
+                .stat-card {
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        cursor: pointer;
+                        border: 1px solid transparent;
+                }
+
+                .stat-card:hover {
+                        transform: translateY(-8px);
+                        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+                        border-color: rgba(99, 102, 241, 0.15);
+                }
+
+                .stat-icon {
+                        transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                }
+
+                .stat-card:hover .stat-icon {
+                        transform: scale(1.2) rotate(10deg);
+                }
+
+                /* Feature Cards Animation */
+                .feature-card {
+                        opacity: 0;
+                        transform: translateY(50px);
+                        transition: all 0.4s ease;
+                        position: relative;
+                        overflow: hidden;
+                        border: 1px solid transparent;
+                }
+
+                .feature-card::after {
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 3px;
+                        background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+                        transform: scaleX(0);
+                        transform-origin: left;
+                        transition: transform 0.4s ease;
+                }
+
+                .feature-card:hover::after {
+                        transform: scaleX(1);
+                }
+
+                .feature-card:hover {
+                        transform: translateY(-8px);
+                        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.12);
+                        border-color: rgba(99, 102, 241, 0.15);
+                }
+
+                .feature-icon {
+                        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                }
+
+                .feature-card:hover .feature-icon {
+                        transform: scale(1.1) translateY(-5px);
+                }
+
+                /* Paper Card Animation */
+                .paper-card {
+                        opacity: 0;
+                        transform: translateY(30px);
+                        transition: all 0.3s ease;
+                }
+
+                .paper-card:hover {
+                        transform: translateY(-5px);
+                }
+
+                /* CTA Section Animation */
+                .cta-section {
+                        position: relative;
+                        overflow: hidden;
+                }
+
+                .cta-section::before {
+                        content: '';
+                        position: absolute;
+                        top: -100px;
+                        right: -100px;
+                        width: 300px;
+                        height: 300px;
+                        background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+                        border-radius: 50%;
+                        pointer-events: none;
+                }
+
+                .cta-section::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -80px;
+                        left: -80px;
+                        width: 250px;
+                        height: 250px;
+                        background: radial-gradient(circle, rgba(129, 140, 248, 0.06) 0%, transparent 70%);
+                        border-radius: 50%;
+                        pointer-events: none;
+                }
+
+
+                /* Scroll To Top Button */
+                .scroll-to-top {
+                        position: fixed;
+                        bottom: 30px;
+                        right: 30px;
+                        width: 50px;
+                        height: 50px;
+                        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                        border: none;
+                        border-radius: 50%;
+                        color: #fff;
+                        font-size: 1.2rem;
+                        cursor: pointer;
+                        opacity: 0;
+                        visibility: hidden;
+                        transform: translateY(20px);
+                        transition: all 0.3s ease;
+                        z-index: 1000;
+                        box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+                }
+
+                .scroll-to-top.visible {
+                        opacity: 1;
+                        visibility: visible;
+                        transform: translateY(0);
+                }
+
+                .scroll-to-top:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5);
+                }
+
+                /* Typing Animation */
+                .typing-text {
+                        border-right: 3px solid rgba(99, 102, 241, 0.7);
+                        white-space: nowrap;
+                        overflow: hidden;
+                        animation: blink 0.7s step-end infinite;
+                }
+
+                @keyframes blink {
+                        50% {
+                                border-color: transparent;
+                        }
+                }
+
+                /* How It Works Section */
+                .how-it-works-section {
+                        background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+                        position: relative;
+                }
+
+                .steps-row {
+                        position: relative;
+                }
+
+                .step-card {
+                        position: relative;
+                        padding: 2.5rem 2rem 2rem;
+                        background: #fff;
+                        border-radius: 24px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                        opacity: 0;
+                        transform: translateY(60px) scale(0.95);
+                        border: 1px solid rgba(99, 102, 241, 0.08);
+                        z-index: 1;
+                }
+
+                .step-card.animated {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                }
+
+                .step-card:hover {
+                        transform: translateY(-10px) scale(1.02);
+                        box-shadow: 0 25px 60px rgba(99, 102, 241, 0.15);
+                        border-color: rgba(99, 102, 241, 0.25);
+                }
+
+                .step-icon-wrapper {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 20px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-bottom: 1.25rem;
+                        position: relative;
+                        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                }
+
+                .step-card:hover .step-icon-wrapper {
+                        transform: scale(1.1) rotate(-5deg);
+                }
+
+                .step-icon-wrapper i {
+                        font-size: 2rem;
+                        transition: all 0.4s ease;
+                }
+
+                .step-card:hover .step-icon-wrapper i {
+                        transform: scale(1.1);
+                }
+
+                .step-number {
+                        position: absolute;
+                        top: -18px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 44px;
+                        height: 44px;
+                        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #fff;
+                        font-weight: 700;
+                        font-size: 1.1rem;
+                        box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+                        z-index: 2;
+                        opacity: 0;
+                        transform: translateX(-50%) scale(0);
+                        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                }
+
+                .step-card.animated .step-number {
+                        opacity: 1;
+                        transform: translateX(-50%) scale(1);
+                }
+
+                .step-number::after {
+                        content: '';
+                        position: absolute;
+                        inset: -4px;
+                        border-radius: 50%;
+                        border: 2px solid rgba(99, 102, 241, 0.3);
+                        animation: step-pulse 2s ease-in-out infinite;
+                }
+
+                @keyframes step-pulse {
+
+                        0%,
+                        100% {
+                                transform: scale(1);
+                                opacity: 0.5;
+                        }
+
+                        50% {
+                                transform: scale(1.15);
+                                opacity: 0;
+                        }
+                }
+
+                .step-connector {
+                        position: absolute;
+                        top: 50%;
+                        left: 33.33%;
+                        width: 33.33%;
+                        height: 3px;
+                        background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+                        z-index: 0;
+                        transform-origin: left;
+                        transform: scaleX(0);
+                        transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .step-connector.second {
+                        left: 66.66%;
+                        transition-delay: 0.3s;
+                }
+
+                .step-connector.line-animated {
+                        transform: scaleX(1);
+                }
+
+                .step-card h5 {
+                        transition: color 0.3s ease;
+                }
+
+                .step-card:hover h5 {
+                        color: #6366f1;
+                }
+
+                /* Testimonials */
+                .testimonial-card {
+                        background: #fff;
+                        border-radius: 20px;
+                        padding: 2rem;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                        position: relative;
+                        opacity: 0;
+                        transform: translateY(30px);
+                        transition: all 0.4s ease;
+                        border: 1px solid rgba(99, 102, 241, 0.08);
+                }
+
+                .testimonial-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 15px 40px rgba(99, 102, 241, 0.1);
+                        border-color: rgba(99, 102, 241, 0.2);
+                }
+
+                .testimonial-card::before {
+                        content: '"';
+                        position: absolute;
+                        top: 10px;
+                        left: 20px;
+                        font-size: 5rem;
+                        font-family: Georgia, serif;
+                        color: rgba(99, 102, 241, 0.1);
+                        line-height: 1;
+                }
+
+                .testimonial-avatar {
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 3px solid #6366f1;
+                }
+
+                /* Newsletter Enhanced */
+                .newsletter-input-group {
+                        position: relative;
+                        max-width: 400px;
+                }
+
+                .newsletter-input-group input {
+                        padding-right: 130px;
+                        height: 55px;
+                        border-radius: 30px;
+                        border: 2px solid #e2e8f0;
+                        background: #f8fafc;
+                        color: #1e293b;
+                }
+
+                .newsletter-input-group input::placeholder {
+                        color: #94a3b8;
+                }
+
+                .newsletter-input-group button {
+                        position: absolute;
+                        right: 5px;
+                        top: 5px;
+                        height: 45px;
+                        border-radius: 25px;
+                        padding: 0 25px;
+                }
+
+                /* Ripple Effect */
+                .ripple {
+                        position: relative;
+                        overflow: hidden;
+                }
+
+                .ripple-effect {
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(99, 102, 241, 0.15);
+                        transform: scale(0);
+                        animation: ripple-animation 0.6s linear;
+                        pointer-events: none;
+                }
+
+                @keyframes ripple-animation {
+                        to {
+                                transform: scale(4);
+                                opacity: 0;
+                        }
+                }
+
+                /* Loading Skeleton */
+                .skeleton {
+                        background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+                        background-size: 200% 100%;
+                        animation: skeleton-loading 1.8s ease-in-out infinite;
+                        border-radius: 8px;
+                }
+
+                @keyframes skeleton-loading {
+                        0% {
+                                background-position: 200% 0;
+                        }
+
+                        100% {
+                                background-position: -200% 0;
+                        }
+                }
+
+
+
+                /* Reveal Animation Classes */
+                .reveal {
+                        opacity: 0;
+                        transform: translateY(30px);
+                        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .reveal.revealed {
+                        opacity: 1;
+                        transform: translateY(0);
+                }
+
+                .reveal-left {
+                        opacity: 0;
+                        transform: translateX(-50px);
+                        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .reveal-left.revealed {
+                        opacity: 1;
+                        transform: translateX(0);
+                }
+
+                .reveal-right {
+                        opacity: 0;
+                        transform: translateX(50px);
+                        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .reveal-right.revealed {
+                        opacity: 1;
+                        transform: translateX(0);
+                }
+
+                /* Stagger delay classes */
+                .delay-1 {
+                        transition-delay: 0.1s;
+                }
+
+                .delay-2 {
+                        transition-delay: 0.2s;
+                }
+
+                .delay-3 {
+                        transition-delay: 0.3s;
+                }
+
+                .delay-4 {
+                        transition-delay: 0.4s;
+                }
+
+                .delay-5 {
+                        transition-delay: 0.5s;
+                }
+
+                .delay-6 {
+                        transition-delay: 0.6s;
+                }
+
+                .delay-7 {
+                        transition-delay: 0.7s;
+                }
+
+                .delay-8 {
+                        transition-delay: 0.8s;
+                }
+
+                /* ========== WHITE THEME OVERRIDES ========== */
+                /* Navbar overrides */
+                .navbar-custom {
+                        background: #ffffff !important;
+                        box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06) !important;
+                }
+
+                .navbar-custom .nav-link {
+                        color: #475569 !important;
+                }
+
+                .navbar-custom .nav-link:hover,
+                .navbar-custom .nav-link.active {
+                        color: #6366f1 !important;
+                }
+
+                /* Hero overrides */
+                .hero-section {
+                        background: #ffffff !important;
+                }
+
+                .hero-section h1 {
+                        color: #0f172a !important;
+                }
+
+                .hero-section .lead {
+                        color: #64748b !important;
+                }
+
+                .btn-hero-outline {
+                        border-color: #cbd5e1 !important;
+                        color: #334155 !important;
+                }
+
+                .btn-hero-outline:hover {
+                        background: #f1f5f9 !important;
+                        border-color: #6366f1 !important;
+                        color: #6366f1 !important;
+                }
+
+                /* CTA overrides */
+                .cta-section {
+                        background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ede9fe 100%) !important;
+                }
+
+                /* Footer overrides */
+                .footer {
+                        background: #ffffff !important;
+                        border-top: 1px solid #e2e8f0;
+                }
+
+                .footer h5,
+                .footer h6 {
+                        color: #0f172a !important;
+                }
+
+                .footer-link:hover {
+                        color: #6366f1 !important;
+                }
+
+                .social-icon:hover {
+                        color: #6366f1 !important;
+                }
+        </style>
+</head>
+
+<body>
+        <!-- Scroll Progress Bar -->
+        <div class="scroll-progress" id="scrollProgress"></div>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-custom fixed-top"
+                style="background: #ffffff !important; box-shadow: 0 1px 12px rgba(0,0,0,0.06);">
+                <div class="container">
+                        <a class="navbar-brand fw-bold" href="index.html"
+                                style="background: linear-gradient(135deg, #0f172a, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <i class="bi bi-journal-bookmark-fill me-2"
+                                        style="-webkit-text-fill-color: #6366f1;"></i>PaperVault
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav">
+                                <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav me-auto">
+                                        <li class="nav-item">
+                                                <a class="nav-link active" href="index.html"
+                                                        style="color: #6366f1 !important;">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="papers.html"
+                                                        style="color: #475569 !important;">Papers</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="about.html"
+                                                        style="color: #475569 !important;">About</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="contact.html"
+                                                        style="color: #475569 !important;">Contact</a>
+                                        </li>
+                                </ul>
+                                <!-- Search Form -->
+                                <form class="d-flex me-3" id="searchForm">
+                                        <input class="form-control me-2" type="search" placeholder="Search papers..."
+                                                id="searchInput"
+                                                style="background: #f1f5f9; border-color: #e2e8f0; color: #1e293b;">
+                                        <button class="btn btn-outline-primary ripple" type="submit">
+                                                <i class="bi bi-search"></i>
+                                        </button>
+                                </form>
+                                <!-- Auth Buttons (shown when not logged in) -->
+                                <div id="authButtons">
+                                        <a href="login.html" class="btn btn-outline-primary me-2 ripple">Login</a>
+                                        <a href="register.html" class="btn btn-primary ripple"
+                                                style="color: #fff;">Register</a>
+                                </div>
+                                <!-- User Menu (shown when logged in) -->
+                                <div id="userMenu" class="dropdown d-none">
+                                        <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown">
+                                                <i class="bi bi-person-circle me-1"></i>
+                                                <span id="userName">User</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item" href="question-papers-dashboard.html"><i
+                                                                        class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                                                </li>
+                                                <li><a class="dropdown-item" href="bookmarks.html"><i
+                                                                        class="bi bi-bookmark me-2"></i>Bookmarks</a>
+                                                </li>
+                                                <li><a class="dropdown-item" href="profile.html"><i
+                                                                        class="bi bi-person me-2"></i>Profile</a></li>
+                                                <li>
+                                                        <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i
+                                                                        class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                                                </li>
+                                        </ul>
+                                </div>
+                                <!-- Admin Link (shown for admins) -->
+                                <a href="admin/dashboard.html" id="adminLink" class="btn btn-warning ms-2 d-none">
+                                        <i class="bi bi-gear me-1"></i>Admin
+                                </a>
+                        </div>
+                </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section py-5" style="margin-top: 56px; background: #ffffff !important;">
+                <div class="container py-5 position-relative">
+                        <div class="row align-items-center">
+                                <div class="col-lg-6 hero-content">
+                                        <span class="badge px-3 py-2 mb-3 hero-badge"
+                                                style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">
+                                                <i class="bi bi-mortarboard me-1"></i> RGUKT Question Paper Repository
+                                        </span>
+                                        <h1 class="display-4 fw-bold mb-4 hero-title"
+                                                style="color: #0f172a !important;">
+                                                RGUKT <span class="gradient-text">Question Paper</span>
+                                                Vault
+                                        </h1>
+                                        <p class="lead mb-4 hero-description" style="color: #64748b;">Access previous
+                                                year question papers for PUC 1, PUC 2 & Engineering (all branches) —
+                                                organized by semester, exam type & year. <span class="typing-text"
+                                                        id="typingText"></span></p>
+                                        <div class="d-flex gap-3 flex-wrap hero-buttons">
+                                                <a href="papers.html" class="btn btn-hero-primary btn-lg ripple">
+                                                        <i class="bi bi-search me-2"></i>Browse Papers
+                                                </a>
+                                                <a href="register.html" class="btn btn-hero-outline btn-lg ripple"
+                                                        style="border-color: #cbd5e1; color: #334155;">Get
+                                                        Started <i class="bi bi-arrow-right ms-1"></i></a>
+                                        </div>
+                                        <div class="mt-4 d-flex gap-4 hero-stats">
+                                                <div class="text-center">
+                                                        <h4 class="fw-bold mb-0" data-count="2400"
+                                                                style="color: #0f172a;">0</h4>
+                                                        <small style="color: #94a3b8;">Papers</small>
+                                                </div>
+                                                <div class="text-center">
+                                                        <h4 class="fw-bold mb-0" data-count="3000"
+                                                                style="color: #0f172a;">0</h4>
+                                                        <small style="color: #94a3b8;">Students</small>
+                                                </div>
+                                                <div class="text-center">
+                                                        <h4 class="fw-bold mb-0" data-count="5" style="color: #0f172a;">
+                                                                0</h4>
+                                                        <small style="color: #94a3b8;">Campuses</small>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="col-lg-6 text-center mt-5 mt-lg-0">
+                                        <img src="https://illustrations.popsy.co/amber/student-going-to-school.svg"
+                                                alt="Students" class="img-fluid floating hero-image"
+                                                style="max-height: 450px; filter: drop-shadow(0 20px 40px rgba(99,102,241,0.15));">
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section py-5">
+                <div class="container">
+                        <div class="row text-center g-4">
+                                <div class="col-md-3 col-6">
+                                        <div class="stat-card p-4 bg-white rounded-4 shadow-sm reveal delay-1">
+                                                <div class="stat-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                                        style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(129, 140, 248, 0.15) 100%);">
+                                                        <i class="bi bi-file-earmark-text fs-3 text-primary"></i>
+                                                </div>
+                                                <h2 class="fw-bold mb-1 counter" data-target="1000" id="totalPapers">0
+                                                </h2>
+                                                <p class="text-muted mb-0">Question Papers</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                        <div class="stat-card p-4 bg-white rounded-4 shadow-sm reveal delay-2">
+                                                <div class="stat-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                                        style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);">
+                                                        <i class="bi bi-people fs-3 text-success"></i>
+                                                </div>
+                                                <h2 class="fw-bold mb-1 counter" data-target="5000" id="totalUsers">0
+                                                </h2>
+                                                <p class="text-muted mb-0">Active Users</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                        <div class="stat-card p-4 bg-white rounded-4 shadow-sm reveal delay-3">
+                                                <div class="stat-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                                        style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(249, 115, 22, 0.15) 100%);">
+                                                        <i class="bi bi-download fs-3 text-warning"></i>
+                                                </div>
+                                                <h2 class="fw-bold mb-1 counter" data-target="50000"
+                                                        id="totalDownloads">0</h2>
+                                                <p class="text-muted mb-0">Downloads</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                        <div class="stat-card p-4 bg-white rounded-4 shadow-sm reveal delay-4">
+                                                <div class="stat-icon d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                                                        style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);">
+                                                        <i class="bi bi-building fs-3 text-danger"></i>
+                                                </div>
+                                                <h2 class="fw-bold mb-1 counter" data-target="50"
+                                                        id="totalUniversities">0</h2>
+                                                <p class="text-muted mb-0">Universities</p>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section py-5">
+                <div class="container">
+                        <div class="text-center mb-5">
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3 reveal">How It
+                                        Works</span>
+                                <h2 class="fw-bold reveal delay-1">Get Started in 3 Simple Steps</h2>
+                                <p class="text-muted reveal delay-2">Finding the right papers has never been easier</p>
+                        </div>
+                        <div class="row g-4 g-md-5 steps-row position-relative">
+                                <!-- Connector Lines (desktop only) -->
+                                <div class="step-connector d-none d-md-block" id="stepLine1"></div>
+                                <div class="step-connector second d-none d-md-block" id="stepLine2"></div>
+
+                                <div class="col-md-4">
+                                        <div class="step-card text-center h-100" data-step="1">
+                                                <div class="step-number">1</div>
+                                                <div class="step-icon-wrapper"
+                                                        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(129, 140, 248, 0.12) 100%);">
+                                                        <i class="bi bi-person-plus" style="color: #6366f1;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Create Account</h5>
+                                                <p class="text-muted mb-0">Sign up with your RGUKT ID for free in
+                                                        seconds.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="step-card text-center h-100" data-step="2">
+                                                <div class="step-number">2</div>
+                                                <div class="step-icon-wrapper"
+                                                        style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%);">
+                                                        <i class="bi bi-search" style="color: #10b981;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Search Papers</h5>
+                                                <p class="text-muted mb-0">Browse PUC & Engineering papers or filter by
+                                                        branch, semester & exam type.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="step-card text-center h-100" data-step="3">
+                                                <div class="step-number">3</div>
+                                                <div class="step-icon-wrapper"
+                                                        style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(249, 115, 22, 0.12) 100%);">
+                                                        <i class="bi bi-download" style="color: #f59e0b;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Download & Study</h5>
+                                                <p class="text-muted mb-0">Download Mid-1, Mid-2, End Sem & Supply
+                                                        papers instantly.</p>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- Recent Papers Section -->
+        <section class="recent-papers-section py-5">
+                <div class="container">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                        <span
+                                                class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-2 reveal">Latest</span>
+                                        <h2 class="fw-bold mb-0 reveal delay-1">Recently Added Papers</h2>
+                                </div>
+                                <a href="question-papers-dashboard.html"
+                                        class="btn btn-outline-primary ripple reveal delay-2">View All <i
+                                                class="bi bi-arrow-right ms-1"></i></a>
+                        </div>
+                        <div class="row g-4" id="recentPapers">
+                                <!-- Papers will be loaded dynamically -->
+                                <div class="col-12 text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section py-5 bg-light">
+                <div class="container">
+                        <div class="text-center mb-5">
+                                <span
+                                        class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3 reveal">Features</span>
+                                <h2 class="fw-bold reveal delay-1">Why Choose PaperVault?</h2>
+                                <p class="text-muted reveal delay-2">Everything you need to ace your RGUKT exams</p>
+                        </div>
+                        <div class="row g-4">
+                                <div class="col-md-4">
+                                        <div class="feature-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                                                <div class="feature-icon primary-icon rounded-3 p-3 d-inline-flex mb-4"
+                                                        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(129, 140, 248, 0.1) 100%);">
+                                                        <i class="bi bi-cloud-download display-5"
+                                                                style="color: #6366f1;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Free Downloads</h5>
+                                                <p class="text-muted mb-0">Download unlimited question papers for free.
+                                                        No hidden charges or subscriptions required.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="feature-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                                                <div class="feature-icon secondary-icon rounded-3 p-3 d-inline-flex mb-4"
+                                                        style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);">
+                                                        <i class="bi bi-shield-check display-5"
+                                                                style="color: #14b8a6;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Verified Content</h5>
+                                                <p class="text-muted mb-0">All papers are verified by our team to ensure
+                                                        accuracy and authenticity.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="feature-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                                                <div class="feature-icon accent-icon rounded-3 p-3 d-inline-flex mb-4"
+                                                        style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);">
+                                                        <i class="bi bi-lightning display-5"
+                                                                style="color: #f59e0b;"></i>
+                                                </div>
+                                                <h5 class="fw-semibold mb-3">Fast & Easy</h5>
+                                                <p class="text-muted mb-0">Find papers quickly with our powerful search
+                                                        and filter options.</p>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section py-5">
+                <div class="container">
+                        <div class="text-center mb-5">
+                                <span
+                                        class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3 reveal">Testimonials</span>
+                                <h2 class="fw-bold reveal delay-1">What Students Say</h2>
+                                <p class="text-muted reveal delay-2">Trusted by RGUKT students across all campuses</p>
+                        </div>
+                        <div class="row g-4">
+                                <div class="col-md-4">
+                                        <div class="testimonial-card">
+                                                <div class="d-flex align-items-center mb-3">
+                                                        <img src="https://i.pravatar.cc/100?img=1" alt="Student"
+                                                                class="testimonial-avatar me-3">
+                                                        <div>
+                                                                <h6 class="fw-semibold mb-0">Rahul Reddy</h6>
+                                                                <small class="text-muted">B.Tech CSE · RGUKT RK
+                                                                        Valley</small>
+                                                        </div>
+                                                </div>
+                                                <p class="text-muted mb-3">"PaperVault helped me score 9.5 GPA in my
+                                                        end semester exams! All CSE papers organized by semester — super
+                                                        helpful."</p>
+                                                <div class="text-warning">
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="testimonial-card">
+                                                <div class="d-flex align-items-center mb-3">
+                                                        <img src="https://i.pravatar.cc/100?img=5" alt="Student"
+                                                                class="testimonial-avatar me-3">
+                                                        <div>
+                                                                <h6 class="fw-semibold mb-0">Priya Sree</h6>
+                                                                <small class="text-muted">PUC 2 · RGUKT Nuzvid</small>
+                                                        </div>
+                                                </div>
+                                                <p class="text-muted mb-3">"Found all PUC-2 Maths IIA and Physics papers
+                                                        here. Really helped me prepare for end sems — well-organized and
+                                                        authentic."
+                                                </p>
+                                                <div class="text-warning">
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                        <div class="testimonial-card">
+                                                <div class="d-flex align-items-center mb-3">
+                                                        <img src="https://i.pravatar.cc/100?img=3" alt="Student"
+                                                                class="testimonial-avatar me-3">
+                                                        <div>
+                                                                <h6 class="fw-semibold mb-0">Amit Kumar</h6>
+                                                                <small class="text-muted">B.Tech ECE · RGUKT
+                                                                        Ongole</small>
+                                                        </div>
+                                                </div>
+                                                <p class="text-muted mb-3">"Best platform for RGUKT papers! I
+                                                        recommend PaperVault to all my batchmates — Mid-1, Mid-2, End
+                                                        Sem, everything is here."</p>
+                                                <div class="text-warning">
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-half"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section py-5 position-relative"
+                style="background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ede9fe 100%) !important;">
+                <div class="container text-center position-relative">
+                        <h2 class="fw-bold mb-3 reveal" style="color: #0f172a;">Ready to Ace Your RGUKT Exams?</h2>
+                        <p class="lead mb-4 reveal delay-1" style="color: #64748b;">Join RGUKT students across RK
+                                Valley, Nuzvid, Ongole, Srikakulam & Basar who trust PaperVault for exam prep.</p>
+                        <a href="register.html" class="btn btn-primary btn-lg px-5 ripple reveal delay-2"
+                                style="color: #fff;">
+                                <i class="bi bi-rocket-takeoff me-2"></i>Create Free Account
+                        </a>
+                </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer py-5" style="background: #ffffff !important; border-top: 1px solid #e2e8f0;">
+                <div class="container">
+                        <div class="row g-4">
+                                <div class="col-lg-4 col-md-6">
+                                        <h5 class="fw-bold mb-3" style="color: #0f172a;">
+                                                <i class="bi bi-journal-bookmark-fill me-2"
+                                                        style="color: #6366f1;"></i>PaperVault
+                                        </h5>
+                                        <p class="text-muted">Your trusted source for RGUKT previous year question
+                                                papers — PUC 1, PUC 2 & Engineering (all branches). Built for RGUKT
+                                                students, by RGUKT students.</p>
+                                        <div class="social-links d-flex gap-3">
+                                                <a href="#" class="social-icon" style="color: #64748b;"><i
+                                                                class="bi bi-facebook fs-5"></i></a>
+                                                <a href="#" class="social-icon" style="color: #64748b;"><i
+                                                                class="bi bi-twitter fs-5"></i></a>
+                                                <a href="#" class="social-icon" style="color: #64748b;"><i
+                                                                class="bi bi-instagram fs-5"></i></a>
+                                                <a href="#" class="social-icon" style="color: #64748b;"><i
+                                                                class="bi bi-linkedin fs-5"></i></a>
+                                        </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6">
+                                        <h6 class="fw-bold mb-3" style="color: #0f172a;">Quick Links</h6>
+                                        <ul class="list-unstyled">
+                                                <li class="mb-2"><a href="index.html"
+                                                                class="text-muted text-decoration-none footer-link">Home</a>
+                                                </li>
+                                                <li class="mb-2"><a href="papers.html"
+                                                                class="text-muted text-decoration-none footer-link">Papers</a>
+                                                </li>
+                                                <li class="mb-2"><a href="about.html"
+                                                                class="text-muted text-decoration-none footer-link">About</a>
+                                                </li>
+                                                <li class="mb-2"><a href="contact.html"
+                                                                class="text-muted text-decoration-none footer-link">Contact</a>
+                                                </li>
+                                        </ul>
+                                </div>
+                                <div class="col-lg-2 col-md-6">
+                                        <h6 class="fw-bold mb-3" style="color: #0f172a;">Categories</h6>
+                                        <ul class="list-unstyled">
+                                                <li class="mb-2"><a href="question-papers-dashboard.html#puc1"
+                                                                class="text-muted text-decoration-none footer-link">PUC
+                                                                1</a>
+                                                </li>
+                                                <li class="mb-2"><a href="question-papers-dashboard.html#puc2"
+                                                                class="text-muted text-decoration-none footer-link">PUC
+                                                                2</a>
+                                                </li>
+                                                <li class="mb-2"><a href="question-papers-dashboard.html#engg"
+                                                                class="text-muted text-decoration-none footer-link">Engineering</a>
+                                                </li>
+                                                <li class="mb-2"><a href="question-papers-dashboard.html#all"
+                                                                class="text-muted text-decoration-none footer-link">All
+                                                                Papers</a>
+                                                </li>
+                                        </ul>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                        <h6 class="fw-bold mb-3" style="color: #0f172a;">Newsletter</h6>
+                                        <p class="text-muted small">Subscribe to get updates on new papers and
+                                                features.</p>
+                                        <form class="newsletter-input-group" id="newsletterForm">
+                                                <input type="email" class="form-control" placeholder="Your email">
+                                                <button class="btn btn-primary" type="submit">Subscribe</button>
+                                        </form>
+                                </div>
+                        </div>
+                        <hr class="my-4" style="border-color: #e2e8f0;">
+                        <div class="row">
+                                <div class="col-md-6 text-center text-md-start">
+                                        <p class="text-muted mb-0">&copy; 2024 PaperVault. All rights reserved.</p>
+                                </div>
+                                <div class="col-md-6 text-center text-md-end">
+                                        <a href="#" class="text-muted text-decoration-none me-3 footer-link">Privacy
+                                                Policy</a>
+                                        <a href="#" class="text-muted text-decoration-none footer-link">Terms of
+                                                Service</a>
+                                </div>
+                        </div>
+                </div>
+        </footer>
+
+        <!-- Scroll To Top Button -->
+        <button class="scroll-to-top" id="scrollToTop">
+                <i class="bi bi-chevron-up"></i>
+        </button>
+
+        <!-- Toast Container -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JS -->
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/home.js"></script>
+
+        <!-- Animation Scripts -->
+        <script>
+                // ========== HERO ANIMATIONS ==========
+                document.addEventListener('DOMContentLoaded', function () {
+                        // Hero Section Staggered Animation
+                        const heroTimeline = anime.timeline({
+                                easing: 'easeOutExpo'
+                        });
+
+                        heroTimeline
+                                .add({
+                                        targets: '.hero-content',
+                                        opacity: [0, 1],
+                                        duration: 100
+                                })
+                                .add({
+                                        targets: '.hero-badge',
+                                        opacity: [0, 1],
+                                        translateY: [20, 0],
+                                        duration: 800
+                                })
+                                .add({
+                                        targets: '.hero-title',
+                                        opacity: [0, 1],
+                                        translateY: [30, 0],
+                                        duration: 800
+                                }, '-=600')
+                                .add({
+                                        targets: '.hero-description',
+                                        opacity: [0, 1],
+                                        translateY: [30, 0],
+                                        duration: 800
+                                }, '-=600')
+                                .add({
+                                        targets: '.hero-buttons',
+                                        opacity: [0, 1],
+                                        translateY: [30, 0],
+                                        duration: 800
+                                }, '-=600')
+                                .add({
+                                        targets: '.hero-stats',
+                                        opacity: [0, 1],
+                                        translateY: [30, 0],
+                                        duration: 800
+                                }, '-=500')
+                                .add({
+                                        targets: '.hero-image',
+                                        opacity: [0, 1],
+                                        translateX: [50, 0],
+                                        duration: 1000
+                                }, '-=800');
+
+                        // Hero Stats Counter Animation
+                        const heroCounters = document.querySelectorAll('.hero-stats h4[data-count]');
+                        heroCounters.forEach(counter => {
+                                const target = parseInt(counter.getAttribute('data-count'));
+                                anime({
+                                        targets: counter,
+                                        innerHTML: [0, target],
+                                        round: 1,
+                                        easing: 'easeInOutExpo',
+                                        duration: 2000,
+                                        delay: 1500,
+                                        update: function (anim) {
+                                                counter.innerHTML = Math.round(anim.animations[0].currentValue) + '+';
+                                        }
+                                });
+                        });
+
+                        // Typing Animation
+                        const typingTexts = ['Ace your RGUKT exams!', 'PUC & B.Tech papers!', 'All branches covered!', 'Mid & End Sem ready!'];
+                        let textIndex = 0;
+                        const typingElement = document.getElementById('typingText');
+
+                        function typeText() {
+                                const text = typingTexts[textIndex];
+                                let charIndex = 0;
+
+                                const typeInterval = setInterval(() => {
+                                        if (charIndex <= text.length) {
+                                                typingElement.textContent = text.substring(0, charIndex);
+                                                charIndex++;
+                                        } else {
+                                                clearInterval(typeInterval);
+                                                setTimeout(deleteText, 2000);
+                                        }
+                                }, 100);
+                        }
+
+                        function deleteText() {
+                                const text = typingElement.textContent;
+                                let charIndex = text.length;
+
+                                const deleteInterval = setInterval(() => {
+                                        if (charIndex >= 0) {
+                                                typingElement.textContent = text.substring(0, charIndex);
+                                                charIndex--;
+                                        } else {
+                                                clearInterval(deleteInterval);
+                                                textIndex = (textIndex + 1) % typingTexts.length;
+                                                setTimeout(typeText, 500);
+                                        }
+                                }, 50);
+                        }
+
+                        setTimeout(typeText, 2000);
+                });
+
+                // ========== SCROLL PROGRESS BAR ==========
+                window.addEventListener('scroll', function () {
+                        const scrollProgress = document.getElementById('scrollProgress');
+                        const scrollTop = document.documentElement.scrollTop;
+                        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        const progress = (scrollTop / scrollHeight) * 100;
+                        scrollProgress.style.width = progress + '%';
+                });
+
+                // ========== SCROLL TO TOP ==========
+                const scrollToTopBtn = document.getElementById('scrollToTop');
+
+                window.addEventListener('scroll', function () {
+                        if (window.scrollY > 300) {
+                                scrollToTopBtn.classList.add('visible');
+                        } else {
+                                scrollToTopBtn.classList.remove('visible');
+                        }
+                });
+
+                scrollToTopBtn.addEventListener('click', function () {
+                        anime({
+                                targets: 'html, body',
+                                scrollTop: 0,
+                                duration: 800,
+                                easing: 'easeInOutQuad'
+                        });
+                });
+
+                // ========== SCROLL REVEAL ANIMATIONS ==========
+                function revealOnScroll() {
+                        const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .feature-card, .testimonial-card');
+
+                        reveals.forEach(element => {
+                                const windowHeight = window.innerHeight;
+                                const elementTop = element.getBoundingClientRect().top;
+                                const revealPoint = 150;
+
+                                if (elementTop < windowHeight - revealPoint) {
+                                        element.classList.add('revealed');
+                                        element.style.opacity = '1';
+                                        element.style.transform = 'translateY(0) translateX(0)';
+                                }
+                        });
+                }
+
+                window.addEventListener('scroll', revealOnScroll);
+                revealOnScroll(); // Initial check
+
+                // ========== HOW IT WORKS STEP ANIMATION ==========
+                let stepsAnimated = false;
+
+                function animateSteps() {
+                        if (stepsAnimated) return;
+                        const stepsSection = document.querySelector('.how-it-works-section');
+                        if (!stepsSection) return;
+                        const sectionTop = stepsSection.getBoundingClientRect().top;
+                        if (sectionTop < window.innerHeight - 120) {
+                                stepsAnimated = true;
+                                const stepCards = document.querySelectorAll('.step-card');
+
+                                stepCards.forEach((card, index) => {
+                                        // Staggered card entrance with Anime.js
+                                        anime({
+                                                targets: card,
+                                                opacity: [0, 1],
+                                                translateY: [60, 0],
+                                                scale: [0.95, 1],
+                                                duration: 800,
+                                                delay: index * 250,
+                                                easing: 'easeOutCubic',
+                                                begin: function () {
+                                                        card.classList.add('animated');
+                                                }
+                                        });
+
+                                        // Icon wrapper bounce-in
+                                        const iconWrapper = card.querySelector('.step-icon-wrapper');
+                                        if (iconWrapper) {
+                                                anime({
+                                                        targets: iconWrapper,
+                                                        scale: [0, 1],
+                                                        rotate: ['15deg', '0deg'],
+                                                        duration: 600,
+                                                        delay: index * 250 + 400,
+                                                        easing: 'easeOutBack'
+                                                });
+                                        }
+                                });
+
+                                // Animate connector lines drawing across
+                                setTimeout(() => {
+                                        const line1 = document.getElementById('stepLine1');
+                                        const line2 = document.getElementById('stepLine2');
+                                        if (line1) line1.classList.add('line-animated');
+                                        setTimeout(() => {
+                                                if (line2) line2.classList.add('line-animated');
+                                        }, 400);
+                                }, 500);
+                        }
+                }
+
+                window.addEventListener('scroll', animateSteps);
+                animateSteps(); // Initial check
+
+                // ========== COUNTER ANIMATION ON SCROLL ==========
+                let countersAnimated = false;
+
+                function animateCounters() {
+                        if (countersAnimated) return;
+
+                        const counters = document.querySelectorAll('.counter');
+                        const statsSection = document.querySelector('.stats-section');
+
+                        if (!statsSection) return;
+
+                        const sectionTop = statsSection.getBoundingClientRect().top;
+                        const windowHeight = window.innerHeight;
+
+                        if (sectionTop < windowHeight - 100) {
+                                countersAnimated = true;
+
+                                counters.forEach(counter => {
+                                        const target = parseInt(counter.getAttribute('data-target'));
+                                        anime({
+                                                targets: counter,
+                                                innerHTML: [0, target],
+                                                round: 1,
+                                                easing: 'easeInOutExpo',
+                                                duration: 2500,
+                                                update: function (anim) {
+                                                        const value = Math.round(anim.animations[0].currentValue);
+                                                        counter.innerHTML = value.toLocaleString() + '+';
+                                                }
+                                        });
+                                });
+                        }
+                }
+
+                window.addEventListener('scroll', animateCounters);
+
+                // ========== RIPPLE EFFECT ==========
+                document.querySelectorAll('.ripple').forEach(button => {
+                        button.addEventListener('click', function (e) {
+                                const rect = this.getBoundingClientRect();
+                                const x = e.clientX - rect.left;
+                                const y = e.clientY - rect.top;
+
+                                const ripple = document.createElement('span');
+                                ripple.className = 'ripple-effect';
+                                ripple.style.left = x + 'px';
+                                ripple.style.top = y + 'px';
+
+                                this.appendChild(ripple);
+
+                                setTimeout(() => ripple.remove(), 600);
+                        });
+                });
+
+                // ========== FOOTER LINKS HOVER ==========
+                document.querySelectorAll('.footer-link').forEach(link => {
+                        link.addEventListener('mouseenter', function () {
+                                anime({
+                                        targets: this,
+                                        translateX: 5,
+                                        duration: 300,
+                                        easing: 'easeOutCubic'
+                                });
+                        });
+
+                        link.addEventListener('mouseleave', function () {
+                                anime({
+                                        targets: this,
+                                        translateX: 0,
+                                        duration: 300,
+                                        easing: 'easeOutCubic'
+                                });
+                        });
+                });
+
+                // ========== SOCIAL ICONS ANIMATION ==========
+                document.querySelectorAll('.social-icon').forEach(icon => {
+                        icon.addEventListener('mouseenter', function () {
+                                anime({
+                                        targets: this,
+                                        scale: 1.2,
+                                        duration: 300,
+                                        easing: 'easeOutCubic'
+                                });
+                        });
+
+                        icon.addEventListener('mouseleave', function () {
+                                anime({
+                                        targets: this,
+                                        scale: 1,
+                                        duration: 300,
+                                        easing: 'easeOutCubic'
+                                });
+                        });
+                });
+
+                // ========== NEWSLETTER FORM ANIMATION ==========
+                const newsletterForm = document.getElementById('newsletterForm');
+                if (newsletterForm) {
+                        newsletterForm.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                const button = this.querySelector('button');
+                                const originalText = button.innerHTML;
+
+                                anime({
+                                        targets: button,
+                                        scale: [1, 0.95, 1],
+                                        duration: 300,
+                                        easing: 'easeInOutQuad'
+                                });
+
+                                button.innerHTML = '<i class="bi bi-check-lg"></i> Subscribed!';
+                                button.disabled = true;
+
+                                setTimeout(() => {
+                                        button.innerHTML = originalText;
+                                        button.disabled = false;
+                                        this.reset();
+                                }, 3000);
+                        });
+                }
+        </script>
+</body>
+
+</html>

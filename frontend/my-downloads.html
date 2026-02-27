@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Downloads - PaperVault</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+  :root {
+    --indigo: #4F35D2;
+    --bg: #F4F3FF;
+    --surface: #FFFFFF;
+    --text: #1A1340;
+    --muted: #7B7A99;
+    --border: #E5E3F7;
+    --sidebar-w: 240px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+  .sidebar { width: var(--sidebar-w); background: var(--indigo); padding: 24px 14px; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; }
+  .logo-area { display: flex; align-items: center; gap: 12px; padding: 0 10px; margin-bottom: 28px; }
+  .logo-icon { background: rgba(255,255,255,0.18); border-radius: 14px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+  .logo-text { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
+  .logo-sub { font-size: 10px; color: rgba(255,255,255,0.55); }
+  .nav-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; padding: 16px 14px 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; color: rgba(255,255,255,0.65); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 2px; text-decoration: none; }
+  .nav-item:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .nav-item.active { background: rgba(255,255,255,0.22); color: #fff; font-weight: 700; }
+  .nav-item i { font-size: 17px; width: 20px; }
+  .logout-btn { margin-top: auto; padding: 12px 14px; background: rgba(239, 68, 68, 0.15); color: #EF4444; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; }
+  .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 32px; overflow-y: auto; }
+  .page-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+  .page-subtitle { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+  .downloads-table { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--bg); padding: 14px 20px; text-align: left; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+  td { padding: 16px 20px; border-top: 1px solid var(--border); font-size: 14px; }
+  .subject-name { font-weight: 600; color: var(--text); }
+  .download-date { color: var(--muted); font-size: 13px; }
+  .btn-icon { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: var(--indigo); color: white; }
+  @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo-area">
+    <div class="logo-icon"><i class="bi bi-journal-bookmark-fill" style="font-size: 24px; color: white;"></i></div>
+    <div><div class="logo-text">PaperVault</div><div class="logo-sub">RGUKT Paper Repository</div></div>
+  </div>
+  <div class="nav-label">Main</div>
+  <a class="nav-item" href="question-papers-dashboard.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+  <a class="nav-item" href="browse-papers.html"><i class="bi bi-file-earmark-text"></i> Browse Papers</a>
+  <a class="nav-item" href="upload-paper.html"><i class="bi bi-cloud-arrow-up"></i> Upload Paper</a>
+  <a class="nav-item" href="advanced-search.html"><i class="bi bi-search"></i> Advanced Search</a>
+  <div class="nav-label">Library</div>
+  <a class="nav-item" href="bookmarks.html"><i class="bi bi-bookmark-heart"></i> Bookmarks</a>
+  <a class="nav-item active" href="my-downloads.html"><i class="bi bi-download"></i> My Downloads</a>
+  <a class="nav-item" href="view-history.html"><i class="bi bi-clock-history"></i> View History</a>
+  <div class="nav-label">Account</div>
+  <a class="nav-item" href="my-profile.html"><i class="bi bi-person-circle"></i> My Profile</a>
+  <a class="nav-item" href="settings.html"><i class="bi bi-gear"></i> Settings</a>
+  <button class="logout-btn" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</button>
+</div>
+
+<div class="main-content">
+  <h1 class="page-title">My Downloads</h1>
+  <p class="page-subtitle">Papers you've downloaded</p>
+
+  <div class="downloads-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Branch</th>
+          <th>Exam Type</th>
+          <th>Downloaded On</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="subject-name">Data Structures</div></td>
+          <td>CSE</td>
+          <td>Mid-1</td>
+          <td><div class="download-date">Feb 25, 2026</div></td>
+          <td><button class="btn-icon" title="Download Again"><i class="bi bi-download"></i></button></td>
+        </tr>
+        <tr>
+          <td><div class="subject-name">Digital Electronics</div></td>
+          <td>ECE</td>
+          <td>End Sem</td>
+          <td><div class="download-date">Feb 24, 2026</div></td>
+          <td><button class="btn-icon"><i class="bi bi-download"></i></button></td>
+        </tr>
+        <tr>
+          <td><div class="subject-name">Mathematics IIA</div></td>
+          <td>PUC-2</td>
+          <td>Mid-2</td>
+          <td><div class="download-date">Feb 20, 2026</div></td>
+          <td><button class="btn-icon"><i class="bi bi-download"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+/* ============================================
+   PaperVault - Custom Styles
+   Modern Multi-Color Theme
+   ============================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   CSS Variables - Modern Color Palette
+   ============================================ */
+:root {
+        /* Primary - Deep Purple/Violet */
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+
+        /* Secondary - Teal */
+        --secondary-color: #14b8a6;
+        --secondary-dark: #0d9488;
+        --secondary-light: #2dd4bf;
+
+        /* Accent Colors */
+        --accent-orange: #f97316;
+        --accent-pink: #ec4899;
+        --accent-amber: #f59e0b;
+        --accent-emerald: #10b981;
+        --accent-rose: #f43f5e;
+        --accent-sky: #0ea5e9;
+
+        /* Neutral Colors */
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --info-color: #06b6d4;
+        --dark-color: #1e293b;
+        --light-color: #f8fafc;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #0f172a;
+
+        /* Gradients */
+        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        --gradient-secondary: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+        --gradient-warm: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
+        --gradient-cool: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        --gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+
+        /* Typography */
+        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-display: 'Poppins', var(--font-family);
+
+        /* Transitions & Effects */
+        --transition-speed: 0.3s;
+        --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+        --radius-full: 9999px;
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+}
+
+body {
+        font-family: var(--font-family);
+        background-color: var(--gray-50);
+        color: var(--gray-800);
+        line-height: 1.6;
+        overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--gray-900);
+}
+
+a {
+        transition: all var(--transition-speed) ease;
+        text-decoration: none;
+}
+
+img {
+        max-width: 100%;
+        height: auto;
+}
+
+/* ============================================
+   Custom Navbar - Gradient Style
+   ============================================ */
+.navbar-custom {
+        background: var(--gradient-dark) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-md);
+        padding: 0.75rem 0;
+}
+
+.navbar-custom .navbar-brand {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+}
+
+.navbar-custom .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        border-radius: var(--radius-md);
+        transition: all var(--transition-speed) ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-custom .btn-outline-light {
+        border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-custom .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Search Bar in Navbar */
+.navbar-custom .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: var(--radius-full);
+        padding-left: 1rem;
+}
+
+.navbar-custom .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-custom .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* ============================================
+   Hero Section - Modern Gradient
+   ============================================ */
+.hero-section {
+        background: var(--gradient-dark);
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+}
+
+.hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(20, 184, 166, 0.15) 0%, transparent 40%);
+        pointer-events: none;
+}
+
+.hero-section h1 {
+        color: #fff;
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+}
+
+.hero-section .lead {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.25rem;
+}
+
+.hero-section .btn-hero-primary {
+        background: var(--gradient-primary);
+        border: none;
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        border-radius: var(--radius-full);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        transition: all var(--transition-speed) ease;
+}
+
+.hero-section .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.hero-section .btn-hero-outline {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        border-radius: var(--radius-full);
+        color: #fff;
+        background: transparent;
+        transition: all var(--transition-speed) ease;
+}
+
+.hero-section .btn-hero-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: #fff;
+}
+
+/* ============================================
+   Card Styles - Modern Glass Effect
+   ============================================ */
+.card {
+        transition: all var(--transition-speed) ease;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--gray-200);
+        background: #fff;
+        overflow: hidden;
+}
+
+.card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+}
+
+.hover-shadow:hover {
+        box-shadow: var(--shadow-xl) !important;
+}
+
+/* Category Cards - Colorful */
+.category-card {
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        border: none !important;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+}
+
+.category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform var(--transition-speed) ease;
+}
+
+.category-card:hover::before {
+        transform: scaleX(1);
+}
+
+.category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+}
+
+.category-card i {
+        transition: all var(--transition-speed) var(--transition-bounce);
+}
+
+.category-card:hover i {
+        transform: scale(1.2);
+}
+
+/* Category Icon Colors */
+.category-card .text-primary {
+        color: var(--primary-color) !important;
+}
+
+.category-card .text-danger {
+        color: var(--accent-rose) !important;
+}
+
+.category-card .text-success {
+        color: var(--accent-emerald) !important;
+}
+
+.category-card .text-warning {
+        color: var(--accent-amber) !important;
+}
+
+.category-card .text-info {
+        color: var(--accent-sky) !important;
+}
+
+/* Paper Card - Modern Style */
+.paper-card {
+        height: 100%;
+        border: none;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-speed) ease;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+}
+
+.paper-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
+}
+
+.paper-card .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        background: var(--gradient-cool);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+}
+
+.paper-card .card-img-top i {
+        font-size: 4rem;
+        color: rgba(255, 255, 255, 0.8);
+}
+
+/* Stat Cards */
+/* Stat Cards - Modern Glassmorphism */
+.stat-card {
+        transition: all var(--transition-speed) ease;
+        border-radius: var(--radius-xl);
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        position: relative;
+        overflow: hidden;
+}
+
+.stat-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: var(--gradient-primary);
+        opacity: 0.05;
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+}
+
+.stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+}
+
+.stat-card .display-4 {
+        font-size: 2.5rem;
+}
+
+/* ============================================
+   Feature Section - Colorful Icons
+   ============================================ */
+.feature-card {
+        transition: all var(--transition-speed) ease;
+        background: #fff;
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+}
+
+.feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+}
+
+.feature-icon {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-speed) ease;
+}
+
+.feature-icon.primary-icon {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+}
+
+.feature-icon.secondary-icon {
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+}
+
+.feature-icon.accent-icon {
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+}
+
+/* ============================================
+   Auth Pages (Login/Register) - Modern
+   ============================================ */
+.login-section,
+.register-section,
+.forgot-password-section {
+        background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+        position: relative;
+        overflow: hidden;
+}
+
+.login-section::before,
+.register-section::before,
+.forgot-password-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 600px;
+        height: 600px;
+        background: var(--gradient-primary);
+        opacity: 0.05;
+        border-radius: 50%;
+}
+
+.auth-card {
+        border: none;
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        overflow: hidden;
+}
+
+.auth-card .card-body {
+        padding: 3rem;
+}
+
+/* ============================================
+   Page Header - Gradient Style
+   ============================================ */
+.page-header {
+        background: var(--gradient-dark);
+        position: relative;
+        overflow: hidden;
+}
+
+.page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+                radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+        pointer-events: none;
+}
+
+/* ============================================
+   Filters Sidebar - Modern
+   ============================================ */
+.sidebar .nav-link {
+        color: var(--gray-700);
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+        transition: all var(--transition-speed) ease;
+}
+
+.sidebar .nav-link:hover {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Paper Grid */
+.papers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+}
+
+/* List View */
+.paper-list-item {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-speed) ease;
+        border: 1px solid var(--gray-100);
+}
+
+.paper-list-item:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateX(5px);
+}
+
+/* ============================================
+   Paper Detail Page
+   ============================================ */
+.paper-meta i {
+        width: 20px;
+        color: var(--primary-color);
+}
+
+.rating-input i {
+        cursor: pointer;
+        color: #ddd;
+        transition: color var(--transition-speed);
+}
+
+.rating-input i:hover,
+.rating-input i.active {
+        color: var(--accent-amber);
+}
+
+/* ============================================
+   Dashboard - Modern Style
+   ============================================ */
+.dashboard-section .sidebar {
+        position: sticky;
+        top: 70px;
+}
+
+.avatar-placeholder {
+        font-size: 2rem;
+        background: var(--gradient-primary);
+}
+
+.dashboard-stat-card {
+        border: none;
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-speed) ease;
+        overflow: hidden;
+}
+
+.dashboard-stat-card.primary {
+        background: var(--gradient-primary);
+}
+
+.dashboard-stat-card.secondary {
+        background: var(--gradient-secondary);
+}
+
+.dashboard-stat-card.warm {
+        background: var(--gradient-warm);
+}
+
+.dashboard-stat-card.cool {
+        background: var(--gradient-cool);
+}
+
+.dashboard-stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+}
+
+/* ============================================
+   Admin Sidebar - Modern
+   ============================================ */
+.admin-sidebar {
+        background: var(--gradient-dark);
+        min-height: calc(100vh - 56px);
+}
+
+.admin-sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.875rem 1.25rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.25rem;
+        transition: all var(--transition-speed) ease;
+}
+
+.admin-sidebar .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .nav-link.active {
+        color: #fff;
+        background: var(--gradient-primary);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+@media (min-width: 768px) {
+        .sidebar {
+                position: sticky;
+                top: 56px;
+                height: calc(100vh - 56px);
+                overflow-y: auto;
+        }
+}
+
+/* ============================================
+   Footer - Dark Modern
+   ============================================ */
+.footer {
+        margin-top: auto;
+        background: var(--gradient-dark);
+}
+
+.footer .social-links a {
+        font-size: 1.25rem;
+        transition: opacity var(--transition-speed);
+}
+
+.footer .social-links a:hover {
+        opacity: 0.8;
+}
+
+/* ============================================
+   Toast Notifications - Modern
+   ============================================ */
+.toast-container .toast {
+        border-radius: var(--radius-lg);
+        border: none;
+        box-shadow: var(--shadow-lg);
+}
+
+.toast.bg-success {
+        background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%) !important;
+}
+
+.toast.bg-danger {
+        background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%) !important;
+}
+
+/* ============================================
+   Loading States - Shimmer Effect
+   ============================================ */
+.skeleton {
+        background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+        border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-loading {
+        0% {
+                background-position: 200% 0;
+        }
+
+        100% {
+                background-position: -200% 0;
+        }
+}
+
+/* ============================================
+   Pagination - Modern
+   ============================================ */
+.pagination .page-link {
+        border-radius: var(--radius-md);
+        margin: 0 0.2rem;
+        border: none;
+        color: var(--gray-700);
+        font-weight: 500;
+        padding: 0.5rem 0.875rem;
+        transition: all var(--transition-speed) ease;
+}
+
+.pagination .page-link:hover {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        color: var(--primary-color);
+}
+
+.pagination .page-item.active .page-link {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+/* ============================================
+   Form Styles - Modern
+   ============================================ */
+.form-control,
+.form-select {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--gray-300);
+        padding: 0.75rem 1rem;
+        transition: all var(--transition-speed) ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.input-group-text {
+        background-color: var(--gray-50);
+        border-color: var(--gray-300);
+        border-radius: var(--radius-md);
+        color: var(--gray-500);
+}
+
+/* ============================================
+   Button Styles - Modern Gradients
+   ============================================ */
+.btn {
+        border-radius: var(--radius-md);
+        font-weight: 500;
+        padding: 0.625rem 1.25rem;
+        transition: all var(--transition-speed) ease;
+        border: none;
+}
+
+.btn-primary {
+        background: var(--gradient-primary);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.btn-primary:hover {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+}
+
+.btn-secondary {
+        background: var(--gradient-secondary);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(20, 184, 166, 0.25);
+}
+
+.btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(20, 184, 166, 0.35);
+}
+
+.btn-outline-primary {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        background: transparent;
+}
+
+.btn-outline-primary:hover {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        color: #fff;
+}
+
+.btn-light {
+        background: #fff;
+        color: var(--gray-800);
+        box-shadow: var(--shadow-sm);
+}
+
+.btn-light:hover {
+        background: var(--gray-50);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+}
+
+.btn-warning {
+        background: linear-gradient(135deg, var(--accent-amber) 0%, var(--accent-orange) 100%);
+        color: #fff;
+}
+
+.btn-success {
+        background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
+        color: #fff;
+}
+
+.btn-danger {
+        background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
+        color: #fff;
+}
+
+/* ============================================
+   Utility Classes - Extended
+   ============================================ */
+.text-gradient {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+}
+
+.text-gradient-warm {
+        background: var(--gradient-warm);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+}
+
+.bg-gradient-primary {
+        background: var(--gradient-primary) !important;
+}
+
+.bg-gradient-secondary {
+        background: var(--gradient-secondary) !important;
+}
+
+.bg-gradient-dark {
+        background: var(--gradient-dark) !important;
+}
+
+.bg-gradient-warm {
+        background: var(--gradient-warm) !important;
+}
+
+/* Color overrides for icons */
+.text-primary {
+        color: var(--primary-color) !important;
+}
+
+.text-secondary {
+        color: var(--secondary-color) !important;
+}
+
+.text-success {
+        color: var(--accent-emerald) !important;
+}
+
+.text-danger {
+        color: var(--accent-rose) !important;
+}
+
+.text-warning {
+        color: var(--accent-amber) !important;
+}
+
+.text-info {
+        color: var(--accent-sky) !important;
+}
+
+/* Badge styles */
+.badge {
+        padding: 0.5em 0.85em;
+        font-weight: 500;
+        border-radius: var(--radius-full);
+}
+
+.badge.bg-primary {
+        background: var(--gradient-primary) !important;
+}
+
+/* CTA Section */
+.cta-section {
+        background: var(--gradient-dark);
+        position: relative;
+        overflow: hidden;
+}
+
+.cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+@media (max-width: 768px) {
+        .hero-section {
+                min-height: auto;
+                padding: 3rem 0;
+        }
+
+        .hero-section h1 {
+                font-size: 2rem;
+        }
+
+        .stat-card {
+                padding: 1rem !important;
+        }
+
+        .category-card {
+                padding: 1.5rem !important;
+        }
+}
+
+@media (max-width: 576px) {
+        .navbar-brand {
+                font-size: 1.25rem;
+        }
+
+        .btn-lg {
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+        }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+        from {
+                opacity: 0;
+                transform: translateY(20px);
+        }
+
+        to {
+                opacity: 1;
+                transform: translateY(0);
+        }
+}
+
+.fade-in {
+        animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes pulse {
+
+        0%,
+        100% {
+                transform: scale(1);
+        }
+
+        50% {
+                transform: scale(1.05);
+        }
+}
+
+.pulse {
+        animation: pulse 2s infinite;
+}
+
+/* ============================================
+   Scrollbar Styles
+   ============================================ */
+::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+}
+
+::-webkit-scrollbar-track {
+        background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+        background: #a1a1a1;
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+
+        .navbar,
+        .footer,
+        .sidebar,
+        .btn {
+                display: none !important;
+        }
+
+        .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+        }
+}

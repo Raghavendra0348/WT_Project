@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login / Sign Up - PaperVault</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+                rel="stylesheet">
+        <style>
+                * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                }
+
+                body {
+                        font-family: 'Inter', sans-serif;
+                        min-height: 100vh;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 2rem;
+                        overflow: hidden;
+                }
+
+                /* Main Container */
+                .auth-container {
+                        background: #1a1a1a;
+                        border-radius: 24px;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                        max-width: 900px;
+                        width: 100%;
+                        min-height: 550px;
+                        position: relative;
+                        overflow: hidden;
+                }
+
+                /* Forms Wrapper - Contains both forms */
+                .forms-wrapper {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 50%;
+                        height: 100%;
+                        z-index: 5;
+                        transition: left 0.8s cubic-bezier(0.68, -0.15, 0.32, 1.15);
+                }
+
+                .auth-container.signup-mode .forms-wrapper {
+                        left: 50%;
+                }
+
+                /* Form Box */
+                .form-box {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        padding: 2.5rem;
+                        opacity: 1;
+                        transform: scale(1);
+                        transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .form-box.login-form {
+                        opacity: 1;
+                        pointer-events: auto;
+                        transform: scale(1);
+                        transition-delay: 0.15s;
+                }
+
+                .form-box.signup-form {
+                        opacity: 0;
+                        pointer-events: none;
+                        transform: scale(0.92);
+                }
+
+                .auth-container.signup-mode .form-box.login-form {
+                        opacity: 0;
+                        pointer-events: none;
+                        transform: scale(0.92);
+                        transition-delay: 0s;
+                }
+
+                .auth-container.signup-mode .form-box.signup-form {
+                        opacity: 1;
+                        pointer-events: auto;
+                        transform: scale(1);
+                        transition-delay: 0.15s;
+                }
+
+                .form-box h1 {
+                        color: #ffffff;
+                        font-size: 2rem;
+                        font-weight: 700;
+                        margin-bottom: 0.5rem;
+                        font-family: 'Poppins', sans-serif;
+                }
+
+                .form-box .subtitle {
+                        color: #888;
+                        font-size: 0.9rem;
+                        margin-bottom: 1.5rem;
+                }
+
+                /* Input Fields */
+                .auth-input-group {
+                        position: relative;
+                        margin-bottom: 1.1rem;
+                }
+
+                .auth-input-group input {
+                        width: 100%;
+                        background: transparent;
+                        border: none;
+                        border-bottom: 1px solid #333;
+                        padding: 10px 40px 10px 0;
+                        color: #fff;
+                        font-size: 0.9rem;
+                        transition: border-color 0.3s ease;
+                }
+
+                .auth-input-group input::placeholder {
+                        color: #666;
+                }
+
+                .auth-input-group input:focus {
+                        outline: none;
+                        border-bottom-color: #8b5cf6;
+                }
+
+                .auth-input-group .toggle-password {
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: none;
+                        color: #666;
+                        cursor: pointer;
+                        padding: 0;
+                        transition: color 0.3s;
+                }
+
+                .auth-input-group .toggle-password:hover {
+                        color: #8b5cf6;
+                }
+
+                .auth-input-group .form-text {
+                        color: #555;
+                        font-size: 0.65rem;
+                        margin-top: 0.2rem;
+                }
+
+                /* Row for name fields */
+                .name-row {
+                        display: flex;
+                        gap: 1rem;
+                }
+
+                .name-row .auth-input-group {
+                        flex: 1;
+                }
+
+                /* Forgot Password Link */
+                .forgot-link {
+                        color: #888;
+                        font-size: 0.8rem;
+                        text-decoration: none;
+                        display: inline-block;
+                        margin-bottom: 1rem;
+                        transition: color 0.3s ease;
+                }
+
+                .forgot-link:hover {
+                        color: #8b5cf6;
+                }
+
+                /* Checkbox Styling */
+                .auth-checkbox {
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 8px;
+                        margin-bottom: 1rem;
+                }
+
+                .auth-checkbox input[type="checkbox"] {
+                        width: 14px;
+                        height: 14px;
+                        accent-color: #8b5cf6;
+                        margin-top: 2px;
+                }
+
+                .auth-checkbox label {
+                        color: #888;
+                        font-size: 0.75rem;
+                        line-height: 1.4;
+                }
+
+                .auth-checkbox label a {
+                        color: #8b5cf6;
+                        text-decoration: none;
+                }
+
+                /* Auth Button */
+                .auth-btn-primary {
+                        width: 100%;
+                        padding: 12px;
+                        background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+                        border: none;
+                        border-radius: 50px;
+                        color: #fff;
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+                }
+
+                .auth-btn-primary:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+                }
+
+                /* Switch Section */
+                .switch-section {
+                        margin-top: 1.2rem;
+                        text-align: center;
+                }
+
+                .switch-section span {
+                        color: #666;
+                        font-size: 0.85rem;
+                }
+
+                .switch-btn {
+                        background: #2a2a2a;
+                        color: #fff;
+                        border: none;
+                        padding: 8px 18px;
+                        border-radius: 6px;
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                        margin-left: 8px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                }
+
+                .switch-btn:hover {
+                        background: #3a3a3a;
+                }
+
+                /* Demo Credentials */
+                .demo-credentials {
+                        background: rgba(139, 92, 246, 0.1);
+                        border: 1px solid rgba(139, 92, 246, 0.2);
+                        border-radius: 8px;
+                        padding: 0.6rem;
+                        margin-top: 1rem;
+                }
+
+                .demo-credentials h6 {
+                        color: #a78bfa;
+                        font-size: 0.7rem;
+                        margin-bottom: 0.2rem;
+                }
+
+                .demo-credentials p {
+                        color: #888;
+                        font-size: 0.65rem;
+                        margin: 0;
+                }
+
+                /* Alert Styles */
+                .auth-alert {
+                        padding: 8px 12px;
+                        border-radius: 8px;
+                        margin-bottom: 1rem;
+                        font-size: 0.8rem;
+                }
+
+                .auth-alert.error {
+                        background: rgba(239, 68, 68, 0.1);
+                        border: 1px solid rgba(239, 68, 68, 0.3);
+                        color: #fca5a5;
+                }
+
+                .auth-alert.success {
+                        background: rgba(16, 185, 129, 0.1);
+                        border: 1px solid rgba(16, 185, 129, 0.3);
+                        color: #6ee7b7;
+                }
+
+                /* Back to Home Link */
+                .back-home {
+                        color: rgba(255, 255, 255, 0.7);
+                        text-decoration: none;
+                        font-size: 0.8rem;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        margin-bottom: 1rem;
+                        transition: color 0.3s ease;
+                }
+
+                .back-home:hover {
+                        color: #fff;
+                }
+
+                /* ========== ILLUSTRATION PANELS ========== */
+                .panels-container {
+                        position: absolute;
+                        top: 0;
+                        left: 50%;
+                        width: 50%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 6;
+                        transition: left 0.8s cubic-bezier(0.68, -0.15, 0.32, 1.15);
+                        overflow: hidden;
+                }
+
+                .auth-container.signup-mode .panels-container {
+                        left: 0;
+                }
+
+                .panel {
+                        position: absolute;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        text-align: center;
+                        padding: 2rem;
+                        width: 100%;
+                        height: 100%;
+                        transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .panel.left-panel {
+                        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+                        border-radius: 0 24px 24px 0;
+                        pointer-events: none;
+                        opacity: 0;
+                        transform: translateX(30%);
+                }
+
+                .auth-container.signup-mode .panel.left-panel {
+                        pointer-events: auto;
+                        opacity: 1;
+                        transform: translateX(0);
+                        border-radius: 24px 0 0 24px;
+                        transition-delay: 0.1s;
+                }
+
+                .panel.right-panel {
+                        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+                        border-radius: 24px 0 0 24px;
+                        pointer-events: auto;
+                        opacity: 1;
+                        transform: translateX(0);
+                }
+
+                .auth-container.signup-mode .panel.right-panel {
+                        pointer-events: none;
+                        opacity: 0;
+                        transform: translateX(-30%);
+                        transition-delay: 0s;
+                }
+
+                .panel img {
+                        max-width: 250px;
+                        width: 100%;
+                        filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.2));
+                        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .panel:hover img {
+                        transform: scale(1.03) translateY(-5px);
+                }
+
+                /* Decorative circles on panels */
+                .panel::before {
+                        content: '';
+                        position: absolute;
+                        top: -40px;
+                        right: -40px;
+                        width: 180px;
+                        height: 180px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                }
+
+                .panel::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -30px;
+                        left: -30px;
+                        width: 120px;
+                        height: 120px;
+                        background: rgba(255, 255, 255, 0.08);
+                        border-radius: 50%;
+                }
+
+                .panel .content {
+                        z-index: 1;
+                }
+
+                .panel h2 {
+                        color: #fff;
+                        font-size: 1.6rem;
+                        font-weight: 700;
+                        font-family: 'Poppins', sans-serif;
+                        margin-bottom: 0.3rem;
+                        transition: transform 0.5s ease;
+                }
+
+                .panel h2 span {
+                        font-weight: 400;
+                        display: block;
+                }
+
+                .panel p {
+                        color: rgba(255, 255, 255, 0.85);
+                        font-size: 0.85rem;
+                        margin-bottom: 1.5rem;
+                        transition: transform 0.5s ease 0.05s;
+                }
+
+                /* ========== RESPONSIVE ========== */
+                @media (max-width: 768px) {
+                        body {
+                                padding: 1rem;
+                        }
+
+                        .auth-container {
+                                min-height: auto;
+                                max-width: 400px;
+                        }
+
+                        .forms-wrapper {
+                                width: 100%;
+                                position: relative;
+                                height: auto;
+                        }
+
+                        .auth-container.signup-mode .forms-wrapper {
+                                left: 0;
+                        }
+
+                        .form-box {
+                                position: relative;
+                                padding: 2rem;
+                        }
+
+                        .form-box.signup-form {
+                                display: none;
+                        }
+
+                        .auth-container.signup-mode .form-box.login-form {
+                                display: none;
+                        }
+
+                        .auth-container.signup-mode .form-box.signup-form {
+                                display: flex;
+                                opacity: 1;
+                                pointer-events: auto;
+                        }
+
+                        .panels-container {
+                                display: none;
+                        }
+
+                        .name-row {
+                                flex-direction: column;
+                                gap: 0;
+                        }
+                }
+        </style>
+</head>
+
+<body>
+        <div class="auth-container" id="authContainer">
+                <!-- Forms Wrapper -->
+                <div class="forms-wrapper">
+                        <!-- Login Form -->
+                        <div class="form-box login-form">
+                                <a href="index.html" class="back-home">
+                                        <i class="bi bi-arrow-left"></i>
+                                        Back to Home
+                                </a>
+
+                                <h1>Login</h1>
+                                <p class="subtitle">Enter your account details</p>
+
+                                <div class="auth-alert error d-none" id="loginError">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <span id="loginErrorText"></span>
+                                </div>
+
+                                <form id="loginForm">
+                                        <div class="auth-input-group">
+                                                <input type="email" id="loginEmail" name="email" placeholder="Username"
+                                                        required>
+                                        </div>
+
+                                        <div class="auth-input-group">
+                                                <input type="password" id="loginPassword" name="password"
+                                                        placeholder="Password" required>
+                                                <button type="button" class="toggle-password"
+                                                        onclick="togglePassword('loginPassword', this)">
+                                                        <i class="bi bi-eye"></i>
+                                                </button>
+                                        </div>
+
+                                        <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+
+                                        <button type="submit" class="auth-btn-primary" id="loginBtn">
+                                                <span class="spinner-border spinner-border-sm d-none me-2"
+                                                        id="loginSpinner"></span>
+                                                Login
+                                        </button>
+                                </form>
+
+                                <div class="demo-credentials">
+                                        <h6><i class="bi bi-info-circle me-1"></i> Demo Credentials</h6>
+                                        <p><strong>User:</strong> user@example.com / password123</p>
+                                        <p><strong>Admin:</strong> admin@example.com / admin123</p>
+                                </div>
+
+                                <div class="switch-section">
+                                        <span>Don't have an account?</span>
+                                        <button class="switch-btn" onclick="toggleMode()">Sign up</button>
+                                </div>
+                        </div>
+
+                        <!-- Signup Form -->
+                        <div class="form-box signup-form">
+                                <a href="index.html" class="back-home">
+                                        <i class="bi bi-arrow-left"></i>
+                                        Back to Home
+                                </a>
+
+                                <h1>Sign Up</h1>
+                                <p class="subtitle">Create your PaperVault account</p>
+
+                                <div class="auth-alert error d-none" id="registerError">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <span id="registerErrorText"></span>
+                                </div>
+
+                                <div class="auth-alert success d-none" id="registerSuccess">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <span id="registerSuccessText"></span>
+                                </div>
+
+                                <form id="registerForm">
+                                        <div class="name-row">
+                                                <div class="auth-input-group">
+                                                        <input type="text" id="firstName" name="firstName"
+                                                                placeholder="First Name" required>
+                                                </div>
+                                                <div class="auth-input-group">
+                                                        <input type="text" id="lastName" name="lastName"
+                                                                placeholder="Last Name" required>
+                                                </div>
+                                        </div>
+
+                                        <div class="auth-input-group">
+                                                <input type="email" id="registerEmail" name="email"
+                                                        placeholder="Email Address" required>
+                                        </div>
+
+                                        <div class="auth-input-group">
+                                                <input type="password" id="registerPassword" name="password"
+                                                        placeholder="Password" required minlength="6">
+                                                <button type="button" class="toggle-password"
+                                                        onclick="togglePassword('registerPassword', this)">
+                                                        <i class="bi bi-eye"></i>
+                                                </button>
+                                                <div class="form-text">Min 6 characters</div>
+                                        </div>
+
+                                        <div class="auth-input-group">
+                                                <input type="password" id="confirmPassword" name="confirmPassword"
+                                                        placeholder="Confirm Password" required>
+                                                <button type="button" class="toggle-password"
+                                                        onclick="togglePassword('confirmPassword', this)">
+                                                        <i class="bi bi-eye"></i>
+                                                </button>
+                                        </div>
+
+                                        <div class="auth-checkbox">
+                                                <input type="checkbox" id="agreeTerms" required>
+                                                <label for="agreeTerms">
+                                                        I agree to the <a href="#">Terms</a> and <a href="#">Privacy
+                                                                Policy</a>
+                                                </label>
+                                        </div>
+
+                                        <button type="submit" class="auth-btn-primary" id="registerBtn">
+                                                <span class="spinner-border spinner-border-sm d-none me-2"
+                                                        id="registerSpinner"></span>
+                                                Create Account
+                                        </button>
+                                </form>
+
+                                <div class="switch-section">
+                                        <span>Already have an account?</span>
+                                        <button class="switch-btn" onclick="toggleMode()">Login</button>
+                                </div>
+                        </div>
+                </div>
+
+                <!-- Illustration Panels -->
+                <div class="panels-container">
+                        <!-- Left Panel (shows when signup mode) -->
+                        <div class="panel left-panel">
+                                <div class="content">
+                                        <h2>Welcome to<span>student portal</span></h2>
+                                        <p>Already have an account? Login now!</p>
+                                        <img src="/home/a-raghavendra/Desktop/WT_PROJECT/WT_Project/files/papervault-complete-project/papervault-project/Login-pana.svg"
+                                                alt="Login Illustration">
+                                </div>
+                        </div>
+
+                        <!-- Right Panel (shows when login mode) -->
+                        <div class="panel right-panel">
+                                <div class="content">
+                                        <h2>Welcome to<span>student portal</span></h2>
+                                        <p>Login to access your account</p>
+                                        <img src="/home/a-raghavendra/Desktop/WT_PROJECT/WT_Project/files/papervault-complete-project/papervault-project/Login-pana.svg"
+                                                alt="Signup Illustration">
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JS -->
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+
+        <script>
+                const authContainer = document.getElementById('authContainer');
+
+                // Toggle between login and signup
+                function toggleMode() {
+                        authContainer.classList.toggle('signup-mode');
+                }
+
+                // Toggle password visibility
+                function togglePassword(inputId, btn) {
+                        const input = document.getElementById(inputId);
+                        const icon = btn.querySelector('i');
+
+                        if (input.type === 'password') {
+                                input.type = 'text';
+                                icon.classList.remove('bi-eye');
+                                icon.classList.add('bi-eye-slash');
+                        } else {
+                                input.type = 'password';
+                                icon.classList.remove('bi-eye-slash');
+                                icon.classList.add('bi-eye');
+                        }
+                }
+
+                // Check URL hash on page load
+                if (window.location.hash === '#signup' || window.location.hash === '#register') {
+                        authContainer.classList.add('signup-mode');
+                }
+
+                // Login Form Handler
+                document.getElementById('loginForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        const email = document.getElementById('loginEmail').value;
+                        const password = document.getElementById('loginPassword').value;
+                        const loginBtn = document.getElementById('loginBtn');
+                        const loginSpinner = document.getElementById('loginSpinner');
+                        const loginError = document.getElementById('loginError');
+                        const loginErrorText = document.getElementById('loginErrorText');
+
+                        loginBtn.disabled = true;
+                        loginSpinner.classList.remove('d-none');
+                        loginError.classList.add('d-none');
+
+                        try {
+                                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ email, password })
+                                });
+
+                                const data = await response.json();
+
+                                if (response.ok) {
+                                        localStorage.setItem('token', data.token);
+                                        localStorage.setItem('user', JSON.stringify(data.user));
+
+                                        if (data.user.role === 'admin') {
+                                                window.location.href = 'admin/dashboard.html';
+                                        } else {
+                                                window.location.href = 'question-papers-dashboard.html';
+                                        }
+                                } else {
+                                        loginErrorText.textContent = data.message || 'Invalid credentials';
+                                        loginError.classList.remove('d-none');
+                                }
+                        } catch (error) {
+                                loginErrorText.textContent = 'Connection error. Please try again.';
+                                loginError.classList.remove('d-none');
+                        } finally {
+                                loginBtn.disabled = false;
+                                loginSpinner.classList.add('d-none');
+                        }
+                });
+
+                // Register Form Handler
+                document.getElementById('registerForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        const firstName = document.getElementById('firstName').value;
+                        const lastName = document.getElementById('lastName').value;
+                        const email = document.getElementById('registerEmail').value;
+                        const password = document.getElementById('registerPassword').value;
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+
+                        const registerBtn = document.getElementById('registerBtn');
+                        const registerSpinner = document.getElementById('registerSpinner');
+                        const registerError = document.getElementById('registerError');
+                        const registerErrorText = document.getElementById('registerErrorText');
+                        const registerSuccess = document.getElementById('registerSuccess');
+                        const registerSuccessText = document.getElementById('registerSuccessText');
+
+                        if (password !== confirmPassword) {
+                                registerErrorText.textContent = 'Passwords do not match';
+                                registerError.classList.remove('d-none');
+                                return;
+                        }
+
+                        registerBtn.disabled = true;
+                        registerSpinner.classList.remove('d-none');
+                        registerError.classList.add('d-none');
+                        registerSuccess.classList.add('d-none');
+
+                        try {
+                                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ firstName, lastName, email, password })
+                                });
+
+                                const data = await response.json();
+
+                                if (response.ok) {
+                                        registerSuccessText.textContent = 'Account created! Redirecting to login...';
+                                        registerSuccess.classList.remove('d-none');
+
+                                        setTimeout(() => {
+                                                toggleMode();
+                                                document.getElementById('loginEmail').value = email;
+                                        }, 2000);
+                                } else {
+                                        registerErrorText.textContent = data.message || 'Registration failed';
+                                        registerError.classList.remove('d-none');
+                                }
+                        } catch (error) {
+                                registerErrorText.textContent = 'Connection error. Please try again.';
+                                registerError.classList.remove('d-none');
+                        } finally {
+                                registerBtn.disabled = false;
+                                registerSpinner.classList.add('d-none');
+                        }
+                });
+        </script>
+</body>
+
+</html>

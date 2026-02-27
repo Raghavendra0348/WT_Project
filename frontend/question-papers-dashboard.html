@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaperVault – RGUKT Question Papers Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --indigo: #4F35D2;
+      --indigo-light: #6B52E8;
+      --indigo-dark: #3520B0;
+      --violet: #7C3AED;
+      --accent: #F59E0B;
+      --accent2: #10B981;
+      --bg: #F4F3FF;
+      --surface: #FFFFFF;
+      --text: #1A1340;
+      --muted: #7B7A99;
+      --border: #E5E3F7;
+      --sidebar-w: 240px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--indigo);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 14px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 16px 14px 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nav-item i {
+      font-size: 17px;
+      width: 20px;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 50px;
+    }
+
+    .nav-spacer {
+      flex: 1;
+    }
+
+    .campus-selector {
+      margin: 16px 8px 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .campus-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .campus-select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .campus-select option {
+      color: var(--text);
+      background: #fff;
+    }
+
+    .nav-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-logout:hover {
+      color: #fff;
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .nav-logout i {
+      font-size: 17px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* ─── MOBILE TOGGLE ─── */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 200;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--indigo);
+      color: #fff;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 90;
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 24px 28px;
+      min-height: 100vh;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      max-width: 480px;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 11px 18px 11px 42px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--indigo-light);
+    }
+
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notif-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      font-size: 17px;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .notif-btn:hover {
+      border-color: var(--indigo-light);
+    }
+
+    .notif-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #EF4444;
+      border: 2px solid #fff;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      padding: 5px 14px 5px 5px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .user-chip:hover {
+      border-color: var(--indigo-light);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo), var(--violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .user-info {
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .user-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ─── HERO BANNER ─── */
+    .hero {
+      background: linear-gradient(120deg, var(--indigo) 0%, var(--violet) 100%);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      min-height: 140px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .hero-date {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .hero-sub {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.72);
+      max-width: 500px;
+    }
+
+    .hero-deco {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .deco-badge {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 12px 16px;
+      text-align: center;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      min-width: 90px;
+    }
+
+    .deco-badge .num {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .deco-badge .lbl {
+      font-size: 10px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* ─── QUICK ACCESS TABS ─── */
+    .quick-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .quick-tab {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.22s;
+      flex: 1;
+      min-width: 180px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .quick-tab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79, 53, 210, 0.1);
+      border-color: var(--indigo-light);
+    }
+
+    .quick-tab.active-tab {
+      border-color: var(--indigo);
+      background: linear-gradient(135deg, #f0edff, #fff);
+    }
+
+    .quick-tab-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .quick-tab-info {
+      line-height: 1.3;
+    }
+
+    .quick-tab-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .quick-tab-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .tab-puc1 .quick-tab-icon {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .tab-puc2 .quick-tab-icon {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .tab-engg .quick-tab-icon {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .tab-all .quick-tab-icon {
+      background: #EDE9FF;
+      color: var(--indigo);
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .see-all {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--indigo);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .see-all:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── TWO COL LAYOUT ─── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 24px;
+    }
+
+    /* ─── FILTER CHIPS ─── */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip.active {
+      background: var(--indigo);
+      border-color: var(--indigo);
+      color: #fff;
+    }
+
+    .chip:hover:not(.active) {
+      border-color: var(--indigo);
+      color: var(--indigo);
+    }
+
+    /* ─── BRANCH GRID ─── */
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .branch-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .branch-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 53, 210, 0.1);
+      border-color: var(--indigo-light);
+    }
+
+    .branch-card.selected {
+      border-color: var(--indigo);
+      background: linear-gradient(135deg, #f0edff, #fff);
+    }
+
+    .branch-card i {
+      font-size: 24px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .branch-card .branch-name {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+    }
+
+    .branch-card .branch-count {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ─── PAPER CARDS ─── */
+    .papers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .paper-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.22s;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79, 53, 210, 0.1);
+    }
+
+    .paper-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-puc1 {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .tag-puc2 {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .tag-engg {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .tag-sem {
+      background: #EDE9FF;
+      color: var(--indigo-dark);
+    }
+
+    .paper-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 5px;
+      line-height: 1.35;
+    }
+
+    .paper-meta {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .paper-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .paper-stars {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .paper-stars i {
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .paper-stars span {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .btn-view {
+      background: var(--indigo);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-view:hover {
+      background: var(--indigo-dark);
+      color: #fff;
+    }
+
+    /* ─── RIGHT COLUMN CARDS ─── */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card-box {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    /* Exam Calendar */
+    .exam-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exam-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .exam-date-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #EDE9FF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .exam-date-box .day {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--indigo);
+      line-height: 1;
+    }
+
+    .exam-date-box .mon {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--indigo);
+      text-transform: uppercase;
+    }
+
+    .exam-info .exam-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .exam-info .exam-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Notices */
+    .notice-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notice-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .notice-heading {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .notice-body {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .notice-link {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--indigo);
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 3px;
+      text-decoration: none;
+    }
+
+    .notice-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Bookmarks */
+    .bookmark-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bookmark-item:last-child {
+      border-bottom: none;
+    }
+
+    .bm-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #EDE9FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+      color: var(--indigo);
+    }
+
+    .bm-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .bm-sub {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .bm-dl {
+      margin-left: auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      color: var(--indigo);
+      border: none;
+    }
+
+    .bm-dl:hover {
+      background: var(--indigo);
+      color: #fff;
+    }
+
+    /* Progress bars */
+    .prog-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .prog-label {
+      font-size: 12px;
+      color: var(--muted);
+      width: 140px;
+    }
+
+    .prog-bar {
+      flex: 1;
+      height: 7px;
+      border-radius: 99px;
+      background: #E5E3F7;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--indigo), var(--violet));
+    }
+
+    .prog-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      width: 34px;
+      text-align: right;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-deco {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-toggle {
+        display: flex;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 18px 16px;
+        padding-top: 60px;
+      }
+
+      .papers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .branch-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      }
+
+      .quick-tabs {
+        flex-direction: column;
+      }
+
+      .quick-tab {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Mobile Sidebar Toggle -->
+  <button class="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">PaperVault</div>
+        <div class="logo-sub">RGUKT Paper Repository</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Main</div>
+    <a class="nav-item active" href="question-papers-dashboard.html">
+      <i class="bi bi-grid-1x2-fill"></i> Dashboard
+    </a>
+    <a class="nav-item" href="browse-papers.html">
+      <i class="bi bi-file-earmark-text"></i> Browse Papers
+      <span class="nav-badge">New</span>
+    </a>
+    <a class="nav-item" href="upload-paper.html">
+      <i class="bi bi-cloud-arrow-up"></i> Upload Paper
+    </a>
+    <a class="nav-item" href="advanced-search.html">
+      <i class="bi bi-search"></i> Advanced Search
+    </a>
+
+    <div class="nav-label">Library</div>
+    <a class="nav-item" href="bookmarks.html">
+      <i class="bi bi-bookmark-heart"></i> Bookmarks
+    </a>
+    <a class="nav-item" href="my-downloads.html">
+      <i class="bi bi-download"></i> My Downloads
+    </a>
+    <a class="nav-item" href="view-history.html">
+      <i class="bi bi-clock-history"></i> View History
+    </a>
+
+    <div class="nav-label">Account</div>
+    <a class="nav-item" href="my-profile.html">
+      <i class="bi bi-person-circle"></i> My Profile
+    </a>
+    <a class="nav-item" href="settings.html">
+      <i class="bi bi-gear"></i> Settings
+    </a>
+
+    <!-- Campus Selector -->
+    <div class="campus-selector">
+      <div class="campus-label">Your Campus</div>
+      <select class="campus-select" id="campusSelect">
+        <option value="rkvalley">RK Valley (Idupulapaya)</option>
+        <option value="nuzvid">Nuzvid</option>
+        <option value="ongole">Ongole</option>
+        <option value="srikakulam">Srikakulam</option>
+        <option value="basar">Basar</option>
+      </select>
+    </div>
+
+    <div class="nav-spacer"></div>
+    <a class="nav-logout" href="#" id="logoutBtn">
+      <i class="bi bi-box-arrow-left"></i> Logout
+    </a>
+  </aside>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-wrap">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Search papers by subject, branch, semester, year…" id="globalSearch">
+      </div>
+      <div class="topbar-right">
+        <div class="notif-btn" title="Notifications">
+          <i class="bi bi-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="user-chip" id="userChip">
+          <div class="user-avatar" id="userAvatar">S</div>
+          <div class="user-info">
+            <div class="user-name" id="userDisplayName">Student</div>
+            <div class="user-sub" id="userBranchInfo">RGUKT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO BANNER -->
+    <div class="hero">
+      <div class="hero-text">
+        <div class="hero-date" id="currentDate"></div>
+        <div class="hero-title" id="heroTitle">Welcome back! 👋</div>
+        <div class="hero-sub">Access RGUKT previous year question papers — PUC 1, PUC 2 & Engineering (all branches)
+        </div>
+      </div>
+      <div class="hero-deco">
+        <div class="deco-badge">
+          <div class="num">2,400+</div>
+          <div class="lbl">Papers</div>
+        </div>
+        <div class="deco-badge">
+          <div class="num" id="myDownloads">0</div>
+          <div class="lbl">Downloaded</div>
+        </div>
+        <div class="deco-badge">
+          <div class="num" id="myBookmarks">0</div>
+          <div class="lbl">Saved</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── QUICK ACCESS CATEGORIES ─── -->
+    <div class="quick-tabs" id="categoryTabs">
+      <div class="quick-tab tab-puc1 active-tab" data-category="puc1">
+        <div class="quick-tab-icon"><i class="bi bi-journal-bookmark"></i></div>
+        <div class="quick-tab-info">
+          <div class="quick-tab-title">PUC 1</div>
+          <div class="quick-tab-desc">1st Year Pre-University</div>
+        </div>
+      </div>
+      <div class="quick-tab tab-puc2" data-category="puc2">
+        <div class="quick-tab-icon"><i class="bi bi-journal-text"></i></div>
+        <div class="quick-tab-info">
+          <div class="quick-tab-title">PUC 2</div>
+          <div class="quick-tab-desc">2nd Year Pre-University</div>
+        </div>
+      </div>
+      <div class="quick-tab tab-engg" data-category="engg">
+        <div class="quick-tab-icon"><i class="bi bi-mortarboard"></i></div>
+        <div class="quick-tab-info">
+          <div class="quick-tab-title">Engineering</div>
+          <div class="quick-tab-desc">B.Tech All Branches</div>
+        </div>
+      </div>
+      <div class="quick-tab tab-all" data-category="all">
+        <div class="quick-tab-icon"><i class="bi bi-collection"></i></div>
+        <div class="quick-tab-info">
+          <div class="quick-tab-title">All Papers</div>
+          <div class="quick-tab-desc">Browse everything</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ENGINEERING BRANCHES (shown when Engineering tab selected) ─── -->
+    <div id="branchSection" style="display:none;">
+      <div class="section-header">
+        <div class="section-title">Select Your Branch</div>
+      </div>
+      <div class="branch-grid" id="branchGrid">
+        <a class="branch-card" data-branch="cse" href="#">
+          <i class="bi bi-cpu" style="color:#6366f1;"></i>
+          <div class="branch-name">CSE</div>
+          <div class="branch-count">420+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="ece" href="#">
+          <i class="bi bi-broadcast-pin" style="color:#0891b2;"></i>
+          <div class="branch-name">ECE</div>
+          <div class="branch-count">380+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="eee" href="#">
+          <i class="bi bi-lightning-charge" style="color:#d97706;"></i>
+          <div class="branch-name">EEE</div>
+          <div class="branch-count">350+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="me" href="#">
+          <i class="bi bi-gear-wide-connected" style="color:#059669;"></i>
+          <div class="branch-name">ME</div>
+          <div class="branch-count">310+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="ce" href="#">
+          <i class="bi bi-building" style="color:#7c3aed;"></i>
+          <div class="branch-name">CE</div>
+          <div class="branch-count">290+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="che" href="#">
+          <i class="bi bi-droplet-half" style="color:#e11d48;"></i>
+          <div class="branch-name">CHE</div>
+          <div class="branch-count">260+ papers</div>
+        </a>
+        <a class="branch-card" data-branch="mme" href="#">
+          <i class="bi bi-hexagon" style="color:#ca8a04;"></i>
+          <div class="branch-name">MME</div>
+          <div class="branch-count">220+ papers</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── MAIN TWO-COLUMN LAYOUT ─── -->
+    <div class="two-col">
+      <div>
+        <!-- EXAM TYPE FILTERS -->
+        <div class="filter-chips" id="filterChips">
+          <div class="chip active" data-filter="all">All</div>
+          <div class="chip" data-filter="mid1">Mid-1</div>
+          <div class="chip" data-filter="mid2">Mid-2</div>
+          <div class="chip" data-filter="endsem">End Sem</div>
+          <div class="chip" data-filter="supply">Supply</div>
+          <div class="chip" data-filter="2025">2024–25</div>
+          <div class="chip" data-filter="2024">2023–24</div>
+          <div class="chip" data-filter="2023">2022–23</div>
+        </div>
+
+        <!-- RECENT PAPERS -->
+        <div class="section-header">
+          <div class="section-title" id="papersTitle">PUC 1 Question Papers</div>
+          <a class="see-all" href="#">See all →</a>
+        </div>
+
+        <div class="papers-grid" id="papersGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- POPULAR SUBJECTS -->
+        <div class="section-header" style="margin-top:24px;">
+          <div class="section-title" id="trendsTitle">Popular Subjects</div>
+        </div>
+        <div class="card-box" id="trendsBox">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ─── RIGHT COLUMN ─── -->
+      <div class="right-col">
+
+        <!-- EXAM CALENDAR -->
+        <div class="card-box">
+          <div class="section-header" style="margin-bottom:10px;">
+            <div class="section-title">Upcoming Exams</div>
+            <a class="see-all" href="#">View all</a>
+          </div>
+          <div class="exam-item">
+            <div class="exam-date-box">
+              <div class="day">10</div>
+              <div class="mon">Mar</div>
+            </div>
+            <div class="exam-info">
+              <div class="exam-title">PUC-1 End Semester</div>
+              <div class="exam-sub">All subjects · March 10–28</div>
+            </div>
+          </div>
+          <div class="exam-item">
+            <div class="exam-date-box" style="background:#D1FAE5;">
+              <div class="day" style="color:#065F46;">18</div>
+              <div class="mon" style="color:#065F46;">Mar</div>
+            </div>
+            <div class="exam-info">
+              <div class="exam-title">B.Tech Mid-1 (Even Sem)</div>
+              <div class="exam-sub">All branches · Sem 2,4,6,8</div>
+            </div>
+          </div>
+          <div class="exam-item">
+            <div class="exam-date-box" style="background:#FEF3C7;">
+              <div class="day" style="color:#92400E;">05</div>
+              <div class="mon" style="color:#92400E;">Apr</div>
+            </div>
+            <div class="exam-info">
+              <div class="exam-title">PUC-2 End Semester</div>
+              <div class="exam-sub">All subjects · April 5–22</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTICES -->
+        <div class="card-box">
+          <div class="section-header" style="margin-bottom:6px;">
+            <div class="section-title">Notices</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-heading">📄 PUC-2 Supply Papers Uploaded</div>
+            <div class="notice-body">2024-25 supplementary exam papers for Maths IIA, Physics & Chemistry are now
+              available.</div>
+            <a class="notice-link" href="#">View papers →</a>
+          </div>
+          <div class="notice-item">
+            <div class="notice-heading">🆕 B.Tech Sem-5 Mid-2 Added</div>
+            <div class="notice-body">CSE, ECE & EEE branches — all Mid-2 papers from Nov 2025 uploaded.</div>
+            <a class="notice-link" href="#">Browse now →</a>
+          </div>
+          <div class="notice-item">
+            <div class="notice-heading">⭐ Rate papers you used</div>
+            <div class="notice-body">Your ratings help fellow RGUKT students find the best resources.</div>
+            <a class="notice-link" href="#">Rate now →</a>
+          </div>
+        </div>
+
+        <!-- BOOKMARKS -->
+        <div class="card-box">
+          <div class="section-header" style="margin-bottom:8px;">
+            <div class="section-title">Saved Papers</div>
+            <a class="see-all" href="#">See all</a>
+          </div>
+          <div class="bookmark-item">
+            <div class="bm-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div>
+              <div class="bm-name">Data Structures – End Sem 2024</div>
+              <div class="bm-sub">B.Tech · CSE · Sem 3</div>
+            </div>
+            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
+          </div>
+          <div class="bookmark-item">
+            <div class="bm-icon" style="background:#D1FAE5;color:#065F46;"><i class="bi bi-file-earmark-text"></i></div>
+            <div>
+              <div class="bm-name">Mathematics IIA – End Sem 2024</div>
+              <div class="bm-sub">PUC 2 · March 2024</div>
+            </div>
+            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
+          </div>
+          <div class="bookmark-item">
+            <div class="bm-icon" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-file-earmark-text"></i></div>
+            <div>
+              <div class="bm-name">Signals & Systems – Mid-2</div>
+              <div class="bm-sub">B.Tech · ECE · Sem 4</div>
+            </div>
+            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ─── SET CURRENT DATE ───
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // ─── LOAD USER DATA FROM LOCALSTORAGE ───
+    (function loadUser() {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+          const name = user.name || user.username || 'Student';
+          document.getElementById('userDisplayName').textContent = name;
+          document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+          document.getElementById('heroTitle').textContent = 'Welcome back, ' + name.split(' ')[0] + '! 👋';
+          if (user.branch) {
+            document.getElementById('userBranchInfo').textContent = user.branch + ' · RGUKT';
+          }
+          if (user.campus) {
+            document.getElementById('campusSelect').value = user.campus;
+          }
+        }
+      } catch (e) { /* no user in storage */ }
+    })();
+
+    // ─── SIDEBAR MOBILE ───
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('show');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('show');
+    });
+
+    // ─── PAPER DATA ───
+    const paperData = {
+      puc1: [
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Mathematics IA – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.2 },
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Physics – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 4.8 },
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Chemistry – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.1 },
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Mathematics IB – Mid-1 (2024–25)', meta: 'RGUKT · September 2024 · 2 hrs', rating: 4.0 },
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'English – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 3.5 },
+        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Telugu / Hindi – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 3.8 }
+      ],
+      puc2: [
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Mathematics IIA – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.5 },
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Physics Paper-II – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 4.3 },
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Chemistry Paper-II – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.0 },
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Mathematics IIB – Mid-1 (2024–25)', meta: 'RGUKT · September 2024 · 2 hrs', rating: 4.6 },
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'English – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 3.7 },
+        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Physics Paper-II – End Sem (2023–24)', meta: 'RGUKT · March 2024 · 3 hrs', rating: 4.4 }
+      ],
+      engg: [
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Data Structures & Algorithms – End Sem', meta: 'RGUKT · CSE · Sem 3 · 3 hrs', rating: 4.7 },
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Analog Electronics – Mid-2 (2024–25)', meta: 'RGUKT · ECE · Sem 4 · 2 hrs', rating: 4.2 },
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Engineering Mathematics III', meta: 'RGUKT · All Branches · Sem 3 · 3 hrs', rating: 4.4 },
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Thermodynamics – End Sem (2024–25)', meta: 'RGUKT · ME · Sem 3 · 3 hrs', rating: 3.9 },
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Computer Networks – Mid-1 (2024–25)', meta: 'RGUKT · CSE/ECE · Sem 5 · 2 hrs', rating: 4.5 },
+        { tag: 'B.Tech', cls: 'tag-engg', name: 'Electrical Machines – End Sem', meta: 'RGUKT · EEE · Sem 4 · 3 hrs', rating: 4.1 }
+      ],
+      all: [] // filled below
+    };
+    // "All" combines 2 from each
+    paperData.all = [
+      paperData.puc1[0], paperData.puc1[1],
+      paperData.puc2[0], paperData.puc2[1],
+      paperData.engg[0], paperData.engg[1]
+    ];
+
+    const trendData = {
+      puc1: [
+        { label: 'Mathematics IA', pct: 88, gradient: '' },
+        { label: 'Physics', pct: 74, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
+        { label: 'Chemistry', pct: 65, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
+        { label: 'Mathematics IB', pct: 58, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
+        { label: 'English', pct: 42, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
+      ],
+      puc2: [
+        { label: 'Mathematics IIA', pct: 91, gradient: '' },
+        { label: 'Physics Paper-II', pct: 78, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
+        { label: 'Chemistry Paper-II', pct: 68, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
+        { label: 'Mathematics IIB', pct: 62, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
+        { label: 'English', pct: 38, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
+      ],
+      engg: [
+        { label: 'Engg. Mathematics', pct: 85, gradient: '' },
+        { label: 'Data Structures', pct: 79, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
+        { label: 'Computer Networks', pct: 64, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
+        { label: 'Analog Electronics', pct: 55, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
+        { label: 'Thermodynamics', pct: 43, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
+      ],
+      all: [
+        { label: 'Mathematics', pct: 90, gradient: '' },
+        { label: 'Physics', pct: 76, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
+        { label: 'Data Structures', pct: 68, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
+        { label: 'Chemistry', pct: 60, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
+        { label: 'English', pct: 41, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
+      ]
+    };
+
+    // ─── RENDER FUNCTIONS ───
+    function renderStars(r) {
+      const full = Math.floor(r);
+      let s = '';
+      for (let i = 0; i < full; i++) s += '<i class="bi bi-star-fill"></i>';
+      for (let i = full; i < 5; i++) s += '<i class="bi bi-star"></i>';
+      return s + '<span>' + r.toFixed(1) + '</span>';
+    }
+
+    function renderPapers(cat) {
+      const papers = paperData[cat] || paperData.all;
+      document.getElementById('papersGrid').innerHTML = papers.map(p =>
+        '<div class="paper-card">' +
+        '<span class="paper-tag ' + p.cls + '">' + p.tag + '</span>' +
+        '<div class="paper-name">' + p.name + '</div>' +
+        '<div class="paper-meta">' + p.meta + '</div>' +
+        '<div class="paper-footer">' +
+        '<div class="paper-stars">' + renderStars(p.rating) + '</div>' +
+        '<button class="btn-view"><i class="bi bi-download"></i> Download</button>' +
+        '</div>' +
+        '</div>'
+      ).join('');
+    }
+
+    function renderTrends(cat) {
+      const trends = trendData[cat] || trendData.all;
+      document.getElementById('trendsBox').innerHTML = trends.map((t, i) =>
+        '<div class="prog-bar-wrap"' + (i === trends.length - 1 ? ' style="margin-bottom:0"' : '') + '>' +
+        '<span class="prog-label">' + t.label + '</span>' +
+        '<div class="prog-bar"><div class="prog-fill" style="width:' + t.pct + '%;' + (t.gradient ? 'background:' + t.gradient + ';' : '') + '"></div></div>' +
+        '<span class="prog-num">' + t.pct + '%</span>' +
+        '</div>'
+      ).join('');
+    }
+
+    // ─── CATEGORY TABS ───
+    const categoryTabs = document.querySelectorAll('.quick-tab');
+    const branchSection = document.getElementById('branchSection');
+    const papersTitle = document.getElementById('papersTitle');
+    const trendsTitle = document.getElementById('trendsTitle');
+
+    const titleMap = {
+      puc1: 'PUC 1 Question Papers',
+      puc2: 'PUC 2 Question Papers',
+      engg: 'Engineering Question Papers',
+      all: 'All Recent Papers'
+    };
+
+    let currentCategory = 'puc1';
+
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        categoryTabs.forEach(t => t.classList.remove('active-tab'));
+        tab.classList.add('active-tab');
+
+        currentCategory = tab.dataset.category;
+        branchSection.style.display = currentCategory === 'engg' ? 'block' : 'none';
+        papersTitle.textContent = titleMap[currentCategory] || 'Recent Question Papers';
+        trendsTitle.textContent = 'Popular ' + (currentCategory === 'all' ? 'Subjects' : titleMap[currentCategory].replace(' Question Papers', '') + ' Subjects');
+
+        renderPapers(currentCategory);
+        renderTrends(currentCategory);
+
+        // Reset branch selection
+        document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+      });
+    });
+
+    // Initial render
+    renderPapers('puc1');
+    renderTrends('puc1');
+
+    // ─── FILTER CHIPS ───
+    document.querySelectorAll('.chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+      });
+    });
+
+    // ─── BRANCH CARD CLICK ───
+    document.querySelectorAll('.branch-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        const branch = card.dataset.branch.toUpperCase();
+        papersTitle.textContent = branch + ' Question Papers';
+      });
+    });
+
+    // ─── SIDEBAR NAV ───
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // ─── LOGOUT ───
+    document.getElementById('logoutBtn').addEventListener('click', function (e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    });
+
+    // ─── GLOBAL SEARCH ───
+    document.getElementById('globalSearch').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const q = this.value.trim();
+        if (q) alert('Searching for: ' + q + '\n\n(Full search coming soon!)');
+      }
+    });
+  </script>
+</body>
+
+</html>

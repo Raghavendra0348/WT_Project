@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact Us - PaperVault</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+                <div class="container">
+                        <a class="navbar-brand fw-bold" href="index.html">
+                                <i class="bi bi-journal-bookmark-fill me-2"></i>PaperVault
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav">
+                                <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav me-auto">
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="index.html">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="papers.html">Papers</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="about.html">About</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link active" href="contact.html">Contact</a>
+                                        </li>
+                                </ul>
+                                <!-- Auth Buttons -->
+                                <div id="authButtons">
+                                        <a href="login.html" class="btn btn-outline-light me-2">Login</a>
+                                        <a href="register.html" class="btn btn-light">Register</a>
+                                </div>
+                                <!-- User Menu -->
+                                <div id="userMenu" class="dropdown d-none">
+                                        <button class="btn btn-outline-light dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown">
+                                                <i class="bi bi-person-circle me-1"></i>
+                                                <span id="userName">User</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item" href="question-papers-dashboard.html"><i
+                                                                        class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                                                </li>
+                                                <li>
+                                                        <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i
+                                                                        class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                                                </li>
+                                        </ul>
+                                </div>
+                        </div>
+                </div>
+        </nav>
+
+        <!-- Page Header -->
+        <section class="page-header text-white py-5 position-relative" style="margin-top: 56px;">
+                <div class="container position-relative">
+                        <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 mb-3">
+                                <i class="bi bi-chat-dots me-1"></i> Get In Touch
+                        </span>
+                        <h1 class="fw-bold mb-2">Contact Us</h1>
+                        <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="index.html" class="text-white-50">Home</a>
+                                        </li>
+                                        <li class="breadcrumb-item active text-white" aria-current="page">Contact</li>
+                                </ol>
+                        </nav>
+                </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section py-5">
+                <div class="container">
+                        <div class="row g-5">
+                                <!-- Contact Form -->
+                                <div class="col-lg-8">
+                                        <div class="card shadow-sm border-0">
+                                                <div class="card-body p-5">
+                                                        <h3 class="fw-bold mb-4">Send us a Message</h3>
+
+                                                        <!-- Alert for messages -->
+                                                        <div class="alert alert-success d-none" id="contactSuccess"
+                                                                role="alert">
+                                                                <i class="bi bi-check-circle me-2"></i>
+                                                                <span id="contactSuccessText">Your message has been sent
+                                                                        successfully!</span>
+                                                        </div>
+
+                                                        <div class="alert alert-danger d-none" id="contactError"
+                                                                role="alert">
+                                                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                                                <span id="contactErrorText"></span>
+                                                        </div>
+
+                                                        <form id="contactForm">
+                                                                <div class="row g-3">
+                                                                        <div class="col-md-6">
+                                                                                <label for="name"
+                                                                                        class="form-label">Your
+                                                                                        Name</label>
+                                                                                <input type="text" class="form-control"
+                                                                                        id="name" name="name"
+                                                                                        placeholder="Enter your name"
+                                                                                        required>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                                <label for="email"
+                                                                                        class="form-label">Email
+                                                                                        Address</label>
+                                                                                <input type="email" class="form-control"
+                                                                                        id="email" name="email"
+                                                                                        placeholder="Enter your email"
+                                                                                        required>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                                <label for="subject"
+                                                                                        class="form-label">Subject</label>
+                                                                                <input type="text" class="form-control"
+                                                                                        id="subject" name="subject"
+                                                                                        placeholder="Enter subject"
+                                                                                        required>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                                <label for="message"
+                                                                                        class="form-label">Message</label>
+                                                                                <textarea class="form-control"
+                                                                                        id="message" name="message"
+                                                                                        rows="5"
+                                                                                        placeholder="Write your message here..."
+                                                                                        required></textarea>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                                <button type="submit"
+                                                                                        class="btn btn-primary btn-lg"
+                                                                                        id="submitBtn">
+                                                                                        <span class="spinner-border spinner-border-sm d-none me-2"
+                                                                                                id="submitSpinner"></span>
+                                                                                        <i class="bi bi-send me-2"
+                                                                                                id="submitIcon"></i>
+                                                                                        Send Message
+                                                                                </button>
+                                                                        </div>
+                                                                </div>
+                                                        </form>
+                                                </div>
+                                        </div>
+                                </div>
+
+                                <!-- Contact Info -->
+                                <div class="col-lg-4">
+                                        <div class="card shadow-sm border-0 mb-4">
+                                                <div class="card-body p-4">
+                                                        <h5 class="fw-bold mb-4">Contact Information</h5>
+                                                        <div class="d-flex mb-3">
+                                                                <div class="flex-shrink-0">
+                                                                        <div
+                                                                                class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                                                                <i
+                                                                                        class="bi bi-geo-alt text-primary"></i>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="flex-grow-1 ms-3">
+                                                                        <h6 class="mb-1">Address</h6>
+                                                                        <p class="text-muted mb-0 small">123 Education
+                                                                                Street, Tech Park, Bangalore - 560001
+                                                                        </p>
+                                                                </div>
+                                                        </div>
+                                                        <div class="d-flex mb-3">
+                                                                <div class="flex-shrink-0">
+                                                                        <div
+                                                                                class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                                                                <i
+                                                                                        class="bi bi-envelope text-primary"></i>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="flex-grow-1 ms-3">
+                                                                        <h6 class="mb-1">Email</h6>
+                                                                        <p class="text-muted mb-0 small">
+                                                                                support@papervault.com</p>
+                                                                </div>
+                                                        </div>
+                                                        <div class="d-flex mb-3">
+                                                                <div class="flex-shrink-0">
+                                                                        <div
+                                                                                class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                                                                <i
+                                                                                        class="bi bi-telephone text-primary"></i>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="flex-grow-1 ms-3">
+                                                                        <h6 class="mb-1">Phone</h6>
+                                                                        <p class="text-muted mb-0 small">+91 9876543210
+                                                                        </p>
+                                                                </div>
+                                                        </div>
+                                                        <div class="d-flex">
+                                                                <div class="flex-shrink-0">
+                                                                        <div
+                                                                                class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                                                                <i class="bi bi-clock text-primary"></i>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="flex-grow-1 ms-3">
+                                                                        <h6 class="mb-1">Working Hours</h6>
+                                                                        <p class="text-muted mb-0 small">Mon - Fri: 9:00
+                                                                                AM - 6:00 PM</p>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>
+
+                                        <!-- Social Links -->
+                                        <div class="card shadow-sm border-0">
+                                                <div class="card-body p-4">
+                                                        <h5 class="fw-bold mb-4">Follow Us</h5>
+                                                        <div class="d-flex gap-3">
+                                                                <a href="#" class="btn btn-outline-primary">
+                                                                        <i class="bi bi-facebook"></i>
+                                                                </a>
+                                                                <a href="#" class="btn btn-outline-info">
+                                                                        <i class="bi bi-twitter"></i>
+                                                                </a>
+                                                                <a href="#" class="btn btn-outline-danger">
+                                                                        <i class="bi bi-instagram"></i>
+                                                                </a>
+                                                                <a href="#" class="btn btn-outline-primary">
+                                                                        <i class="bi bi-linkedin"></i>
+                                                                </a>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        <!-- FAQ Section -->
+                        <div class="mt-5">
+                                <h3 class="fw-bold text-center mb-4">Frequently Asked Questions</h3>
+                                <div class="accordion" id="faqAccordion">
+                                        <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                        <button class="accordion-button" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#faq1">
+                                                                How do I download papers?
+                                                        </button>
+                                                </h2>
+                                                <div id="faq1" class="accordion-collapse collapse show"
+                                                        data-bs-parent="#faqAccordion">
+                                                        <div class="accordion-body">
+                                                                Simply browse or search for the paper you need, click on
+                                                                it to view details, and then click the "Download PDF"
+                                                                button. You may need to create a free account to
+                                                                download papers.
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#faq2">
+                                                                Is PaperVault free to use?
+                                                        </button>
+                                                </h2>
+                                                <div id="faq2" class="accordion-collapse collapse"
+                                                        data-bs-parent="#faqAccordion">
+                                                        <div class="accordion-body">
+                                                                Yes! PaperVault is completely free for students. You can
+                                                                browse, view, and download papers without any charges.
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#faq3">
+                                                                How can I contribute papers?
+                                                        </button>
+                                                </h2>
+                                                <div id="faq3" class="accordion-collapse collapse"
+                                                        data-bs-parent="#faqAccordion">
+                                                        <div class="accordion-body">
+                                                                If you have question papers that you'd like to share,
+                                                                please contact us through this form. Our team will
+                                                                review and upload verified papers to the platform.
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#faq4">
+                                                                Can I request a specific paper?
+                                                        </button>
+                                                </h2>
+                                                <div id="faq4" class="accordion-collapse collapse"
+                                                        data-bs-parent="#faqAccordion">
+                                                        <div class="accordion-body">
+                                                                Absolutely! Use the contact form above to request
+                                                                specific papers. Include details like university name,
+                                                                subject, and year, and we'll try our best to source it
+                                                                for you.
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer bg-dark text-white py-4">
+                <div class="container">
+                        <div class="row">
+                                <div class="col-md-6 text-center text-md-start">
+                                        <p class="mb-0">&copy; 2024 PaperVault. All rights reserved.</p>
+                                </div>
+                                <div class="col-md-6 text-center text-md-end">
+                                        <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                                        <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+                                </div>
+                        </div>
+                </div>
+        </footer>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JS -->
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/contact.js"></script>
+</body>
+
+</html>
