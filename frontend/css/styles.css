@@ -167,7 +167,7 @@ img {
 }
 
 .navbar-custom .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+        color: #6366F1;
 }
 
 .navbar-custom .form-control:focus {
