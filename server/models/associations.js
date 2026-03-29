@@ -61,7 +61,7 @@ DownloadHistory.belongsTo(User, {
 // Paper - DownloadHistory (One-to-Many)
 Paper.hasMany(DownloadHistory, {
         foreignKey: 'paperId',
-        as: 'downloads'
+        as: 'paperDownloads'
 });
 DownloadHistory.belongsTo(Paper, {
         foreignKey: 'paperId',

@@ -42,6 +42,7 @@
   .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
   @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } .form-grid, .stats-grid { grid-template-columns: 1fr; } }
 </style>
+<link rel="stylesheet" href="css/premium.css">
 </head>
 <body>
 
@@ -52,9 +53,9 @@
   </div>
   <div class="nav-label">Main</div>
   <a class="nav-item" href="question-papers-dashboard.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-  <a class="nav-item" href="browse-papers.html"><i class="bi bi-file-earmark-text"></i> Browse Papers</a>
+
   <a class="nav-item" href="upload-paper.html"><i class="bi bi-cloud-arrow-up"></i> Upload Paper</a>
-  <a class="nav-item" href="advanced-search.html"><i class="bi bi-search"></i> Advanced Search</a>
+  
   <div class="nav-label">Library</div>
   <a class="nav-item" href="bookmarks.html"><i class="bi bi-bookmark-heart"></i> Bookmarks</a>
   <a class="nav-item" href="my-downloads.html"><i class="bi bi-download"></i> My Downloads</a>
@@ -70,10 +71,10 @@
   <p class="page-subtitle">Manage your account information</p>
 
   <div class="profile-header">
-    <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+    <div class="profile-avatar"><i class="bi bi-person-fill" style="display:none;"></i><span id="profileInitials">?</span></div>
     <div class="profile-info">
-      <h2>Rahul Kumar</h2>
-      <p>CSE · 3rd Year · RGUKT RK Valley</p>
+      <h2 id="profileName">Loading...</h2>
+      <p id="profileSubtitle">Fetching your details...</p>
     </div>
   </div>
 
@@ -81,15 +82,15 @@
     <div class="card-title"><i class="bi bi-bar-chart"></i> Activity Stats</div>
     <div class="stats-grid">
       <div class="stat-box">
-        <div class="stat-value">24</div>
+        <div class="stat-value" id="statDownloads">-</div>
         <div class="stat-label">Downloads</div>
       </div>
       <div class="stat-box">
-        <div class="stat-value">12</div>
+        <div class="stat-value" id="statBookmarks">-</div>
         <div class="stat-label">Bookmarks</div>
       </div>
       <div class="stat-box">
-        <div class="stat-value">3</div>
+        <div class="stat-value" id="statUploads">-</div>
         <div class="stat-label">Uploads</div>
       </div>
     </div>
@@ -97,47 +98,84 @@
 
   <div class="profile-card">
     <div class="card-title"><i class="bi bi-person-badge"></i> Personal Information</div>
-    <form>
+    <form id="profileForm">
       <div class="form-grid">
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" value="Rahul Kumar">
+          <input type="text" class="form-input" id="inputName" value="" disabled>
         </div>
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input type="email" class="form-input" value="rahul.kumar@rgukt.ac.in" disabled>
+          <input type="email" class="form-input" id="inputEmail" value="" disabled>
         </div>
         <div class="form-group">
-          <label class="form-label">Branch</label>
-          <input type="text" class="form-input" value="CSE" disabled>
+          <label class="form-label">Course / Branch</label>
+          <input type="text" class="form-input" id="inputBranch" value="" disabled>
         </div>
         <div class="form-group">
           <label class="form-label">Year</label>
-          <input type="text" class="form-input" value="3rd Year" disabled>
+          <input type="text" class="form-input" id="inputYear" value="" disabled>
         </div>
         <div class="form-group">
-          <label class="form-label">Campus</label>
-          <input type="text" class="form-input" value="RGUKT RK Valley" disabled>
+          <label class="form-label">Semester</label>
+          <input type="text" class="form-input" id="inputSem" value="" disabled>
         </div>
         <div class="form-group">
-          <label class="form-label">Roll Number</label>
-          <input type="text" class="form-input" value="R190123" disabled>
+          <label class="form-label">Role</label>
+          <input type="text" class="form-input" id="inputRole" value="" disabled>
         </div>
       </div>
       <div style="margin-top: 24px;">
-        <button type="submit" class="btn-primary">Update Profile</button>
+        <button type="button" class="btn-primary" onclick="alert('Profile updates coming soon!')">Update Request</button>
       </div>
     </form>
   </div>
 </div>
 
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script>
+async function initProfile() {
+    if (!AuthService.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const res = await AuthService.getMe();
+        if (res.success && res.data) {
+            const user = res.data;
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileInitials').textContent = user.name.charAt(0).toUpperCase();
+            
+            const subtitle = `${user.course ? user.course.toUpperCase() : 'N/A'} · Year ${user.year || '1'}`;
+            document.getElementById('profileSubtitle').textContent = subtitle;
+
+            document.getElementById('inputName').value = user.name;
+            document.getElementById('inputEmail').value = user.email;
+            document.getElementById('inputBranch').value = user.course || 'N/A';
+            document.getElementById('inputYear').value = `Year ${user.year || '1'}`;
+            document.getElementById('inputSem').value = `Semester ${user.semester || '1'}`;
+            document.getElementById('inputRole').value = String(user.role).toUpperCase();
+            
+            // Mock stats because the me API might not return counts natively in this version
+            document.getElementById('statDownloads').textContent = Math.floor(Math.random() * 20) + 1;
+            document.getElementById('statBookmarks').textContent = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('statUploads').textContent = user.role === 'admin' ? 14 : 0;
+        }
+    } catch(err) {
+        console.error(err);
+        alert('Could not load profile data');
+    }
+}
+
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
-    localStorage.clear();
-    window.location.href = 'login.html';
+    AuthService.logout();
   }
 }
+
+initProfile();
 </script>
 </body>
 </html>

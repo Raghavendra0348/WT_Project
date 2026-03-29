@@ -338,61 +338,63 @@
                         }
                 }
         </style>
+<link rel="stylesheet" href="css/premium.css">
 </head>
 
 <body>
 
         <!-- Sidebar -->
-        <div class="sidebar">
-                <div class="logo-area">
-                        <div class="logo-icon">
-                                <i class="bi bi-journal-bookmark-fill" style="font-size: 24px; color: white;"></i>
-                        </div>
-                        <div>
-                                <div class="logo-text">PaperVault</div>
-                                <div class="logo-sub">RGUKT Paper Repository</div>
-                        </div>
-                </div>
+            <!-- Background Decoration -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
 
-                <div class="nav-label">Main</div>
-                <a class="nav-item" href="question-papers-dashboard.html">
-                        <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                </a>
-                <a class="nav-item" href="browse-papers.html">
-                        <i class="bi bi-file-earmark-text"></i> Browse Papers
-                </a>
-                <a class="nav-item" href="upload-paper.html">
-                        <i class="bi bi-cloud-arrow-up"></i> Upload Paper
-                </a>
-                <a class="nav-item" href="advanced-search.html">
-                        <i class="bi bi-search"></i> Advanced Search
-                </a>
-
-                <div class="nav-label">Library</div>
-                <a class="nav-item active" href="bookmarks.html">
-                        <i class="bi bi-bookmark-heart"></i> Bookmarks
-                </a>
-                <a class="nav-item" href="my-downloads.html">
-                        <i class="bi bi-download"></i> My Downloads
-                </a>
-                <a class="nav-item" href="view-history.html">
-                        <i class="bi bi-clock-history"></i> View History
-                </a>
-
-                <div class="nav-label">Account</div>
-                <a class="nav-item" href="my-profile.html">
-                        <i class="bi bi-person-circle"></i> My Profile
-                </a>
-                <a class="nav-item" href="settings.html">
-                        <i class="bi bi-gear"></i> Settings
-                </a>
-
-                <button class="logout-btn" onclick="logout()">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="bi bi-journal-bookmark-fill" style="font-size: 20px; color: white;"></i>
+            </div>
+            <div>
+                <div class="logo-text">PaperVault</div>
+                <div class="logo-sub">PREMIUM REPOSITORY</div>
+            </div>
         </div>
 
-        <!-- Main Content -->
+        <div class="nav-label">Main</div>
+        <a class="nav-item" href="question-papers-dashboard.html">
+            <i class="bi bi-grid-fill"></i> Dashboard
+        </a>
+
+        <a class="nav-item" href="upload-paper.html">
+            <i class="bi bi-cloud-arrow-up-fill"></i> Upload Paper
+        </a>
+        
+
+        <div class="nav-label">Library</div>
+        <a class="nav-item active" href="bookmarks.html">
+            <i class="bi bi-bookmark-heart-fill"></i> Saved
+        </a>
+        <a class="nav-item" href="my-downloads.html">
+            <i class="bi bi-cloud-download-fill"></i> Downloads
+        </a>
+        <a class="nav-item" href="view-history.html">
+            <i class="bi bi-clock-history"></i> View History
+        </a>
+
+        <div class="nav-label">Account</div>
+        <a class="nav-item" href="my-profile.html">
+            <i class="bi bi-person-badge-fill"></i> Profile
+        </a>
+        <a class="nav-item" href="settings.html">
+            <i class="bi bi-gear-fill"></i> Settings
+        </a>
+
+        <button class="logout-btn" onclick="logout()">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
+    </div>
+
+    <!-- Main Content -->
         <div class="main-content">
                 <div class="page-header">
                         <div>
@@ -403,16 +405,8 @@
 
                 <div class="bookmarks-stats">
                         <div class="stat-card">
-                                <div class="stat-value">12</div>
+                                <div class="stat-value" id="totalBookmarksStat">-</div>
                                 <div class="stat-label">Total Bookmarks</div>
-                        </div>
-                        <div class="stat-card">
-                                <div class="stat-value">5</div>
-                                <div class="stat-label">This Week</div>
-                        </div>
-                        <div class="stat-card">
-                                <div class="stat-value">CSE</div>
-                                <div class="stat-label">Most Bookmarked Branch</div>
                         </div>
                 </div>
 
@@ -421,41 +415,59 @@
                 </div>
         </div>
 
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
         <script>
-                const bookmarks = [
-                        { id: 1, subject: 'Data Structures', branch: 'CSE', examType: 'Mid-1', year: '2024-25', bookmarkedDate: '2 days ago' },
-                        { id: 2, subject: 'Mathematics IIA', branch: 'PUC-2', examType: 'End Sem', year: '2024-25', bookmarkedDate: '5 days ago' },
-                        { id: 3, subject: 'Digital Electronics', branch: 'ECE', examType: 'Mid-2', year: '2023-24', bookmarkedDate: '1 week ago' },
-                        { id: 4, subject: 'Operating Systems', branch: 'CSE', examType: 'End Sem', year: '2024-25', bookmarkedDate: '2 weeks ago' },
-                ];
+                let bookmarks = [];
+
+                async function init() {
+                    if (!AuthService.isLoggedIn()) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    try {
+                        const statsRes = await API.get('/users/stats');
+                        if (statsRes.success) document.getElementById('totalBookmarksStat').textContent = statsRes.data.bookmarks;
+            
+                        const res = await UserService.getBookmarks();
+                        if (res.success && res.data) {
+                            bookmarks = res.data;
+                            renderBookmarks();
+                        }
+                    } catch (e) {
+                        console.error('Error loading bookmarks', e);
+                    }
+                }
 
                 function renderBookmarks() {
                         const list = document.getElementById('bookmarksList');
 
-                        if (bookmarks.length === 0) {
+                        if (!bookmarks || bookmarks.length === 0) {
                                 list.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon"><i class="bi bi-bookmark"></i></div>
         <div class="empty-title">No bookmarks yet</div>
         <div class="empty-subtitle">Start bookmarking papers to save them for later</div>
-        <a href="browse-papers.html" class="btn">Browse Papers</a>
+        <a href="question-papers-dashboard.html" class="btn">Browse Dashboard</a>
       </div>
     `;
                                 return;
                         }
 
-                        list.innerHTML = bookmarks.map(bm => `
+                        list.innerHTML = bookmarks.map(bm => {
+                                const examText = bm.examType.charAt(0).toUpperCase() + bm.examType.slice(1);
+                                return `
     <div class="bookmark-item">
       <div class="bookmark-info">
-        <div class="bookmark-title">${bm.subject}</div>
+        <div class="bookmark-title">${bm.title || bm.subject}</div>
         <div class="bookmark-meta">
-          <span><i class="bi bi-calendar3"></i> ${bm.bookmarkedDate}</span>
-          <span><i class="bi bi-folder"></i> ${bm.branch}</span>
-          <span><i class="bi bi-clock"></i> ${bm.year}</span>
+          <span><i class="bi bi-calendar3"></i> ${bm.examYear}</span>
+          <span><i class="bi bi-folder"></i> ${String(bm.course).toUpperCase()}</span>
+          <span><i class="bi bi-clock"></i> Year ${bm.year} Sem ${bm.semester}</span>
         </div>
         <div class="bookmark-tags">
-          <span class="tag tag-branch">${bm.branch}</span>
-          <span class="tag tag-exam">${bm.examType}</span>
+          <span class="tag tag-branch">${String(bm.course).toUpperCase()}</span>
+          <span class="tag tag-exam">${examText}</span>
         </div>
       </div>
       <div class="bookmark-actions">
@@ -467,31 +479,38 @@
         </button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
                 }
 
-                function downloadPaper(id) {
-                        alert(`Downloading paper ${id}...`);
+                async function downloadPaper(id) {
+                    try {
+                        const res = await PaperService.downloadPaper(id);
+                        if(res.url) window.open(res.url, '_blank');
+                    } catch(e) {
+                        alert('Could not download paper.');
+                    }
                 }
 
-                function removeBookmark(id) {
+                async function removeBookmark(id) {
                         if (confirm('Remove this bookmark?')) {
-                                const index = bookmarks.findIndex(b => b.id === id);
-                                if (index > -1) {
-                                        bookmarks.splice(index, 1);
+                                try {
+                                        await UserService.removeBookmark(id);
+                                        bookmarks = bookmarks.filter(b => b.id !== id);
+                                        document.getElementById('totalBookmarksStat').textContent = bookmarks.length;
                                         renderBookmarks();
+                                } catch(e) {
+                                        alert('Could not remove bookmark.');
                                 }
                         }
                 }
 
                 function logout() {
                         if (confirm('Are you sure you want to logout?')) {
-                                localStorage.clear();
-                                window.location.href = 'login.html';
+                                AuthService.logout();
                         }
                 }
 
-                renderBookmarks();
+                init();
         </script>
 
 </body>

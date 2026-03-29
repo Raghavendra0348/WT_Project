@@ -68,7 +68,7 @@ function redirectIfLoggedIn() {
         if (AuthService.isLoggedIn()) {
                 const user = AuthService.getCurrentUser();
                 if (user && user.role === 'admin') {
-                        window.location.href = '/admin/dashboard.html';
+                        window.location.href = '/question-papers-dashboard.html';
                 } else {
                         window.location.href = '/question-papers-dashboard.html';
                 }

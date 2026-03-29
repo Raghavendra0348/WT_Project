@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile - PaperVault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #050510;
+            overflow-x: hidden;
+        }
+
+        /* ——— Animated background ——— */
+        .bg-mesh {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 120%, rgba(120, 119, 198, 0.15), transparent),
+                radial-gradient(ellipse 60% 50% at 80% -20%, rgba(255, 107, 107, 0.1), transparent),
+                radial-gradient(ellipse 50% 80% at 50% 50%, rgba(78, 205, 196, 0.06), transparent);
+        }
+
+        canvas#particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+        /* ——— Container ——— */
+        .wrapper {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 520px; margin: 24px 16px;
+        }
+
+        /* ——— Header ——— */
+        .brand {
+            text-align: center; margin-bottom: 28px;
+        }
+
+        .brand-logo {
+            width: 64px; height: 64px; margin: 0 auto 18px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f97316 100%);
+            display: grid; place-items: center;
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35);
+            animation: breathe 3s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35); transform: scale(1); }
+            50% { box-shadow: 0 16px 56px rgba(124, 58, 237, 0.5); transform: scale(1.04); }
+        }
+
+        .brand-logo i { font-size: 28px; color: #fff; }
+
+        .brand h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px; font-weight: 800;
+            color: #fff; letter-spacing: -0.8px;
+        }
+        .brand h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, #a78bfa, #f472b6, #fb923c);
+            background-clip: text; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand p {
+            color: #64748b; font-size: 14px; margin-top: 6px;
+        }
+
+        /* ——— Card Shell ——— */
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 28px; padding: 36px 32px;
+            backdrop-filter: blur(40px) saturate(180%);
+            box-shadow: 0 32px 64px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        /* ——— Progress / Stepper ——— */
+        .stepper {
+            display: flex; align-items: center; gap: 6px;
+            margin-bottom: 32px;
+        }
+        .stepper-dot {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: grid; place-items: center;
+            font-size: 13px; font-weight: 700;
+            background: rgba(255,255,255,0.04);
+            border: 2px solid rgba(255,255,255,0.08);
+            color: #475569;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            position: relative;
+        }
+        .stepper-dot.active {
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        .stepper-dot.done {
+            background: #10b981; border-color: transparent; color: #fff;
+        }
+        .stepper-line {
+            flex: 1; height: 2px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .stepper-line .fill {
+            position: absolute; inset: 0; width: 0;
+            background: linear-gradient(90deg, #10b981, #6366f1);
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(.4,0,.2,1);
+        }
+        .stepper-line.done .fill { width: 100%; }
+
+        /* ——— Sections ——— */
+        .section { display: none; }
+        .section.active {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-head { font-family: 'Outfit'; font-size: 22px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+        .section-sub { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
+
+        /* ——— Option tiles ——— */
+        .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+        .tile {
+            position: relative;
+            background: rgba(255,255,255,0.025);
+            border: 1.5px solid rgba(255,255,255,0.06);
+            border-radius: 18px; padding: 22px 16px;
+            cursor: pointer; text-align: center;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            overflow: hidden;
+        }
+        .tile::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(99,102,241,0.04));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tile:hover { border-color: rgba(124,58,237,0.3); transform: translateY(-3px); }
+        .tile:hover::before { opacity: 1; }
+        .tile.selected {
+            border-color: #7c3aed;
+            background: rgba(124,58,237,0.08);
+            box-shadow: 0 0 0 1px rgba(124,58,237,0.3), 0 8px 24px rgba(124,58,237,0.15);
+        }
+        .tile.selected::before { opacity: 1; }
+        .tile-check {
+            position: absolute; top: 10px; right: 10px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #7c3aed; color: white;
+            display: none; place-items: center;
+            font-size: 12px;
+        }
+        .tile.selected .tile-check { display: grid; }
+
+        .tile-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: grid; place-items: center;
+            margin: 0 auto 12px;
+            font-size: 24px;
+        }
+        .tile-label { font-weight: 600; font-size: 15px; color: #e2e8f0; margin-bottom: 4px; position: relative; }
+        .tile-desc { font-size: 12px; color: #64748b; position: relative; }
+
+        /* Tile color variants */
+        .tile[data-value="intermediate"] .tile-icon {
+            background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(251,146,60,0.05));
+            color: #fb923c;
+        }
+        .tile[data-value="engineering"] .tile-icon {
+            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
+            color: #818cf8;
+        }
+
+        /* ——— 4-col compact tiles for year ——— */
+        .tiles-4 { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .tile-sm { padding: 16px 8px; }
+        .tile-sm .tile-icon { width: 40px; height: 40px; font-size: 18px; margin-bottom: 8px; border-radius: 12px; }
+        .tile-sm .tile-label { font-size: 14px; }
+
+        /* Year icon colors */
+        .tile-sm:nth-child(1) .tile-icon { background: rgba(99,102,241,0.12); color: #818cf8; }
+        .tile-sm:nth-child(2) .tile-icon { background: rgba(16,185,129,0.12); color: #34d399; }
+        .tile-sm:nth-child(3) .tile-icon { background: rgba(251,146,60,0.12); color: #fb923c; }
+        .tile-sm:nth-child(4) .tile-icon { background: rgba(239,68,68,0.12); color: #f87171; }
+
+        /* Semester tiles */
+        .tiles-sem { grid-template-columns: 1fr 1fr; }
+        .tile-sem .tile-icon { width: 44px; height: 44px; font-size: 20px; margin-bottom: 8px; border-radius: 12px; }
+
+        /* ——— Select dropdown ——— */
+        .field-group { margin-bottom: 20px; }
+        .field-label {
+            display: block; font-size: 11px; font-weight: 700;
+            color: #64748b; text-transform: uppercase; letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        .field-select {
+            width: 100%; padding: 14px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 14px; color: #e2e8f0;
+            font-size: 14px; font-family: 'Inter', sans-serif;
+            outline: none; cursor: pointer;
+            transition: border-color 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6.5 6.5-6.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+        .field-select:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+        .field-select option { background: #1e1b4b; color: #e2e8f0; }
+
+        /* ——— Sub-heading inside step ——— */
+        .sub-head {
+            font-family: 'Outfit'; font-size: 15px; font-weight: 600;
+            color: #94a3b8; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .sub-head i { color: #7c3aed; font-size: 16px; }
+
+        /* ——— Buttons ——— */
+        .btn-row { display: flex; gap: 12px; margin-top: 4px; }
+
+        .btn-back {
+            width: 50px; height: 50px; flex-shrink: 0;
+            display: grid; place-items: center;
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 14px; color: #94a3b8;
+            font-size: 18px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-back:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+        .btn-next {
+            flex: 1; height: 50px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: none; border-radius: 14px;
+            color: #fff; font-weight: 700; font-size: 15px;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,102,241,0.45); }
+        .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn-finish {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+        .btn-finish:hover { box-shadow: 0 8px 28px rgba(16, 185, 129, 0.45); }
+
+        /* ——— Review card ——— */
+        .review-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            border-radius: 18px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 28px;
+        }
+        .review-item {
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .review-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.04); }
+        .review-item:nth-last-child(-n+2) { border-bottom: none; }
+        .review-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px; }
+        .review-val {
+            font-family: 'Outfit'; font-size: 18px; font-weight: 700; color: #f1f5f9;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .review-val .rv-icon {
+            width: 28px; height: 28px; border-radius: 8px;
+            display: grid; place-items: center; font-size: 14px;
+        }
+
+        /* ——— Error ——— */
+        .err-bar {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px; padding: 10px 16px;
+            color: #fca5a5; font-size: 13px; font-weight: 500;
+            margin-bottom: 16px;
+            display: none; align-items: center; gap: 8px;
+        }
+        .err-bar.show { display: flex; }
+
+        /* ——— Success ——— */
+        .success-splash {
+            text-align: center; padding: 32px 16px; display: none;
+        }
+        .success-splash.show { display: block; animation: slideUp 0.5s ease; }
+        .success-ring {
+            width: 88px; height: 88px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            display: grid; place-items: center; margin: 0 auto 20px;
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.35);
+            animation: pop 0.6s cubic-bezier(.175,.885,.32,1.275);
+        }
+        @keyframes pop { from { transform: scale(0) rotate(-30deg); } to { transform: scale(1) rotate(0deg); } }
+        .success-ring i { font-size: 38px; color: #fff; }
+        .success-splash h2 { font-family: 'Outfit'; font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+        .success-splash p { color: #64748b; font-size: 14px; }
+
+        /* ——— Skip ——— */
+        .skip-link {
+            display: block; text-align: center; margin-top: 16px;
+            color: #475569; font-size: 13px; text-decoration: none;
+            transition: color 0.2s;
+        }
+        .skip-link:hover { color: #94a3b8; text-decoration: underline; }
+
+        /* ——— Responsive ——— */
+        @media (max-width: 480px) {
+            .card { padding: 28px 20px; border-radius: 22px; }
+            .tiles-4 { grid-template-columns: repeat(2, 1fr); }
+            .brand h1 { font-size: 24px; }
+            .review-grid { grid-template-columns: 1fr; }
+            .review-item:nth-child(odd) { border-right: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-mesh"></div>
+    <canvas id="particles"></canvas>
+
+    <div class="wrapper">
+        <div class="brand">
+            <div class="brand-logo"><i class="bi bi-mortarboard-fill"></i></div>
+            <h1>Welcome to <em>PaperVault</em></h1>
+            <p>Tell us about yourself to personalize your experience</p>
+        </div>
+
+        <div class="card">
+            <!-- Stepper -->
+            <div class="stepper">
+                <div class="stepper-dot active" id="dot1">1</div>
+                <div class="stepper-line" id="line1"><div class="fill"></div></div>
+                <div class="stepper-dot" id="dot2">2</div>
+                <div class="stepper-line" id="line2"><div class="fill"></div></div>
+                <div class="stepper-dot" id="dot3">3</div>
+            </div>
+
+            <div class="err-bar" id="errBar">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span id="errText"></span>
+            </div>
+
+            <!-- ——— Step 1: Program ——— -->
+            <div class="section active" id="sec1">
+                <div class="section-head">What do you study?</div>
+                <div class="section-sub">Choose your academic program so we show you the right papers</div>
+                <div class="tiles">
+                    <div class="tile" data-value="intermediate" onclick="pick(this,'category')">
+                        <div class="tile-check"><i class="bi bi-check-lg"></i></div>
+                        <div class="tile-icon"><i class="bi bi-book-fill"></i></div>
+                        <div class="tile-label">Intermediate</div>
+                        <div class="tile-desc">PUC / Junior College</div>
+                    </div>
+                    <div class="tile" data-value="engineering" onclick="pick(this,'category')">
+                        <div class="tile-check"><i class="bi bi-check-lg"></i></div>
+                        <div class="tile-icon"><i class="bi bi-cpu-fill"></i></div>
+                        <div class="tile-label">Engineering</div>
+                        <div class="tile-desc">B.Tech / B.E.</div>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-next" onclick="go(2)">Continue <i class="bi bi-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- ——— Step 2: Details ——— -->
+            <div class="section" id="sec2">
+                <div class="section-head">Academic Details</div>
+                <div class="section-sub">This helps us filter papers for your exact year and branch</div>
+
+                <div class="field-group">
+                    <label class="field-label">Branch / Course</label>
+                    <select class="field-select" id="branchSel">
+                        <option value="" disabled selected>— Choose your branch —</option>
+                    </select>
+                </div>
+
+                <div class="sub-head"><i class="bi bi-calendar3"></i> Select Year</div>
+                <div class="tiles tiles-4" id="yearGrid"></div>
+
+                <div class="sub-head" style="margin-top:4px;"><i class="bi bi-layers"></i> Select Semester</div>
+                <div class="tiles tiles-sem">
+                    <div class="tile tile-sem" data-value="1" onclick="pick(this,'semester')">
+                        <div class="tile-check"><i class="bi bi-check-lg"></i></div>
+                        <div class="tile-icon" style="background:rgba(99,102,241,0.12);color:#818cf8;"><i class="bi bi-1-circle-fill"></i></div>
+                        <div class="tile-label">Semester 1</div>
+                    </div>
+                    <div class="tile tile-sem" data-value="2" onclick="pick(this,'semester')">
+                        <div class="tile-check"><i class="bi bi-check-lg"></i></div>
+                        <div class="tile-icon" style="background:rgba(236,72,153,0.12);color:#f472b6;"><i class="bi bi-2-circle-fill"></i></div>
+                        <div class="tile-label">Semester 2</div>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn-back" onclick="go(1)"><i class="bi bi-arrow-left"></i></button>
+                    <button class="btn-next" onclick="go(3)">Review <i class="bi bi-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- ——— Step 3: Review ——— -->
+            <div class="section" id="sec3">
+                <div class="section-head">Looks good?</div>
+                <div class="section-sub">Review your details before we set everything up</div>
+
+                <div class="review-grid">
+                    <div class="review-item">
+                        <div class="review-label">Program</div>
+                        <div class="review-val">
+                            <div class="rv-icon" style="background:rgba(124,58,237,0.12); color:#a78bfa;"><i class="bi bi-mortarboard-fill"></i></div>
+                            <span id="rvCat">—</span>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-label">Branch</div>
+                        <div class="review-val">
+                            <div class="rv-icon" style="background:rgba(99,102,241,0.12); color:#818cf8;"><i class="bi bi-diagram-3-fill"></i></div>
+                            <span id="rvBranch">—</span>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-label">Year</div>
+                        <div class="review-val">
+                            <div class="rv-icon" style="background:rgba(16,185,129,0.12); color:#34d399;"><i class="bi bi-calendar-check-fill"></i></div>
+                            <span id="rvYear">—</span>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-label">Semester</div>
+                        <div class="review-val">
+                            <div class="rv-icon" style="background:rgba(251,146,60,0.12); color:#fb923c;"><i class="bi bi-layers-fill"></i></div>
+                            <span id="rvSem">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn-back" onclick="go(2)"><i class="bi bi-arrow-left"></i></button>
+                    <button class="btn-next btn-finish" id="submitBtn" onclick="submit()">
+                        <i class="bi bi-check-circle-fill"></i> Complete Setup
+                    </button>
+                </div>
+            </div>
+
+            <!-- ——— Success ——— -->
+            <div class="success-splash" id="successSplash">
+                <div class="success-ring"><i class="bi bi-check-lg"></i></div>
+                <h2>You're all set! 🎉</h2>
+                <p>Redirecting to your personalized dashboard...</p>
+            </div>
+        </div>
+
+        <a href="question-papers-dashboard.html" class="skip-link" id="skipLink">Skip for now →</a>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Auth guard
+        if (!AuthService.isLoggedIn()) window.location.href = 'login.html';
+
+        // ——— Data ———
+        const D = { category: null, branch: null, year: null, semester: null };
+
+        const BRANCHES = {
+            intermediate: ['PUC-1', 'PUC-2', 'MPC', 'BiPC', 'CEC', 'MEC'],
+            engineering: ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'MME', 'CHEM']
+        };
+
+        const YEARS = {
+            intermediate: [
+                { v: 1, label: 'Year 1', icon: 'bi-1-circle-fill' },
+                { v: 2, label: 'Year 2', icon: 'bi-2-circle-fill' }
+            ],
+            engineering: [
+                { v: 1, label: 'E1', icon: 'bi-1-circle-fill' },
+                { v: 2, label: 'E2', icon: 'bi-2-circle-fill' },
+                { v: 3, label: 'E3', icon: 'bi-3-circle-fill' },
+                { v: 4, label: 'E4', icon: 'bi-4-circle-fill' }
+            ]
+        };
+
+        // ——— Select tile ———
+        function pick(el, field) {
+            el.parentElement.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+            D[field] = el.dataset.value;
+
+            if (field === 'category') {
+                fillBranches(D.category);
+                fillYears(D.category);
+                D.branch = null; D.year = null;
+                document.getElementById('branchSel').value = '';
+            }
+        }
+
+        function fillBranches(cat) {
+            const sel = document.getElementById('branchSel');
+            sel.innerHTML = '<option value="" disabled selected>— Choose your branch —</option>';
+            (BRANCHES[cat] || []).forEach(b => { sel.innerHTML += `<option value="${b}">${b}</option>`; });
+        }
+
+        function fillYears(cat) {
+            const grid = document.getElementById('yearGrid');
+            grid.innerHTML = (YEARS[cat] || YEARS.engineering).map(y => `
+                <div class="tile tile-sm" data-value="${y.v}" onclick="pick(this,'year')">
+                    <div class="tile-check"><i class="bi bi-check-lg"></i></div>
+                    <div class="tile-icon"><i class="bi ${y.icon}"></i></div>
+                    <div class="tile-label">${y.label}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('branchSel').addEventListener('change', function() { D.branch = this.value; });
+
+        // ——— Navigation ———
+        let cur = 1;
+        function go(step) {
+            hideErr();
+            // Validate
+            if (step === 2 && !D.category) { showErr('Please select a program'); return; }
+            if (step === 3) {
+                if (!D.branch) { showErr('Please select your branch'); return; }
+                if (!D.year)   { showErr('Please select your year'); return; }
+                if (!D.semester){ showErr('Please select your semester'); return; }
+                // Fill review
+                document.getElementById('rvCat').textContent = D.category === 'engineering' ? 'Engineering' : 'Intermediate';
+                document.getElementById('rvBranch').textContent = D.branch;
+                document.getElementById('rvYear').textContent = 'Year ' + D.year;
+                document.getElementById('rvSem').textContent = 'Sem ' + D.semester;
+            }
+            cur = step;
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('sec' + step).classList.add('active');
+            // Update stepper
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById('dot' + i);
+                dot.classList.remove('active', 'done');
+                if (i < step) dot.classList.add('done');
+                if (i === step) dot.classList.add('active');
+            }
+            document.getElementById('line1').classList.toggle('done', step >= 2);
+            document.getElementById('line2').classList.toggle('done', step >= 3);
+        }
+
+        function showErr(msg) { document.getElementById('errText').textContent = msg; document.getElementById('errBar').classList.add('show'); }
+        function hideErr() { document.getElementById('errBar').classList.remove('show'); }
+
+        // ——— Submit ———
+        async function submit() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spin-icon"><i class="bi bi-arrow-repeat"></i></span> Saving...';
+
+            try {
+                const res = await API.put('/users/profile', {
+                    course: D.category,
+                    year: parseInt(D.year),
+                    semester: parseInt(D.semester)
+                });
+                if (res.success) {
+                    const user = AuthService.getCurrentUser();
+                    if (user) {
+                        user.course = D.category;
+                        user.year = parseInt(D.year);
+                        user.semester = parseInt(D.semester);
+                        user.profileCompleted = true;
+                        localStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(user));
+                    }
+                    // Success state
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    [1,2,3].forEach(i => { document.getElementById('dot' + i).classList.remove('active'); document.getElementById('dot' + i).classList.add('done'); });
+                    document.getElementById('line1').classList.add('done');
+                    document.getElementById('line2').classList.add('done');
+                    document.getElementById('successSplash').classList.add('show');
+                    document.getElementById('skipLink').style.display = 'none';
+
+                    setTimeout(() => {
+                        window.location.href = (user && user.role === 'admin') ? 'admin-dashboard.html' : 'question-papers-dashboard.html';
+                    }, 2000);
+                }
+            } catch (e) {
+                showErr(e.message || 'Failed to save. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Complete Setup';
+            }
+        }
+
+        // Init
+        fillYears('engineering');
+
+        // ——— Particle canvas ———
+        (function() {
+            const c = document.getElementById('particles');
+            const ctx = c.getContext('2d');
+            let W, H, dots = [];
+
+            function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+            resize();
+            window.addEventListener('resize', resize);
+
+            for (let i = 0; i < 60; i++) {
+                dots.push({
+                    x: Math.random() * W, y: Math.random() * H,
+                    r: Math.random() * 1.5 + 0.5,
+                    dx: (Math.random() - 0.5) * 0.4,
+                    dy: (Math.random() - 0.5) * 0.4,
+                    o: Math.random() * 0.3 + 0.1
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                dots.forEach(d => {
+                    d.x += d.dx; d.y += d.dy;
+                    if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+                    if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(148, 163, 184, ${d.o})`;
+                    ctx.fill();
+                });
+                // Lines between close dots
+                for (let i = 0; i < dots.length; i++) {
+                    for (let j = i + 1; j < dots.length; j++) {
+                        const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(dots[i].x, dots[i].y);
+                            ctx.lineTo(dots[j].x, dots[j].y);
+                            ctx.strokeStyle = `rgba(148, 163, 184, ${0.04 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        // Spin animation
+        const sty = document.createElement('style');
+        sty.textContent = `.spin-icon i { display:inline-block; animation: sp 0.8s linear infinite; } @keyframes sp { to { transform:rotate(360deg); } }`;
+        document.head.appendChild(sty);
+    </script>
+</body>
+
+</html>

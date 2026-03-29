@@ -12,9 +12,9 @@ const CONFIG = {
 
         // Storage Keys
         STORAGE_KEYS: {
-                TOKEN: 'papervault_token',
-                USER: 'papervault_user',
-                THEME: 'papervault_theme'
+                TOKEN: 'token',
+                USER: 'user',
+                THEME: 'theme'
         },
 
         // Pagination

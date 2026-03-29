@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 exports.getPapers = async (req, res, next) => {
   try {
     // Build where clause from query parameters
-    const where = {};
+    const where = { status: 'approved' };
     const { category, year, semester, subject, examType, examYear, search } = req.query;
 
     if (category) where.category = category;
@@ -132,11 +132,13 @@ exports.getPaper = async (req, res, next) => {
 
 // @desc    Create new paper
 // @route   POST /api/papers
-// @access  Private/Admin
+// @access  Private
 exports.createPaper = async (req, res, next) => {
   try {
     // Add user to req.body
     req.body.uploadedById = req.user.id;
+    // Admins bypass pending state
+    req.body.status = req.user.role === 'admin' ? 'approved' : 'pending';
 
     const paper = await Paper.create(req.body);
 
@@ -147,6 +149,34 @@ exports.createPaper = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// @desc    Get pending papers
+// @route   GET /api/papers/pending
+// @access  Private/Admin
+exports.getPendingPapers = async (req, res, next) => {
+  try {
+    const papers = await Paper.findAll({
+      where: { status: 'pending' },
+      include: [{ model: User, as: 'uploadedBy', attributes: ['id', 'name', 'email'] }]
+    });
+    res.status(200).json({ success: true, count: papers.length, data: papers });
+  } catch(err) { next(err); }
+};
+
+// @desc    Approve paper
+// @route   PUT /api/papers/:id/approve
+// @access  Private/Admin
+exports.approvePaper = async (req, res, next) => {
+  try {
+    const paper = await Paper.findByPk(req.params.id);
+    if (!paper) return res.status(404).json({ success: false, message: 'Paper not found' });
+    
+    paper.status = 'approved';
+    await paper.save();
+    
+    res.status(200).json({ success: true, data: paper });
+  } catch(err) { next(err); }
 };
 
 // @desc    Update paper

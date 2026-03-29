@@ -1,14 +1,15 @@
-const express = require('express');
 const dotenv = require('dotenv');
+
+// Load environment variables FIRST (before any other imports that use them)
+dotenv.config();
+
+const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const { connectDB } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
-
-// Load environment variables
-dotenv.config();
 
 // Connect to MySQL
 connectDB();
@@ -20,10 +21,21 @@ require('./models/associations');
 const app = express();
 
 // Middleware
-app.use(helmet()); // Security headers
+app.use(helmet({
+  // Allow Google Identity popup flow to call back into the page
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }
+})); // Security headers
 app.use(compression()); // Compress responses
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:3000',
+    'http://127.0.0.1:3000',
+    process.env.CLIENT_URL || 'http://localhost:3000'
+  ],
   credentials: true
 }));
 app.use(express.json()); // Parse JSON bodies

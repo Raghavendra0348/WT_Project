@@ -352,61 +352,63 @@
                         }
                 }
         </style>
+<link rel="stylesheet" href="css/premium.css">
 </head>
 
 <body>
 
         <!-- Sidebar -->
-        <div class="sidebar">
-                <div class="logo-area">
-                        <div class="logo-icon">
-                                <i class="bi bi-journal-bookmark-fill" style="font-size: 24px; color: white;"></i>
-                        </div>
-                        <div>
-                                <div class="logo-text">PaperVault</div>
-                                <div class="logo-sub">RGUKT Paper Repository</div>
-                        </div>
-                </div>
+            <!-- Background Decoration -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
 
-                <div class="nav-label">Main</div>
-                <a class="nav-item" href="question-papers-dashboard.html">
-                        <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                </a>
-                <a class="nav-item" href="browse-papers.html">
-                        <i class="bi bi-file-earmark-text"></i> Browse Papers
-                </a>
-                <a class="nav-item active" href="upload-paper.html">
-                        <i class="bi bi-cloud-arrow-up"></i> Upload Paper
-                </a>
-                <a class="nav-item" href="advanced-search.html">
-                        <i class="bi bi-search"></i> Advanced Search
-                </a>
-
-                <div class="nav-label">Library</div>
-                <a class="nav-item" href="bookmarks.html">
-                        <i class="bi bi-bookmark-heart"></i> Bookmarks
-                </a>
-                <a class="nav-item" href="my-downloads.html">
-                        <i class="bi bi-download"></i> My Downloads
-                </a>
-                <a class="nav-item" href="view-history.html">
-                        <i class="bi bi-clock-history"></i> View History
-                </a>
-
-                <div class="nav-label">Account</div>
-                <a class="nav-item" href="my-profile.html">
-                        <i class="bi bi-person-circle"></i> My Profile
-                </a>
-                <a class="nav-item" href="settings.html">
-                        <i class="bi bi-gear"></i> Settings
-                </a>
-
-                <button class="logout-btn" onclick="logout()">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="bi bi-journal-bookmark-fill" style="font-size: 20px; color: white;"></i>
+            </div>
+            <div>
+                <div class="logo-text">PaperVault</div>
+                <div class="logo-sub" id="logoSub">PREMIUM REPOSITORY</div>
+            </div>
         </div>
 
-        <!-- Main Content -->
+        <div id="sidebarNav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="question-papers-dashboard.html">
+                <i class="bi bi-grid-fill"></i> Dashboard
+            </a>
+            <a class="nav-item active" href="upload-paper.html">
+                <i class="bi bi-cloud-arrow-up-fill"></i> Upload Paper
+            </a>
+
+            <div class="nav-label">Library</div>
+            <a class="nav-item" href="bookmarks.html">
+                <i class="bi bi-bookmark-heart-fill"></i> Saved
+            </a>
+            <a class="nav-item" href="my-downloads.html">
+                <i class="bi bi-cloud-download-fill"></i> Downloads
+            </a>
+            <a class="nav-item" href="view-history.html">
+                <i class="bi bi-clock-history"></i> View History
+            </a>
+
+            <div class="nav-label">Account</div>
+            <a class="nav-item" href="my-profile.html">
+                <i class="bi bi-person-badge-fill"></i> Profile
+            </a>
+            <a class="nav-item" href="settings.html">
+                <i class="bi bi-gear-fill"></i> Settings
+            </a>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
+    </div>
+
+    <!-- Main Content -->
         <div class="main-content">
                 <div class="page-header">
                         <h1 class="page-title">Upload Question Paper</h1>
@@ -470,6 +472,14 @@
                                                                         class="required">*</span></label>
                                                         <select class="form-select" id="branchSelect" required>
                                                                 <option value="">Select Branch</option>
+                                                                <option value="CSE">CSE</option>
+                                                                <option value="ECE">ECE</option>
+                                                                <option value="EEE">EEE</option>
+                                                                <option value="ME">ME</option>
+                                                                <option value="CE">CE</option>
+                                                                <option value="CHE">CHE</option>
+                                                                <option value="MME">MME</option>
+                                                                <option value="PUC">PUC (All)</option>
                                                         </select>
                                                 </div>
 
@@ -550,9 +560,17 @@
                 </div>
         </div>
 
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/admin/role-nav.js"></script>
         <script>
-                let selectedFile = null;
+                // Verify auth
+                if (!AuthService.isLoggedIn()) {
+                        window.location.href = 'login.html';
+                }
 
+                let selectedFile = null;
                 const dropZone = document.getElementById('dropZone');
                 const fileInput = document.getElementById('fileInput');
 
@@ -605,6 +623,7 @@
                         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
                 }
 
+                // Helper to initialize branches dynamically
                 function updateBranchOptions() {
                         const category = document.getElementById('categorySelect').value;
                         const branchSelect = document.getElementById('branchSelect');
@@ -613,7 +632,7 @@
 
                         if (category === 'puc1' || category === 'puc2') {
                                 options += '<option value="PUC">PUC (All)</option>';
-                        } else if (category === 'engg') {
+                        } else {
                                 options += `
       <option value="CSE">CSE</option>
       <option value="ECE">ECE</option>
@@ -622,13 +641,13 @@
       <option value="CE">CE</option>
       <option value="CHE">CHE</option>
       <option value="MME">MME</option>
+      <option value="PUC">PUC (All)</option>
     `;
                         }
-
                         branchSelect.innerHTML = options;
                 }
 
-                document.getElementById('uploadForm').addEventListener('submit', (e) => {
+                document.getElementById('uploadForm').addEventListener('submit', async (e) => {
                         e.preventDefault();
 
                         if (!selectedFile) {
@@ -636,8 +655,68 @@
                                 return;
                         }
 
-                        alert('Paper uploaded successfully! It will be reviewed before publishing.');
-                        resetForm();
+                        const btn = e.target.querySelector('button[type="submit"]');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Uploading...';
+                        btn.disabled = true;
+
+                        try {
+                                // 1. Upload File
+                                const formData = new FormData();
+                                formData.append('paper', selectedFile);
+
+                                const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
+                                const uploadRes = await fetch(CONFIG.API_URL + '/upload/paper', {
+                                        method: 'POST',
+                                        headers: { 'Authorization': `Bearer ${token}` },
+                                        body: formData
+                                });
+                                
+                                const uploadData = await uploadRes.json();
+                                if(!uploadRes.ok || !uploadData.success) throw new Error(uploadData.message || 'File upload failed');
+
+                                // 2. Create Paper Record
+                                const subject = e.target.querySelector('input[placeholder="e.g., Data Structures"]').value;
+                                const categorySelect = document.getElementById('categorySelect').value;
+                                const category = categorySelect.includes('puc') ? 'intermediate' : 'engineering';
+                                const course = document.getElementById('branchSelect').value;
+                                
+                                // Process year and sem from "Year/Semester" dropdown ("1","2",etc) and generic "Semester"
+                                const fullYearVal = e.target.querySelectorAll('select')[2].value; // "Year/Semester"
+                                const actualYear = parseInt(fullYearVal) || 1;
+                                const actualSemStr = e.target.querySelectorAll('select')[6].value; // "Semester (Optional)"
+                                const actualSem = actualSemStr === 'II' ? 2 : 1;
+                                
+                                const examType = e.target.querySelectorAll('select')[3].value; // "Exam Type"
+                                const examYearStr = e.target.querySelectorAll('select')[4].value; // "Academic Year"
+                                const examYear = parseInt(examYearStr.split('-')[0]) || 2024;
+                                
+                                const payload = {
+                                    title: subject + ' - ' + examType,
+                                    category,
+                                    course,
+                                    year: actualYear,
+                                    semester: actualSem,
+                                    subject,
+                                    examType: examType === 'endsem' ? 'final' : (examType.includes('mid') ? 'midterm' : 'model'),
+                                    examYear,
+                                    fileUrl: uploadData.data.url,
+                                    filePublicId: uploadData.data.publicId,
+                                    fileSize: uploadData.data.size
+                                };
+
+                                const paperRes = await API.post('/papers', payload);
+                                if(paperRes.success) {
+                                    alert('Paper uploaded successfully! It has been submitted for Admin approval.');
+                                    resetForm();
+                                }
+                        } catch(err) {
+                                console.error(err);
+                                alert('Error: ' + err.message);
+                        } finally {
+                                btn.innerHTML = originalText;
+                                btn.disabled = false;
+                        }
                 });
 
                 function resetForm() {
@@ -646,9 +725,8 @@
                 }
 
                 function logout() {
-                        if (confirm('Are you sure you want to logout?')) {
-                                localStorage.clear();
-                                window.location.href = 'login.html';
+                        if (confirm('Are you sure you want to sign out?')) {
+                                AuthService.logout();
                         }
                 }
         </script>

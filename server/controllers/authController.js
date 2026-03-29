@@ -2,22 +2,26 @@ const User = require('../models/User');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 const { Op } = require('sequelize');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, course, year, semester } = req.body;
+    const { name, firstName, lastName, email, password, course, year, semester } = req.body;
+    
+    const finalName = name || (firstName ? `${firstName} ${lastName}` : 'Student');
 
     // Create user
     const user = await User.create({
-      name,
+      name: finalName,
       email,
       password,
-      course,
-      year,
-      semester
+      course: course || 'engineering',
+      year: year || 1,
+      semester: semester || 1
     });
 
     // Create token
@@ -92,6 +96,61 @@ exports.login = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+};
+
+// @desc    Google Authentication
+// @route   POST /api/auth/google
+// @access  Public
+exports.googleAuth = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ success: false, message: 'No Google token provided' });
+    }
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      // Create new user with default values for required fields
+      user = await User.create({
+        name,
+        email,
+        course: 'engineering',
+        year: 1,
+        role: 'student'
+      });
+    }
+
+    // Create app token
+    const jwtToken = user.getSignedJwtToken();
+
+    res.status(200).json({
+      success: true,
+      token: jwtToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        course: user.course,
+        year: user.year
+      }
+    });
+  } catch (err) {
+    console.error('Google auth error:', err.message);
+    res.status(401).json({ success: false, message: 'Invalid Google token' });
   }
 };
 

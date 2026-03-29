@@ -5,1020 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PaperVault – RGUKT Question Papers Dashboard</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-    rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <style>
-    :root {
-      --indigo: #4F35D2;
-      --indigo-light: #6B52E8;
-      --indigo-dark: #3520B0;
-      --violet: #7C3AED;
-      --accent: #F59E0B;
-      --accent2: #10B981;
-      --bg: #F4F3FF;
-      --surface: #FFFFFF;
-      --text: #1A1340;
-      --muted: #7B7A99;
-      --border: #E5E3F7;
-      --sidebar-w: 240px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--muted);
-    }
-
-    /* ─── SIDEBAR ─── */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--indigo);
-      display: flex;
-      flex-direction: column;
-      padding: 24px 14px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 100;
-      overflow-y: auto;
-    }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 10px;
-      margin-bottom: 28px;
-    }
-
-    .logo-icon {
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 14px;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .logo-icon svg {
-      width: 24px;
-      height: 24px;
-      fill: #fff;
-    }
-
-    .logo-text {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.2;
-    }
-
-    .logo-sub {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.55);
-      font-weight: 400;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.35);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 16px 14px 8px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      color: rgba(255, 255, 255, 0.65);
-      font-size: 13.5px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 2px;
-      text-decoration: none;
-    }
-
-    .nav-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-
-    .nav-item.active {
-      background: rgba(255, 255, 255, 0.22);
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .nav-item i {
-      font-size: 17px;
-      width: 20px;
-      text-align: center;
-      opacity: 0.85;
-    }
-
-    .nav-badge {
-      margin-left: auto;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 50px;
-    }
-
-    .nav-spacer {
-      flex: 1;
-    }
-
-    .campus-selector {
-      margin: 16px 8px 12px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .campus-label {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.45);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .campus-select {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .campus-select option {
-      color: var(--text);
-      background: #fff;
-    }
-
-    .nav-logout {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      color: rgba(255, 255, 255, 0.55);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .nav-logout:hover {
-      color: #fff;
-      background: rgba(239, 68, 68, 0.25);
-    }
-
-    .nav-logout i {
-      font-size: 17px;
-      width: 20px;
-      text-align: center;
-    }
-
-    /* ─── MOBILE TOGGLE ─── */
-    .sidebar-toggle {
-      display: none;
-      position: fixed;
-      top: 14px;
-      left: 14px;
-      z-index: 200;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: var(--indigo);
-      color: #fff;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 90;
-    }
-
-    /* ─── MAIN ─── */
-    .main {
-      margin-left: var(--sidebar-w);
-      flex: 1;
-      padding: 24px 28px;
-      min-height: 100vh;
-    }
-
-    /* ─── TOPBAR ─── */
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .search-wrap {
-      flex: 1;
-      max-width: 480px;
-      position: relative;
-    }
-
-    .search-wrap input {
-      width: 100%;
-      padding: 11px 18px 11px 42px;
-      border-radius: 50px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-wrap input:focus {
-      border-color: var(--indigo-light);
-    }
-
-    .search-wrap .search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      color: var(--muted);
-    }
-
-    .topbar-right {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .notif-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      font-size: 17px;
-      color: var(--text);
-      transition: all 0.2s;
-    }
-
-    .notif-btn:hover {
-      border-color: var(--indigo-light);
-    }
-
-    .notif-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #EF4444;
-      border: 2px solid #fff;
-      position: absolute;
-      top: 6px;
-      right: 6px;
-    }
-
-    .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 50px;
-      padding: 5px 14px 5px 5px;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    .user-chip:hover {
-      border-color: var(--indigo-light);
-    }
-
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--indigo), var(--violet));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Syne', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .user-info {
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .user-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* ─── HERO BANNER ─── */
-    .hero {
-      background: linear-gradient(120deg, var(--indigo) 0%, var(--violet) 100%);
-      border-radius: 20px;
-      padding: 28px 32px;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      min-height: 140px;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .hero-text {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-    }
-
-    .hero-date {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 6px;
-    }
-
-    .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-
-    .hero-sub {
-      font-size: 13.5px;
-      color: rgba(255, 255, 255, 0.72);
-      max-width: 500px;
-    }
-
-    .hero-deco {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .deco-badge {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 12px 16px;
-      text-align: center;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      min-width: 90px;
-    }
-
-    .deco-badge .num {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .deco-badge .lbl {
-      font-size: 10px;
-      opacity: 0.75;
-      margin-top: 2px;
-    }
-
-    /* ─── QUICK ACCESS TABS ─── */
-    .quick-tabs {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .quick-tab {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 20px;
-      cursor: pointer;
-      transition: all 0.22s;
-      flex: 1;
-      min-width: 180px;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .quick-tab:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(79, 53, 210, 0.1);
-      border-color: var(--indigo-light);
-    }
-
-    .quick-tab.active-tab {
-      border-color: var(--indigo);
-      background: linear-gradient(135deg, #f0edff, #fff);
-    }
-
-    .quick-tab-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .quick-tab-info {
-      line-height: 1.3;
-    }
-
-    .quick-tab-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .quick-tab-desc {
-      font-size: 11.5px;
-      color: var(--muted);
-    }
-
-    .tab-puc1 .quick-tab-icon {
-      background: #FEF3C7;
-      color: #92400E;
-    }
-
-    .tab-puc2 .quick-tab-icon {
-      background: #DBEAFE;
-      color: #1E40AF;
-    }
-
-    .tab-engg .quick-tab-icon {
-      background: #D1FAE5;
-      color: #065F46;
-    }
-
-    .tab-all .quick-tab-icon {
-      background: #EDE9FF;
-      color: var(--indigo);
-    }
-
-    /* ─── SECTION HEADER ─── */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .see-all {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--indigo);
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .see-all:hover {
-      text-decoration: underline;
-    }
-
-    /* ─── TWO COL LAYOUT ─── */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 310px;
-      gap: 24px;
-    }
-
-    /* ─── FILTER CHIPS ─── */
-    .filter-chips {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .chip {
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .chip.active {
-      background: var(--indigo);
-      border-color: var(--indigo);
-      color: #fff;
-    }
-
-    .chip:hover:not(.active) {
-      border-color: var(--indigo);
-      color: var(--indigo);
-    }
-
-    /* ─── BRANCH GRID ─── */
-    .branch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .branch-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.22s;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .branch-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 53, 210, 0.1);
-      border-color: var(--indigo-light);
-    }
-
-    .branch-card.selected {
-      border-color: var(--indigo);
-      background: linear-gradient(135deg, #f0edff, #fff);
-    }
-
-    .branch-card i {
-      font-size: 24px;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .branch-card .branch-name {
-      font-size: 12px;
-      font-weight: 700;
-      font-family: 'Syne', sans-serif;
-    }
-
-    .branch-card .branch-count {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    /* ─── PAPER CARDS ─── */
-    .papers-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .paper-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      transition: all 0.22s;
-    }
-
-    .paper-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(79, 53, 210, 0.1);
-    }
-
-    .paper-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 50px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .tag-puc1 {
-      background: #FEF3C7;
-      color: #92400E;
-    }
-
-    .tag-puc2 {
-      background: #DBEAFE;
-      color: #1E40AF;
-    }
-
-    .tag-engg {
-      background: #D1FAE5;
-      color: #065F46;
-    }
-
-    .tag-sem {
-      background: #EDE9FF;
-      color: var(--indigo-dark);
-    }
-
-    .paper-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 5px;
-      line-height: 1.35;
-    }
-
-    .paper-meta {
-      font-size: 11.5px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    .paper-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .paper-stars {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .paper-stars i {
-      font-size: 12px;
-      color: var(--accent);
-    }
-
-    .paper-stars span {
-      font-size: 11px;
-      color: var(--muted);
-      margin-left: 4px;
-    }
-
-    .btn-view {
-      background: var(--indigo);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 6px 16px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-view:hover {
-      background: var(--indigo-dark);
-      color: #fff;
-    }
-
-    /* ─── RIGHT COLUMN CARDS ─── */
-    .right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .card-box {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-    }
-
-    /* Exam Calendar */
-    .exam-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .exam-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .exam-date-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: #EDE9FF;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .exam-date-box .day {
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--indigo);
-      line-height: 1;
-    }
-
-    .exam-date-box .mon {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--indigo);
-      text-transform: uppercase;
-    }
-
-    .exam-info .exam-title {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-
-    .exam-info .exam-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* Notices */
-    .notice-item {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .notice-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .notice-heading {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 3px;
-    }
-
-    .notice-body {
-      font-size: 11.5px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .notice-link {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--indigo);
-      cursor: pointer;
-      display: inline-block;
-      margin-top: 3px;
-      text-decoration: none;
-    }
-
-    .notice-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Bookmarks */
-    .bookmark-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .bookmark-item:last-child {
-      border-bottom: none;
-    }
-
-    .bm-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: #EDE9FF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 15px;
-      color: var(--indigo);
-    }
-
-    .bm-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .bm-sub {
-      font-size: 10.5px;
-      color: var(--muted);
-    }
-
-    .bm-dl {
-      margin-left: auto;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 14px;
-      color: var(--indigo);
-      border: none;
-    }
-
-    .bm-dl:hover {
-      background: var(--indigo);
-      color: #fff;
-    }
-
-    /* Progress bars */
-    .prog-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .prog-label {
-      font-size: 12px;
-      color: var(--muted);
-      width: 140px;
-    }
-
-    .prog-bar {
-      flex: 1;
-      height: 7px;
-      border-radius: 99px;
-      background: #E5E3F7;
-      overflow: hidden;
-    }
-
-    .prog-fill {
-      height: 100%;
-      border-radius: 99px;
-      background: linear-gradient(90deg, var(--indigo), var(--violet));
-    }
-
-    .prog-num {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-      width: 34px;
-      text-align: right;
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 1024px) {
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-deco {
-        display: none;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar-toggle {
-        display: flex;
-      }
-
-      .sidebar-overlay.show {
-        display: block;
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 18px 16px;
-        padding-top: 60px;
-      }
-
-      .papers-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .branch-grid {
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      }
-
-      .quick-tabs {
-        flex-direction: column;
-      }
-
-      .quick-tab {
-        min-width: auto;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="question-paper-dash.css">
+  <link rel="stylesheet" href="css/premium.css">
 </head>
 
 <body>
@@ -1028,70 +18,55 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- ─── SIDEBAR ─── -->
-  <aside class="sidebar" id="sidebar">
+  <!-- Background Decoration -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
     <div class="logo-area">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
+        <i class="bi bi-journal-bookmark-fill" style="font-size: 20px; color: white;"></i>
       </div>
       <div>
         <div class="logo-text">PaperVault</div>
-        <div class="logo-sub">RGUKT Paper Repository</div>
+        <div class="logo-sub" id="logoSub">PREMIUM REPOSITORY</div>
       </div>
     </div>
 
-    <div class="nav-label">Main</div>
-    <a class="nav-item active" href="question-papers-dashboard.html">
-      <i class="bi bi-grid-1x2-fill"></i> Dashboard
-    </a>
-    <a class="nav-item" href="browse-papers.html">
-      <i class="bi bi-file-earmark-text"></i> Browse Papers
-      <span class="nav-badge">New</span>
-    </a>
-    <a class="nav-item" href="upload-paper.html">
-      <i class="bi bi-cloud-arrow-up"></i> Upload Paper
-    </a>
-    <a class="nav-item" href="advanced-search.html">
-      <i class="bi bi-search"></i> Advanced Search
-    </a>
+    <div id="sidebarNav">
+      <div class="nav-label">Main</div>
+      <a class="nav-item active" href="question-papers-dashboard.html">
+        <i class="bi bi-grid-fill"></i> Dashboard
+      </a>
+      <a class="nav-item" href="upload-paper.html">
+        <i class="bi bi-cloud-arrow-up-fill"></i> Upload Paper
+      </a>
 
-    <div class="nav-label">Library</div>
-    <a class="nav-item" href="bookmarks.html">
-      <i class="bi bi-bookmark-heart"></i> Bookmarks
-    </a>
-    <a class="nav-item" href="my-downloads.html">
-      <i class="bi bi-download"></i> My Downloads
-    </a>
-    <a class="nav-item" href="view-history.html">
-      <i class="bi bi-clock-history"></i> View History
-    </a>
+      <div class="nav-label">Library</div>
+      <a class="nav-item" href="bookmarks.html">
+        <i class="bi bi-bookmark-heart-fill"></i> Saved
+      </a>
+      <a class="nav-item" href="my-downloads.html">
+        <i class="bi bi-cloud-download-fill"></i> Downloads
+      </a>
+      <a class="nav-item" href="view-history.html">
+        <i class="bi bi-clock-history"></i> View History
+      </a>
 
-    <div class="nav-label">Account</div>
-    <a class="nav-item" href="my-profile.html">
-      <i class="bi bi-person-circle"></i> My Profile
-    </a>
-    <a class="nav-item" href="settings.html">
-      <i class="bi bi-gear"></i> Settings
-    </a>
-
-    <!-- Campus Selector -->
-    <div class="campus-selector">
-      <div class="campus-label">Your Campus</div>
-      <select class="campus-select" id="campusSelect">
-        <option value="rkvalley">RK Valley (Idupulapaya)</option>
-        <option value="nuzvid">Nuzvid</option>
-        <option value="ongole">Ongole</option>
-        <option value="srikakulam">Srikakulam</option>
-        <option value="basar">Basar</option>
-      </select>
+      <div class="nav-label">Account</div>
+      <a class="nav-item" href="my-profile.html">
+        <i class="bi bi-person-badge-fill"></i> Profile
+      </a>
+      <a class="nav-item" href="settings.html">
+        <i class="bi bi-gear-fill"></i> Settings
+      </a>
     </div>
 
-    <div class="nav-spacer"></div>
-    <a class="nav-logout" href="#" id="logoutBtn">
-      <i class="bi bi-box-arrow-left"></i> Logout
-    </a>
-  </aside>
+    <button class="logout-btn" onclick="logout()">
+      <i class="bi bi-box-arrow-right"></i> Sign Out
+    </button>
+  </div>
 
   <!-- ─── MAIN CONTENT ─── -->
   <main class="main">
@@ -1127,15 +102,15 @@
       </div>
       <div class="hero-deco">
         <div class="deco-badge">
-          <div class="num">2,400+</div>
+          <div class="num" id="totalPapersCount">--</div>
           <div class="lbl">Papers</div>
         </div>
         <div class="deco-badge">
-          <div class="num" id="myDownloads">0</div>
+          <div class="num" id="myDownloads">--</div>
           <div class="lbl">Downloaded</div>
         </div>
         <div class="deco-badge">
-          <div class="num" id="myBookmarks">0</div>
+          <div class="num" id="myBookmarks">--</div>
           <div class="lbl">Saved</div>
         </div>
       </div>
@@ -1215,6 +190,18 @@
           <div class="branch-count">220+ papers</div>
         </a>
       </div>
+      <!-- Year/Sem Filters for Engineering -->
+      <div class="filter-chips" id="semChips" style="margin-top:24px; padding-bottom:10px;">
+        <div class="chip active" data-year="all">All Sems</div>
+        <div class="chip" data-year="1" data-sem="1">E1S1</div>
+        <div class="chip" data-year="1" data-sem="2">E1S2</div>
+        <div class="chip" data-year="2" data-sem="1">E2S1</div>
+        <div class="chip" data-year="2" data-sem="2">E2S2</div>
+        <div class="chip" data-year="3" data-sem="1">E3S1</div>
+        <div class="chip" data-year="3" data-sem="2">E3S2</div>
+        <div class="chip" data-year="4" data-sem="1">E4S1</div>
+        <div class="chip" data-year="4" data-sem="2">E4S2</div>
+      </div>
     </div>
 
     <!-- ─── MAIN TWO-COLUMN LAYOUT ─── -->
@@ -1254,66 +241,8 @@
       <!-- ─── RIGHT COLUMN ─── -->
       <div class="right-col">
 
-        <!-- EXAM CALENDAR -->
-        <div class="card-box">
-          <div class="section-header" style="margin-bottom:10px;">
-            <div class="section-title">Upcoming Exams</div>
-            <a class="see-all" href="#">View all</a>
-          </div>
-          <div class="exam-item">
-            <div class="exam-date-box">
-              <div class="day">10</div>
-              <div class="mon">Mar</div>
-            </div>
-            <div class="exam-info">
-              <div class="exam-title">PUC-1 End Semester</div>
-              <div class="exam-sub">All subjects · March 10–28</div>
-            </div>
-          </div>
-          <div class="exam-item">
-            <div class="exam-date-box" style="background:#D1FAE5;">
-              <div class="day" style="color:#065F46;">18</div>
-              <div class="mon" style="color:#065F46;">Mar</div>
-            </div>
-            <div class="exam-info">
-              <div class="exam-title">B.Tech Mid-1 (Even Sem)</div>
-              <div class="exam-sub">All branches · Sem 2,4,6,8</div>
-            </div>
-          </div>
-          <div class="exam-item">
-            <div class="exam-date-box" style="background:#FEF3C7;">
-              <div class="day" style="color:#92400E;">05</div>
-              <div class="mon" style="color:#92400E;">Apr</div>
-            </div>
-            <div class="exam-info">
-              <div class="exam-title">PUC-2 End Semester</div>
-              <div class="exam-sub">All subjects · April 5–22</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- NOTICES -->
-        <div class="card-box">
-          <div class="section-header" style="margin-bottom:6px;">
-            <div class="section-title">Notices</div>
-          </div>
-          <div class="notice-item">
-            <div class="notice-heading">📄 PUC-2 Supply Papers Uploaded</div>
-            <div class="notice-body">2024-25 supplementary exam papers for Maths IIA, Physics & Chemistry are now
-              available.</div>
-            <a class="notice-link" href="#">View papers →</a>
-          </div>
-          <div class="notice-item">
-            <div class="notice-heading">🆕 B.Tech Sem-5 Mid-2 Added</div>
-            <div class="notice-body">CSE, ECE & EEE branches — all Mid-2 papers from Nov 2025 uploaded.</div>
-            <a class="notice-link" href="#">Browse now →</a>
-          </div>
-          <div class="notice-item">
-            <div class="notice-heading">⭐ Rate papers you used</div>
-            <div class="notice-body">Your ratings help fellow RGUKT students find the best resources.</div>
-            <a class="notice-link" href="#">Rate now →</a>
-          </div>
-        </div>
+        <!-- EXAM CALENDAR MOCKS DELETED -->
+        <!-- NOTICES MOCKS DELETED -->
 
         <!-- BOOKMARKS -->
         <div class="card-box">
@@ -1352,6 +281,10 @@
 
   </main>
 
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin/role-nav.js"></script>
   <script>
     // ─── SET CURRENT DATE ───
     const dateEl = document.getElementById('currentDate');
@@ -1360,23 +293,36 @@
       dateEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    // ─── LOAD USER DATA FROM LOCALSTORAGE ───
-    (function loadUser() {
+    // ─── LOAD USER DATA FROM API ───
+    (async function initDashboard() {
+      if (!AuthService.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+      }
       try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-          const name = user.name || user.username || 'Student';
+        const res = await AuthService.getMe();
+        if (res.success) {
+          const user = res.data;
+          const name = user.name || 'Student';
           document.getElementById('userDisplayName').textContent = name;
           document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
           document.getElementById('heroTitle').textContent = 'Welcome back, ' + name.split(' ')[0] + '! 👋';
-          if (user.branch) {
-            document.getElementById('userBranchInfo').textContent = user.branch + ' · RGUKT';
-          }
-          if (user.campus) {
-            document.getElementById('campusSelect').value = user.campus;
+          if (user.course) {
+            document.getElementById('userBranchInfo').textContent = (user.course.toUpperCase()) + ' · RGUKT';
           }
         }
-      } catch (e) { /* no user in storage */ }
+
+        try {
+          const stats = await API.get('/users/stats');
+          if (stats.success) {
+            document.getElementById('myDownloads').textContent = stats.data.downloads;
+            document.getElementById('myBookmarks').textContent = stats.data.bookmarks;
+          }
+        } catch (e) { }
+
+        loadPapersFromDB();
+        loadBookmarksFromDB();
+      } catch (e) { console.error(e); }
     })();
 
     // ─── SIDEBAR MOBILE ───
@@ -1393,70 +339,99 @@
     });
 
     // ─── PAPER DATA ───
-    const paperData = {
-      puc1: [
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Mathematics IA – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.2 },
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Physics – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 4.8 },
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Chemistry – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.1 },
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Mathematics IB – Mid-1 (2024–25)', meta: 'RGUKT · September 2024 · 2 hrs', rating: 4.0 },
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'English – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 3.5 },
-        { tag: 'PUC 1', cls: 'tag-puc1', name: 'Telugu / Hindi – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 3.8 }
-      ],
-      puc2: [
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Mathematics IIA – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.5 },
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Physics Paper-II – Mid-2 (2024–25)', meta: 'RGUKT · January 2025 · 2 hrs', rating: 4.3 },
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Chemistry Paper-II – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 4.0 },
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Mathematics IIB – Mid-1 (2024–25)', meta: 'RGUKT · September 2024 · 2 hrs', rating: 4.6 },
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'English – End Sem (2024–25)', meta: 'RGUKT · March 2025 · 3 hrs', rating: 3.7 },
-        { tag: 'PUC 2', cls: 'tag-puc2', name: 'Physics Paper-II – End Sem (2023–24)', meta: 'RGUKT · March 2024 · 3 hrs', rating: 4.4 }
-      ],
-      engg: [
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Data Structures & Algorithms – End Sem', meta: 'RGUKT · CSE · Sem 3 · 3 hrs', rating: 4.7 },
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Analog Electronics – Mid-2 (2024–25)', meta: 'RGUKT · ECE · Sem 4 · 2 hrs', rating: 4.2 },
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Engineering Mathematics III', meta: 'RGUKT · All Branches · Sem 3 · 3 hrs', rating: 4.4 },
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Thermodynamics – End Sem (2024–25)', meta: 'RGUKT · ME · Sem 3 · 3 hrs', rating: 3.9 },
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Computer Networks – Mid-1 (2024–25)', meta: 'RGUKT · CSE/ECE · Sem 5 · 2 hrs', rating: 4.5 },
-        { tag: 'B.Tech', cls: 'tag-engg', name: 'Electrical Machines – End Sem', meta: 'RGUKT · EEE · Sem 4 · 3 hrs', rating: 4.1 }
-      ],
-      all: [] // filled below
-    };
-    // "All" combines 2 from each
-    paperData.all = [
-      paperData.puc1[0], paperData.puc1[1],
-      paperData.puc2[0], paperData.puc2[1],
-      paperData.engg[0], paperData.engg[1]
-    ];
+    let allLivePapers = { puc1: [], puc2: [], engg: [], all: [] };
+    let allLiveTrends = { puc1: [], puc2: [], engg: [], all: [] };
 
-    const trendData = {
-      puc1: [
-        { label: 'Mathematics IA', pct: 88, gradient: '' },
-        { label: 'Physics', pct: 74, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
-        { label: 'Chemistry', pct: 65, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
-        { label: 'Mathematics IB', pct: 58, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
-        { label: 'English', pct: 42, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
-      ],
-      puc2: [
-        { label: 'Mathematics IIA', pct: 91, gradient: '' },
-        { label: 'Physics Paper-II', pct: 78, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
-        { label: 'Chemistry Paper-II', pct: 68, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
-        { label: 'Mathematics IIB', pct: 62, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
-        { label: 'English', pct: 38, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
-      ],
-      engg: [
-        { label: 'Engg. Mathematics', pct: 85, gradient: '' },
-        { label: 'Data Structures', pct: 79, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
-        { label: 'Computer Networks', pct: 64, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
-        { label: 'Analog Electronics', pct: 55, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
-        { label: 'Thermodynamics', pct: 43, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
-      ],
-      all: [
-        { label: 'Mathematics', pct: 90, gradient: '' },
-        { label: 'Physics', pct: 76, gradient: 'linear-gradient(90deg,#10B981,#3B82F6)' },
-        { label: 'Data Structures', pct: 68, gradient: 'linear-gradient(90deg,#F59E0B,#EF4444)' },
-        { label: 'Chemistry', pct: 60, gradient: 'linear-gradient(90deg,#06b6d4,#6366f1)' },
-        { label: 'English', pct: 41, gradient: 'linear-gradient(90deg,#EC4899,#8B5CF6)' }
-      ]
-    };
+    function generateTrends(papersArray) {
+      if (!papersArray || papersArray.length === 0) return [];
+      const map = {};
+      papersArray.forEach(p => {
+        const sum = (p.downloads || 0) + (p.views || 0) + 1;
+        map[p.subject] = (map[p.subject] || 0) + sum;
+      });
+      const sorted = Object.keys(map).map(k => ({ label: k, val: map[k] })).sort((a, b) => b.val - a.val).slice(0, 5);
+      if (sorted.length === 0) return [];
+      const topVal = sorted[0].val * 1.15;
+      const colors = ['', 'linear-gradient(90deg,#10B981,#3B82F6)', 'linear-gradient(90deg,#F59E0B,#EF4444)', 'linear-gradient(90deg,#06b6d4,#6366f1)', 'linear-gradient(90deg,#EC4899,#8B5CF6)'];
+      return sorted.map((s, i) => ({
+        label: s.label.length > 20 ? s.label.substring(0, 18) + '...' : s.label,
+        pct: Math.min(96, Math.max(10, Math.floor((s.val / topVal) * 100))),
+        gradient: colors[i % colors.length]
+      }));
+    }
+
+    async function loadPapersFromDB() {
+      try {
+        const res = await PaperService.getPapers();
+        if (res.success && res.data) {
+          res.data.forEach(p => {
+            allLivePapers.all.push(p);
+            if (p.category === 'intermediate' && p.year === 1) allLivePapers.puc1.push(p);
+            if (p.category === 'intermediate' && p.year === 2) allLivePapers.puc2.push(p);
+            if (p.category === 'engineering') allLivePapers.engg.push(p);
+          });
+
+          document.getElementById('totalPapersCount').textContent = res.data.length;
+
+          // Build Trends
+          allLiveTrends.all = generateTrends(allLivePapers.all);
+          allLiveTrends.puc1 = generateTrends(allLivePapers.puc1);
+          allLiveTrends.puc2 = generateTrends(allLivePapers.puc2);
+          allLiveTrends.engg = generateTrends(allLivePapers.engg);
+
+          renderPapers(currentCategory);
+          renderTrends(currentCategory);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadBookmarksFromDB() {
+      try {
+        const res = await UserService.getBookmarks();
+        if (res.success && res.data) {
+          // Find the parent of .bookmark-item elements. It's the sibling of the h4 header with 'Saved Papers'
+          const headers = Array.from(document.querySelectorAll('.section-title'));
+          const savedHeader = headers.find(h => h.textContent.includes('Saved Papers'));
+          if (savedHeader) {
+            const container = savedHeader.parentElement.parentElement;
+
+            // Keep the header, drop the items
+            const items = container.querySelectorAll('.bookmark-item');
+            items.forEach(i => i.remove());
+
+            if (res.data.length === 0) {
+              const div = document.createElement('div');
+              div.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:10px;">No saved papers yet</div>';
+              container.appendChild(div);
+              return;
+            }
+
+            res.data.slice(0, 4).forEach(p => {
+              const div = document.createElement('div');
+              div.className = 'bookmark-item';
+              div.innerHTML = `
+                        <div class="bm-icon"><i class="bi bi-file-earmark-text"></i></div>
+                        <div style="flex:1">
+                          <div class="bm-name">\${p.title || p.subject}</div>
+                          <div class="bm-sub">\${String(p.course).toUpperCase()} · Year \${p.year}</div>
+                        </div>
+                        <button class="bm-dl" title="Download" onclick="downloadDashboardPaper(\${p.id})"><i class="bi bi-download"></i></button>
+                        `;
+              container.appendChild(div);
+            });
+          }
+        }
+      } catch (e) { }
+    }
+
+    async function downloadDashboardPaper(id) {
+      try {
+        const res = await PaperService.downloadPaper(id);
+        if (res.url) window.open(res.url, '_blank');
+      } catch (e) { alert('Download failed'); }
+    }
 
     // ─── RENDER FUNCTIONS ───
     function renderStars(r) {
@@ -1467,24 +442,61 @@
       return s + '<span>' + r.toFixed(1) + '</span>';
     }
 
-    function renderPapers(cat) {
-      const papers = paperData[cat] || paperData.all;
-      document.getElementById('papersGrid').innerHTML = papers.map(p =>
-        '<div class="paper-card">' +
-        '<span class="paper-tag ' + p.cls + '">' + p.tag + '</span>' +
-        '<div class="paper-name">' + p.name + '</div>' +
-        '<div class="paper-meta">' + p.meta + '</div>' +
-        '<div class="paper-footer">' +
-        '<div class="paper-stars">' + renderStars(p.rating) + '</div>' +
-        '<button class="btn-view"><i class="bi bi-download"></i> Download</button>' +
-        '</div>' +
-        '</div>'
-      ).join('');
+    // STATE VARIABLES
+    let currentCategory = 'puc1';
+    let currentBranch = 'all';
+    let currentYear = 'all';
+    let currentSem = 'all';
+    let currentSearch = '';
+
+    function renderPapers() {
+      let papers = allLivePapers[currentCategory] || allLivePapers.all;
+
+      if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        papers = allLivePapers.all.filter(p =>
+          (p.title && p.title.toLowerCase().includes(q)) ||
+          (p.subject && p.subject.toLowerCase().includes(q)) ||
+          (p.course && p.course.toLowerCase().includes(q))
+        );
+      } else if (currentCategory === 'engg') {
+        if (currentBranch !== 'all') {
+          papers = papers.filter(p => String(p.course).toLowerCase() === currentBranch.toLowerCase());
+        }
+        if (currentYear !== 'all') {
+          papers = papers.filter(p => String(p.year) === String(currentYear) && String(p.semester) === String(currentSem));
+        }
+      }
+
+      const grid = document.getElementById('papersGrid');
+      if (!papers || papers.length === 0) {
+        grid.innerHTML = '<div style="padding:40px;text-align:center;color:#64748b;grid-column:1/-1;"><i class="bi bi-search" style="font-size:32px;display:block;margin-bottom:10px;opacity:0.5;"></i>No papers found dynamically matching these filters!</div>';
+        return;
+      }
+      grid.innerHTML = papers.slice(0, 16).map(p => {
+        const cls = p.category === 'engineering' ? 'tag-engg' : (p.year == 1 ? 'tag-puc1' : 'tag-puc2');
+        const tag = p.category === 'engineering' ? 'B.Tech' : 'PUC ' + p.year;
+        const meta = 'RGUKT · ' + String(p.course).toUpperCase() + ' · ' + p.examYear;
+        return '<div class="paper-card">' +
+          '<span class="paper-tag ' + cls + '">' + tag + '</span>' +
+          '<div class="paper-name">' + (p.title || p.subject) + '</div>' +
+          '<div class="paper-meta">' + meta + '</div>' +
+          '<div class="paper-footer">' +
+          '<div class="paper-stars">' + renderStars(4.5 + Math.random() * 0.5) + '</div>' +
+          '<button class="btn-view" onclick="downloadDashboardPaper(' + p.id + ')"><i class="bi bi-download"></i> Download</button>' +
+          '</div>' +
+          '</div>';
+      }).join('');
     }
 
     function renderTrends(cat) {
-      const trends = trendData[cat] || trendData.all;
-      document.getElementById('trendsBox').innerHTML = trends.map((t, i) =>
+      const trends = allLiveTrends[cat] || allLiveTrends.all;
+      const box = document.getElementById('trendsBox');
+      if (!trends || trends.length === 0) {
+        box.innerHTML = '<div style="padding:20px;color:#64748b;font-size:13px;text-align:center;">No analytics generated yet.</div>';
+        return;
+      }
+      box.innerHTML = trends.map((t, i) =>
         '<div class="prog-bar-wrap"' + (i === trends.length - 1 ? ' style="margin-bottom:0"' : '') + '>' +
         '<span class="prog-label">' + t.label + '</span>' +
         '<div class="prog-bar"><div class="prog-fill" style="width:' + t.pct + '%;' + (t.gradient ? 'background:' + t.gradient + ';' : '') + '"></div></div>' +
@@ -1506,8 +518,6 @@
       all: 'All Recent Papers'
     };
 
-    let currentCategory = 'puc1';
-
     categoryTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         categoryTabs.forEach(t => t.classList.remove('active-tab'));
@@ -1518,16 +528,36 @@
         papersTitle.textContent = titleMap[currentCategory] || 'Recent Question Papers';
         trendsTitle.textContent = 'Popular ' + (currentCategory === 'all' ? 'Subjects' : titleMap[currentCategory].replace(' Question Papers', '') + ' Subjects');
 
-        renderPapers(currentCategory);
-        renderTrends(currentCategory);
-
-        // Reset branch selection
+        currentSearch = '';
+        document.getElementById('globalSearch').value = '';
+        currentBranch = 'all';
+        currentYear = 'all';
+        currentSem = 'all';
         document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+        if (document.querySelector('#semChips .chip.active')) document.querySelector('#semChips .chip.active').classList.remove('active');
+        document.querySelector('#semChips .chip[data-year="all"]').classList.add('active');
+
+        renderPapers();
+        renderTrends(currentCategory);
       });
     });
 
-    // Initial render
-    renderPapers('puc1');
+    // ─── SEMESTER CHIPS ───
+    document.querySelectorAll('#semChips .chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('#semChips .chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        currentYear = c.dataset.year;
+        currentSem = c.dataset.sem;
+        const yrText = currentYear === 'all' ? 'All Sems' : 'E' + currentYear + 'S' + currentSem;
+        const brText = currentBranch === 'all' ? 'Engineering' : currentBranch.toUpperCase();
+        papersTitle.textContent = brText + ' Question Papers (' + yrText + ')';
+        renderPapers();
+      });
+    });
+
+    // Initial render call (loading state)
+    document.getElementById('papersGrid').innerHTML = '<div style="padding:40px;text-align:center;color:#64748b;grid-column:1/-1;">Loading papers...</div>';
     renderTrends('puc1');
 
     // ─── FILTER CHIPS ───
@@ -1544,8 +574,11 @@
         e.preventDefault();
         document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
-        const branch = card.dataset.branch.toUpperCase();
-        papersTitle.textContent = branch + ' Question Papers';
+        currentBranch = card.dataset.branch;
+
+        const yrText = currentYear === 'all' ? '' : ' (E' + currentYear + 'S' + currentSem + ')';
+        papersTitle.textContent = currentBranch.toUpperCase() + ' Question Papers' + yrText;
+        renderPapers();
       });
     });
 
@@ -1558,19 +591,22 @@
     });
 
     // ─── LOGOUT ───
-    document.getElementById('logoutBtn').addEventListener('click', function (e) {
-      e.preventDefault();
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = 'index.html';
-    });
+    if (document.getElementById('logoutBtn')) {
+      document.getElementById('logoutBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        AuthService.logout();
+      });
+    }
 
     // ─── GLOBAL SEARCH ───
-    document.getElementById('globalSearch').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        const q = this.value.trim();
-        if (q) alert('Searching for: ' + q + '\n\n(Full search coming soon!)');
+    document.getElementById('globalSearch').addEventListener('input', function (e) {
+      currentSearch = this.value.trim();
+      if (currentSearch) {
+        papersTitle.textContent = 'Search Results for "' + currentSearch + '"';
+      } else {
+        papersTitle.textContent = titleMap[currentCategory] || 'Recent Question Papers';
       }
+      renderPapers();
     });
   </script>
 </body>

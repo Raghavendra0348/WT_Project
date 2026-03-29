@@ -29,8 +29,8 @@ const connectDB = async () => {
     await sequelize.authenticate();
     console.log(`✅ MySQL Connected: ${process.env.DB_HOST || 'localhost'}`);
 
-    // Sync all models (use { alter: true } in development to update tables)
-    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
+    // Sync all models (use { alter: true } only when explicitly requested to speed up start times)
+    await sequelize.sync({ alter: process.env.SYNC_DB === 'true' });
     console.log('✅ Database synchronized');
   } catch (error) {
     console.error(`❌ Error: ${error.message}`);

@@ -24,21 +24,29 @@ async function loadAdminDashboard() {
 
         // Load recent papers
         loadRecentPapers();
+
+        // Load recent activity
+        loadRecentActivity();
 }
 
 // Load admin stats
 async function loadStats() {
         try {
-                // In production, fetch from API
-                // const stats = await API.get('/admin/stats');
-
-                // Placeholder data
-                document.getElementById('statsPapers').textContent = '156';
-                document.getElementById('statsUsers').textContent = '1,234';
-                document.getElementById('statsDownloads').textContent = '5,678';
-                document.getElementById('statsReviews').textContent = '892';
+                // Fetch from API
+                const response = await API.get('/admin/stats');
+                if (response.success) {
+                    const stats = response.data;
+                    document.getElementById('statsPapers').textContent = stats.totalPapers || 0;
+                    document.getElementById('statsUsers').textContent = stats.totalUsers || 0;
+                    document.getElementById('statsDownloads').textContent = stats.totalDownloads || 0;
+                    document.getElementById('statsReviews').textContent = stats.todayPapers || 0; 
+                }
         } catch (error) {
                 console.error('Error loading stats:', error);
+                document.getElementById('statsPapers').textContent = '!';
+                document.getElementById('statsUsers').textContent = '!';
+                document.getElementById('statsDownloads').textContent = '!';
+                document.getElementById('statsReviews').textContent = '!';
         }
 }
 
@@ -110,6 +118,40 @@ async function deletePaper(id) {
         } catch (error) {
                 showToast(error.message || 'Failed to delete paper', 'error');
         }
+}
+
+// Load recent activity
+async function loadRecentActivity() {
+    const container = document.getElementById('recentActivity');
+    if (!container) return;
+
+    try {
+        const response = await API.get('/admin/activity');
+        if (response.success && response.data) {
+            const downloads = response.data.recentDownloads || [];
+            if(downloads.length === 0) {
+               container.innerHTML = '<div class="text-center py-3 text-muted">No recent activity</div>';
+               return;
+            }
+            container.innerHTML = downloads.slice(0, 5).map(dl => {
+               return `
+                <div class="activity-item d-flex pb-3 mb-3 border-bottom">
+                        <div class="flex-shrink-0">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                        <i class="bi bi-download text-primary"></i>
+                                </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                                <p class="mb-0 small text-white">\${dl.user ? dl.user.name : 'A student'} downloaded \${dl.paper ? dl.paper.title : 'a paper'}</p>
+                                <small class="text-muted">\${new Date(dl.downloadedAt || dl.createdAt).toLocaleString()}</small>
+                        </div>
+                </div>
+               `;
+            }).join('');
+        }
+    } catch(error) {
+        container.innerHTML = '<div class="text-center py-3 text-muted">Error loading activity</div>';
+    }
 }
 
 window.deletePaper = deletePaper;

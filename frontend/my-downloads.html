@@ -41,6 +41,7 @@
   .btn-icon { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: var(--indigo); color: white; }
   @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } }
 </style>
+<link rel="stylesheet" href="css/premium.css">
 </head>
 <body>
 
@@ -51,9 +52,9 @@
   </div>
   <div class="nav-label">Main</div>
   <a class="nav-item" href="question-papers-dashboard.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-  <a class="nav-item" href="browse-papers.html"><i class="bi bi-file-earmark-text"></i> Browse Papers</a>
+
   <a class="nav-item" href="upload-paper.html"><i class="bi bi-cloud-arrow-up"></i> Upload Paper</a>
-  <a class="nav-item" href="advanced-search.html"><i class="bi bi-search"></i> Advanced Search</a>
+  
   <div class="nav-label">Library</div>
   <a class="nav-item" href="bookmarks.html"><i class="bi bi-bookmark-heart"></i> Bookmarks</a>
   <a class="nav-item active" href="my-downloads.html"><i class="bi bi-download"></i> My Downloads</a>
@@ -79,40 +80,72 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><div class="subject-name">Data Structures</div></td>
-          <td>CSE</td>
-          <td>Mid-1</td>
-          <td><div class="download-date">Feb 25, 2026</div></td>
-          <td><button class="btn-icon" title="Download Again"><i class="bi bi-download"></i></button></td>
-        </tr>
-        <tr>
-          <td><div class="subject-name">Digital Electronics</div></td>
-          <td>ECE</td>
-          <td>End Sem</td>
-          <td><div class="download-date">Feb 24, 2026</div></td>
-          <td><button class="btn-icon"><i class="bi bi-download"></i></button></td>
-        </tr>
-        <tr>
-          <td><div class="subject-name">Mathematics IIA</div></td>
-          <td>PUC-2</td>
-          <td>Mid-2</td>
-          <td><div class="download-date">Feb 20, 2026</div></td>
-          <td><button class="btn-icon"><i class="bi bi-download"></i></button></td>
-        </tr>
+      <tbody id="downloadsList">
+        <!-- JS renders rows here -->
       </tbody>
     </table>
   </div>
 </div>
 
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script>
-function logout() {
-  if (confirm('Are you sure you want to logout?')) {
-    localStorage.clear();
-    window.location.href = 'login.html';
-  }
-}
+    async function init() {
+        if (!AuthService.isLoggedIn()) {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        try {
+            const res = await API.get('/users/downloads');
+            if (res.success && res.data) {
+                renderDownloads(res.data);
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    function renderDownloads(records) {
+        const tbody = document.getElementById('downloadsList');
+        if (!records || records.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 40px; color: var(--muted);">No downloads yet. <a href="question-papers-dashboard.html" style="color: var(--indigo); font-weight: 600;">Browse now</a></td></tr>`;
+            return;
+        }
+        
+        tbody.innerHTML = records.map(record => {
+             const p = record.paper;
+             if(!p) return '';
+             const dDate = new Date(record.downloadedAt || record.createdAt).toLocaleDateString();
+             const examText = p.examType.charAt(0).toUpperCase() + p.examType.slice(1);
+             return `
+        <tr>
+          <td><div class="subject-name">${p.title || p.subject}</div></td>
+          <td>${String(p.course).toUpperCase()}</td>
+          <td>${examText}</td>
+          <td><div class="download-date">${dDate}</div></td>
+          <td><button class="btn-icon" title="Download Again" onclick="downloadPaper(${p.id})"><i class="bi bi-download"></i></button></td>
+        </tr>
+             `;
+        }).join('');
+    }
+
+    async function downloadPaper(id) {
+        try {
+            const res = await PaperService.downloadPaper(id);
+            if(res.url) window.open(res.url, '_blank');
+        } catch(e) {
+            alert('Download failed');
+        }
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        AuthService.logout();
+      }
+    }
+
+    init();
 </script>
 </body>
 </html>

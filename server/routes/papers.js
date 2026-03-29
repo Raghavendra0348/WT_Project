@@ -5,15 +5,23 @@ const {
   createPaper,
   updatePaper,
   deletePaper,
-  downloadPaper
+  downloadPaper,
+  getPendingPapers,
+  approvePaper
 } = require('../controllers/paperController');
 const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
+router.route('/pending')
+  .get(protect, authorize('admin'), getPendingPapers);
+
 router.route('/')
   .get(getPapers)
-  .post(protect, authorize('admin'), createPaper);
+  .post(protect, createPaper);
+
+router.route('/:id/approve')
+  .put(protect, authorize('admin'), approvePaper);
 
 router.route('/:id')
   .get(getPaper)

@@ -130,6 +130,11 @@ const Paper = sequelize.define('Paper', {
       model: 'users',
       key: 'id'
     }
+  },
+  status: {
+    type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+    defaultValue: 'pending',
+    allowNull: false
   }
 }, {
   tableName: 'papers',

@@ -3,13 +3,14 @@ const { protect, authorize } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
+const path = require('path');
 
 const router = express.Router();
 
 // @desc    Upload paper file
 // @route   POST /api/upload/paper
-// @access  Private/Admin
-router.post('/paper', protect, authorize('admin'), upload.single('paper'), async (req, res, next) => {
+// @access  Private
+router.post('/paper', protect, upload.single('paper'), async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -18,11 +19,25 @@ router.post('/paper', protect, authorize('admin'), upload.single('paper'), async
       });
     }
 
-    // Upload to cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'papervault/papers',
-      resource_type: 'raw'
-    });
+    let result = {};
+    
+    // Auto-detect if Cloudinary is configured
+    if (!process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY === 'your_api_key') {
+      const uploadDir = path.join(__dirname, '../../frontend/papers/uploads');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      const fileName = `paper-${Date.now()}-${req.file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+      fs.copyFileSync(req.file.path, path.join(uploadDir, fileName));
+      result = {
+        secure_url: `papers/uploads/${fileName}`,
+        public_id: `local-${Date.now()}`,
+        bytes: req.file.size
+      };
+    } else {
+      result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'papervault/papers',
+        resource_type: 'raw'
+      });
+    }
 
     // Delete local file
     fs.unlinkSync(req.file.path);
@@ -46,8 +61,8 @@ router.post('/paper', protect, authorize('admin'), upload.single('paper'), async
 
 // @desc    Upload solution file
 // @route   POST /api/upload/solution
-// @access  Private/Admin
-router.post('/solution', protect, authorize('admin'), upload.single('solution'), async (req, res, next) => {
+// @access  Private
+router.post('/solution', protect, upload.single('solution'), async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({

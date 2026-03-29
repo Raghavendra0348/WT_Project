@@ -68,12 +68,12 @@ function setupRegisterForm() {
                                 password
                         });
 
-                        showSuccess('Registration successful! Please login to continue.');
+                        showSuccess('Registration successful! Setting up your profile...');
                         form.reset();
 
-                        // Redirect to login after 2 seconds
+                        // Redirect to profile completion after 2 seconds
                         setTimeout(() => {
-                                window.location.href = 'login.html';
+                                window.location.href = 'complete-profile.html';
                         }, 2000);
                 } catch (error) {
                         showError(error.message || 'Registration failed. Please try again.');
