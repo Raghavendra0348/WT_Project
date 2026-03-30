@@ -2,14 +2,13 @@
 -- PaperVault Database Setup Script
 -- ============================================
 -- Run this script in MySQL to create the database
--- 
+- 
 -- How to run:
 -- 1. Open terminal
 -- 2. Run: mysql -u root -p
 -- 3. Enter your MySQL password
 -- 4. Copy and paste these commands:
 -- ============================================
-
 -- Create Database
 CREATE DATABASE IF NOT EXISTS papervault 
 CHARACTER SET utf8mb4 
@@ -20,7 +19,6 @@ SHOW DATABASES LIKE 'papervault';
 
 -- Use the database
 USE papervault;
-
 -- Show that we're connected
 SELECT 'Database papervault created successfully!' AS Status;
 
@@ -35,3 +33,4 @@ SELECT 'Database papervault created successfully!' AS Status;
 -- Note: Tables will be created automatically by Sequelize
 -- when you run the server for the first time.
 -- ============================================
+

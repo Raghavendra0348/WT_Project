@@ -3,8 +3,13 @@
 // ============================================
 
 const CONFIG = {
-        // API Base URL - Change this to your server URL
-        API_URL: 'http://localhost:5000/api',
+        // API Base URL - auto-detect host for LAN usage
+        API_URL: (() => {
+                const isFileProtocol = window.location.protocol === 'file:';
+                const protocol = isFileProtocol ? 'http:' : window.location.protocol;
+                const host = window.location.hostname || 'localhost';
+                return `${protocol}//${host}:5000/api`;
+        })(),
 
         // App Info
         APP_NAME: 'PaperVault',

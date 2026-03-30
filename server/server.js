@@ -27,15 +27,27 @@ app.use(helmet({
 })); // Security headers
 app.use(compression()); // Compress responses
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://0.0.0.0:3000',
-    'http://127.0.0.1:3000',
-    process.env.CLIENT_URL || 'http://localhost:3000'
-  ],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5000',
+      'http://localhost:8000',
+      'http://127.0.0.1:8000',
+      'http://0.0.0.0:3000',
+      'http://127.0.0.1:3000',
+      process.env.CLIENT_URL || 'http://localhost:3000'
+    ];
+
+    const localNetworkPattern = /^http:\/\/(192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/;
+
+    if (allowedOrigins.includes(origin) || localNetworkPattern.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json()); // Parse JSON bodies
