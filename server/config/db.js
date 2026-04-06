@@ -1,4 +1,38 @@
 const { Sequelize } = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+
+// Build SSL options for cloud databases (e.g., Aiven)
+const buildSSLOptions = () => {
+  if (process.env.DB_SSL !== 'true') return {};
+
+  const sslOptions = {
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: true,
+      }
+    }
+  };
+
+  // If a CA certificate file path is provided, use it
+  if (process.env.DB_SSL_CA) {
+    const caPath = path.resolve(process.env.DB_SSL_CA);
+    if (fs.existsSync(caPath)) {
+      sslOptions.dialectOptions.ssl.ca = fs.readFileSync(caPath);
+      console.log('🔒 Using SSL CA certificate:', caPath);
+    } else {
+      console.warn('⚠️  SSL CA file not found:', caPath);
+      // Fall back to not verifying (less secure but works)
+      sslOptions.dialectOptions.ssl.rejectUnauthorized = false;
+    }
+  } else {
+    // No CA provided — allow self-signed certs
+    sslOptions.dialectOptions.ssl.rejectUnauthorized = false;
+  }
+
+  return sslOptions;
+};
 
 // Create Sequelize instance
 const sequelize = new Sequelize(
@@ -19,7 +53,8 @@ const sequelize = new Sequelize(
     define: {
       timestamps: true,
       underscored: true
-    }
+    },
+    ...buildSSLOptions()
   }
 );
 
