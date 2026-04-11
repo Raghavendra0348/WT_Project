@@ -42,8 +42,9 @@ app.use(cors({
     ];
 
     const localNetworkPattern = /^http:\/\/(192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/;
+    const vercelPattern = /^https:\/\/.*\.vercel\.app$/;
 
-    if (allowedOrigins.includes(origin) || localNetworkPattern.test(origin)) {
+    if (allowedOrigins.includes(origin) || localNetworkPattern.test(origin) || vercelPattern.test(origin)) {
       return callback(null, true);
     }
 

@@ -3,12 +3,17 @@
 // ============================================
 
 const CONFIG = {
-        // API Base URL - auto-detect host for LAN usage
+        // API Base URL - auto-detect local vs production
         API_URL: (() => {
-                const isFileProtocol = window.location.protocol === 'file:';
-                const protocol = isFileProtocol ? 'http:' : window.location.protocol;
-                const host = window.location.hostname || 'localhost';
-                return `${protocol}//${host}:5000/api`;
+                const hostname = window.location.hostname;
+                const isLocal = !hostname || hostname === 'localhost' || hostname === '127.0.0.1' || window.location.protocol === 'file:';
+                if (isLocal) {
+                        const protocol = window.location.protocol === 'file:' ? 'http:' : window.location.protocol;
+                        const host = hostname || 'localhost';
+                        return `${protocol}//${host}:5000/api`;
+                }
+                // Production — Render backend
+                return 'https://wt-project-grw7.onrender.com/api';
         })(),
 
         // App Info
