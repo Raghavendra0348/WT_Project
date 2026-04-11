@@ -263,9 +263,17 @@ exports.downloadPaper = async (req, res, next) => {
       });
     }
 
+    // If the fileUrl is a local relative path, construct a full URL via the Express server
+    let downloadUrl = paper.fileUrl;
+    if (downloadUrl && !downloadUrl.startsWith('http')) {
+      const protocol = req.protocol;
+      const host = req.get('host');
+      downloadUrl = `${protocol}://${host}/${downloadUrl}`;
+    }
+
     res.status(200).json({
       success: true,
-      url: paper.fileUrl
+      url: downloadUrl
     });
   } catch (err) {
     next(err);

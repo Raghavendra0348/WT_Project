@@ -44,7 +44,7 @@ function setupLogout() {
 // Protect page (redirect to login if not authenticated)
 function protectPage() {
         if (!AuthService.isLoggedIn()) {
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
                 return false;
         }
         return true;
@@ -53,11 +53,11 @@ function protectPage() {
 // Protect admin page
 function protectAdminPage() {
         if (!AuthService.isLoggedIn()) {
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
                 return false;
         }
         if (!AuthService.isAdmin()) {
-                window.location.href = '/question-papers-dashboard.html';
+                window.location.href = 'question-papers-dashboard.html';
                 return false;
         }
         return true;
@@ -66,12 +66,7 @@ function protectAdminPage() {
 // Redirect if already logged in (for login/register pages)
 function redirectIfLoggedIn() {
         if (AuthService.isLoggedIn()) {
-                const user = AuthService.getCurrentUser();
-                if (user && user.role === 'admin') {
-                        window.location.href = '/question-papers-dashboard.html';
-                } else {
-                        window.location.href = '/question-papers-dashboard.html';
-                }
+                window.location.href = 'question-papers-dashboard.html';
                 return true;
         }
         return false;
@@ -173,6 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setupLogout();
 });
 
+// Global logout function for sidebar onclick="logout()"
+function logout() {
+        if (confirm('Are you sure you want to sign out?')) {
+                AuthService.logout();
+        }
+}
+
 // Make functions globally accessible
 window.checkAuth = checkAuth;
 window.protectPage = protectPage;
@@ -182,3 +184,4 @@ window.showToast = showToast;
 window.formatDate = formatDate;
 window.truncateText = truncateText;
 window.generatePaperCard = generatePaperCard;
+window.logout = logout;

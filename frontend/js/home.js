@@ -4,8 +4,39 @@
 
 document.addEventListener('DOMContentLoaded', () => {
         loadRecentPapers();
+        loadPublicStats();
         setupSearchForm();
 });
+
+// Load real stats from public API
+async function loadPublicStats() {
+        try {
+                const response = await API.get('/stats');
+                const stats = response.data || {};
+
+                // Update hero section counters
+                const heroPaperCount = document.getElementById('heroPaperCount');
+                const heroUserCount = document.getElementById('heroUserCount');
+                const heroDownloadCount = document.getElementById('heroDownloadCount');
+
+                if (heroPaperCount) heroPaperCount.setAttribute('data-count', stats.totalPapers || 0);
+                if (heroUserCount) heroUserCount.setAttribute('data-count', stats.totalUsers || 0);
+                if (heroDownloadCount) heroDownloadCount.setAttribute('data-count', stats.totalDownloads || 0);
+
+                // Update stats section counters
+                const totalPapers = document.getElementById('totalPapers');
+                const totalUsers = document.getElementById('totalUsers');
+                const totalDownloads = document.getElementById('totalDownloads');
+                const totalUniversities = document.getElementById('totalUniversities');
+
+                if (totalPapers) totalPapers.setAttribute('data-target', stats.totalPapers || 0);
+                if (totalUsers) totalUsers.setAttribute('data-target', stats.totalUsers || 0);
+                if (totalDownloads) totalDownloads.setAttribute('data-target', stats.totalDownloads || 0);
+                if (totalUniversities) totalUniversities.setAttribute('data-target', stats.totalSubjects || 0);
+        } catch (error) {
+                console.error('Error loading stats:', error);
+        }
+}
 
 // Load recent papers
 async function loadRecentPapers() {

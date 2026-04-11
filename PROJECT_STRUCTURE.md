@@ -92,7 +92,7 @@ papervault-project/
 
 ### For Students
 - ✅ Browse question papers by **PUC 1**, **PUC 2**, and **Engineering** (all branches)
-- ✅ Filter by campus (RK Valley, Nuzvid, Ongole, Srikakulam, Basar)
+- ✅ Filter by campus (RK Valley, Nuzvid, Ongole, Srikakulam)
 - ✅ Filter by exam type (Mid-1, Mid-2, End Sem, Supply)
 - ✅ Filter by academic year
 - ✅ Bookmark favorite papers
@@ -126,7 +126,6 @@ papervault-project/
 - RGUKT Nuzvid
 - RGUKT Ongole
 - RGUKT Srikakulam
-- RGUKT Basar
 
 ---
 

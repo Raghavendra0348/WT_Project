@@ -24,7 +24,6 @@ A full-stack web application for managing and accessing question papers for RGUK
 - Nuzvid
 - Ongole
 - Srikakulam
-- Basar
 
 ## 🛠️ Tech Stack
 

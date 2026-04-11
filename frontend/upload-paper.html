@@ -502,6 +502,7 @@
                                                                 <option value="">Select Exam Type</option>
                                                                 <option value="mid1">Mid-1</option>
                                                                 <option value="mid2">Mid-2</option>
+                                                                <option value="mid3">Mid-3</option>
                                                                 <option value="endsem">End Sem</option>
                                                                 <option value="supply">Supply</option>
                                                         </select>
@@ -518,19 +519,6 @@
                                                         </select>
                                                 </div>
 
-                                                <div class="form-group">
-                                                        <label class="form-label">Campus <span
-                                                                        class="required">*</span></label>
-                                                        <select class="form-select" required>
-                                                                <option value="">Select Campus</option>
-                                                                <option value="rk-valley">RK Valley (Idupulapaya)
-                                                                </option>
-                                                                <option value="nuzvid">Nuzvid</option>
-                                                                <option value="ongole">Ongole</option>
-                                                                <option value="srikakulam">Srikakulam</option>
-                                                                <option value="basar">Basar</option>
-                                                        </select>
-                                                </div>
 
                                                 <div class="form-group">
                                                         <label class="form-label">Semester (Optional)</label>
@@ -681,14 +669,16 @@
                                 const category = categorySelect.includes('puc') ? 'intermediate' : 'engineering';
                                 const course = document.getElementById('branchSelect').value;
                                 
-                                // Process year and sem from "Year/Semester" dropdown ("1","2",etc) and generic "Semester"
-                                const fullYearVal = e.target.querySelectorAll('select')[2].value; // "Year/Semester"
+                                // Get values from selects by index (after Campus removal):
+                                // [0]=Category, [1]=Branch, [2]=Year, [3]=ExamType, [4]=AcademicYear, [5]=Semester
+                                const allSelects = e.target.querySelectorAll('select');
+                                const fullYearVal = allSelects[2].value; // "Year/Semester"
                                 const actualYear = parseInt(fullYearVal) || 1;
-                                const actualSemStr = e.target.querySelectorAll('select')[6].value; // "Semester (Optional)"
+                                const actualSemStr = allSelects[5] ? allSelects[5].value : ''; // "Semester (Optional)"
                                 const actualSem = actualSemStr === 'II' ? 2 : 1;
                                 
-                                const examType = e.target.querySelectorAll('select')[3].value; // "Exam Type"
-                                const examYearStr = e.target.querySelectorAll('select')[4].value; // "Academic Year"
+                                const examType = allSelects[3].value; // "Exam Type"
+                                const examYearStr = allSelects[4].value; // "Academic Year"
                                 const examYear = parseInt(examYearStr.split('-')[0]) || 2024;
                                 
                                 const payload = {
@@ -698,7 +688,7 @@
                                     year: actualYear,
                                     semester: actualSem,
                                     subject,
-                                    examType: examType === 'endsem' ? 'final' : (examType.includes('mid') ? 'midterm' : 'model'),
+                                    examType: examType === 'endsem' ? 'final' : (['mid1', 'mid2', 'mid3'].includes(examType) ? examType : (examType.includes('mid') ? 'midterm' : 'model')),
                                     examYear,
                                     fileUrl: uploadData.data.url,
                                     filePublicId: uploadData.data.publicId,

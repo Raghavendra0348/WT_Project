@@ -134,6 +134,8 @@
 
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin/role-nav.js"></script>
 <script>
 async function initProfile() {
     if (!AuthService.isLoggedIn()) {
@@ -158,10 +160,19 @@ async function initProfile() {
             document.getElementById('inputSem').value = `Semester ${user.semester || '1'}`;
             document.getElementById('inputRole').value = String(user.role).toUpperCase();
             
-            // Mock stats because the me API might not return counts natively in this version
-            document.getElementById('statDownloads').textContent = Math.floor(Math.random() * 20) + 1;
-            document.getElementById('statBookmarks').textContent = Math.floor(Math.random() * 10) + 1;
-            document.getElementById('statUploads').textContent = user.role === 'admin' ? 14 : 0;
+            // Load real stats from API
+            try {
+                const stats = await API.get('/users/stats');
+                if (stats.success) {
+                    document.getElementById('statDownloads').textContent = stats.data.downloads || 0;
+                    document.getElementById('statBookmarks').textContent = stats.data.bookmarks || 0;
+                    document.getElementById('statUploads').textContent = stats.data.uploads || 0;
+                }
+            } catch(statsErr) {
+                document.getElementById('statDownloads').textContent = '0';
+                document.getElementById('statBookmarks').textContent = '0';
+                document.getElementById('statUploads').textContent = '0';
+            }
         }
     } catch(err) {
         console.error(err);

@@ -11,7 +11,65 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <!-- Custom CSS -->
         <link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/premium.css">
+        <style>
+                /* Override premium.css conflicting styles for this page */
+                body {
+                        display: block !important;
+                }
+
+                .nav-item {
+                        display: list-item !important;
+                        padding: 0 !important;
+                        margin-bottom: 0 !important;
+                        background: transparent !important;
+                        color: inherit !important;
+                        font-size: inherit !important;
+                        cursor: default !important;
+                        transform: none !important;
+                        border-left: none !important;
+                }
+
+                .nav-item:hover {
+                        transform: none !important;
+                }
+
+                /* White theme navbar */
+                .navbar-custom {
+                        background: #ffffff !important;
+                        box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06) !important;
+                }
+
+                .navbar-custom .navbar-brand {
+                        background: linear-gradient(135deg, #0f172a, #6366f1) !important;
+                        -webkit-background-clip: text !important;
+                        -webkit-text-fill-color: transparent !important;
+                        background-clip: text !important;
+                }
+
+                .navbar-custom .nav-link {
+                        color: #475569 !important;
+                }
+
+                .navbar-custom .nav-link:hover,
+                .navbar-custom .nav-link.active {
+                        color: #6366f1 !important;
+                        background: transparent !important;
+                        text-decoration: none !important;
+                }
+
+                /* Page header */
+                .page-header {
+                        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+                        padding: 3rem 0 !important;
+                        margin-bottom: 0 !important;
+                }
+
+                /* Footer */
+                .footer {
+                        background: #ffffff !important;
+                        border-top: 1px solid #e2e8f0;
+                }
+        </style>
 </head>
 
 <body>
@@ -19,7 +77,8 @@
         <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
                 <div class="container">
                         <a class="navbar-brand fw-bold" href="index.html">
-                                <i class="bi bi-journal-bookmark-fill me-2"></i>PaperVault
+                                <i class="bi bi-journal-bookmark-fill me-2"
+                                        style="-webkit-text-fill-color: #6366f1;"></i>PaperVault
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarNav">
@@ -31,9 +90,6 @@
                                                 <a class="nav-link" href="index.html">Home</a>
                                         </li>
                                         <li class="nav-item">
-                                                <a class="nav-link" href="papers.html">Papers</a>
-                                        </li>
-                                        <li class="nav-item">
                                                 <a class="nav-link active" href="about.html">About</a>
                                         </li>
                                         <li class="nav-item">
@@ -42,12 +98,13 @@
                                 </ul>
                                 <!-- Auth Buttons -->
                                 <div id="authButtons">
-                                        <a href="login.html" class="btn btn-outline-light me-2">Login</a>
-                                        <a href="register.html" class="btn btn-light">Register</a>
+                                        <a href="login.html" class="btn btn-outline-primary me-2">Login</a>
+                                        <a href="register.html" class="btn btn-primary"
+                                                style="color: #fff;">Register</a>
                                 </div>
                                 <!-- User Menu -->
                                 <div id="userMenu" class="dropdown d-none">
-                                        <button class="btn btn-outline-light dropdown-toggle" type="button"
+                                        <button class="btn btn-outline-primary dropdown-toggle" type="button"
                                                 data-bs-toggle="dropdown">
                                                 <i class="bi bi-person-circle me-1"></i>
                                                 <span id="userName">User</span>
@@ -96,48 +153,20 @@
                                 <div class="col-lg-6">
                                         <h2 class="fw-bold mb-4">Our Mission</h2>
                                         <p class="lead text-muted">
-                                                PaperVault is dedicated to providing students with easy access to
+                                                PaperVault is dedicated to providing RGUKT students with easy access to
                                                 previous year question papers, helping them prepare effectively for
                                                 their examinations.
                                         </p>
                                         <p class="text-muted">
                                                 We believe that practice is the key to success. By providing a
-                                                comprehensive collection of question papers from various universities
-                                                and courses, we aim to empower students to achieve their academic goals.
+                                                comprehensive collection of question papers from PUC and Engineering
+                                                courses, we aim to empower students to achieve their academic goals.
                                         </p>
                                         <p class="text-muted">
                                                 Our platform is designed to be user-friendly, making it easy for
                                                 students to search, filter, and download papers based on their specific
                                                 needs.
                                         </p>
-                                </div>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="row text-center g-4 mb-5">
-                                <div class="col-md-3 col-6">
-                                        <div class="p-4 bg-light rounded">
-                                                <h2 class="fw-bold text-primary mb-2">1000+</h2>
-                                                <p class="text-muted mb-0">Question Papers</p>
-                                        </div>
-                                </div>
-                                <div class="col-md-3 col-6">
-                                        <div class="p-4 bg-light rounded">
-                                                <h2 class="fw-bold text-success mb-2">5000+</h2>
-                                                <p class="text-muted mb-0">Students</p>
-                                        </div>
-                                </div>
-                                <div class="col-md-3 col-6">
-                                        <div class="p-4 bg-light rounded">
-                                                <h2 class="fw-bold text-warning mb-2">50+</h2>
-                                                <p class="text-muted mb-0">Universities</p>
-                                        </div>
-                                </div>
-                                <div class="col-md-3 col-6">
-                                        <div class="p-4 bg-light rounded">
-                                                <h2 class="fw-bold text-danger mb-2">50000+</h2>
-                                                <p class="text-muted mb-0">Downloads</p>
-                                        </div>
                                 </div>
                         </div>
 
@@ -305,20 +334,23 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="cta-section py-5 bg-primary text-white">
-                <div class="container text-center">
-                        <h2 class="fw-bold mb-3">Join Our Community</h2>
-                        <p class="lead mb-4">Start your journey with PaperVault today and ace your exams!</p>
-                        <a href="register.html" class="btn btn-light btn-lg">Get Started Free</a>
+        <section class="cta-section py-5 position-relative"
+                style="background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ede9fe 100%) !important;">
+                <div class="container text-center position-relative">
+                        <h2 class="fw-bold mb-3" style="color: #0f172a;">Join Our Community</h2>
+                        <p class="lead mb-4" style="color: #64748b;">Start your journey with PaperVault today and ace
+                                your RGUKT exams!</p>
+                        <a href="register.html" class="btn btn-primary btn-lg px-5" style="color: #fff;">Get Started
+                                Free</a>
                 </div>
         </section>
 
         <!-- Footer -->
-        <footer class="footer bg-dark text-white py-4">
+        <footer class="footer py-5" style="background: #ffffff !important; border-top: 1px solid #e2e8f0;">
                 <div class="container">
                         <div class="row">
                                 <div class="col-md-6 text-center text-md-start">
-                                        <p class="mb-0">&copy; 2024 PaperVault. All rights reserved.</p>
+                                        <p class="text-muted mb-0">&copy; 2026 PaperVault. All rights reserved.</p>
                                 </div>
                                 <div class="col-md-6 text-center text-md-end">
                                         <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>

@@ -678,10 +678,10 @@
                                                 <a class="nav-link active" href="index.html"
                                                         style="color: #6366f1 !important;">Home</a>
                                         </li>
-                                        <li class="nav-item">
+                                        <!-- <li class="nav-item">
                                                 <a class="nav-link" href="papers.html"
                                                         style="color: #475569 !important;">Papers</a>
-                                        </li>
+                                        </li> -->
                                         <li class="nav-item">
                                                 <a class="nav-link" href="about.html"
                                                         style="color: #475569 !important;">About</a>
@@ -750,37 +750,37 @@
                                         <h1 class="display-4 fw-bold mb-4 hero-title"
                                                 style="color: #0f172a !important;">
                                                 RGUKT <span class="gradient-text">Question Paper</span>
-                                                Vault
+                                                Vaupaperslt
                                         </h1>
                                         <p class="lead mb-4 hero-description" style="color: #64748b;">Access previous
                                                 year question papers for PUC 1, PUC 2 & Engineering (all branches) —
                                                 organized by semester, exam type & year. <span class="typing-text"
                                                         id="typingText"></span></p>
                                         <div class="d-flex gap-3 flex-wrap hero-buttons">
-                                                <a href="papers.html" class="btn btn-hero-primary btn-lg ripple">
+                                                <a href="login.html" class="btn btn-hero-primary btn-lg ripple">
                                                         <i class="bi bi-search me-2"></i>Browse Papers
                                                 </a>
                                                 <a href="register.html" class="btn btn-hero-outline btn-lg ripple"
                                                         style="border-color: #cbd5e1; color: #334155;">Get
                                                         Started <i class="bi bi-arrow-right ms-1"></i></a>
                                         </div>
-                                        <div class="mt-4 d-flex gap-4 hero-stats">
+                                        <!-- <div class="mt-4 d-flex gap-4 hero-stats">
                                                 <div class="text-center">
-                                                        <h4 class="fw-bold mb-0" data-count="2400"
+                                                        <h4 class="fw-bold mb-0 hero-counter" id="heroPaperCount" data-count="0"
                                                                 style="color: #0f172a;">0</h4>
                                                         <small style="color: #94a3b8;">Papers</small>
                                                 </div>
                                                 <div class="text-center">
-                                                        <h4 class="fw-bold mb-0" data-count="3000"
+                                                        <h4 class="fw-bold mb-0 hero-counter" id="heroUserCount" data-count="0"
                                                                 style="color: #0f172a;">0</h4>
                                                         <small style="color: #94a3b8;">Students</small>
                                                 </div>
                                                 <div class="text-center">
-                                                        <h4 class="fw-bold mb-0" data-count="5" style="color: #0f172a;">
-                                                                0</h4>
-                                                        <small style="color: #94a3b8;">Campuses</small>
+                                                        <h4 class="fw-bold mb-0 hero-counter" id="heroDownloadCount" data-count="0"
+                                                                style="color: #0f172a;">0</h4>
+                                                        <small style="color: #94a3b8;">Downloads</small>
                                                 </div>
-                                        </div>
+                                        </div> -->
                                 </div>
                                 <div class="col-lg-6 text-center mt-5 mt-lg-0">
                                         <img src="https://illustrations.popsy.co/amber/student-going-to-school.svg"
@@ -792,7 +792,7 @@
         </section>
 
         <!-- Stats Section -->
-        <section class="stats-section py-5">
+        <!-- <section class="stats-section py-5">
                 <div class="container">
                         <div class="row text-center g-4">
                                 <div class="col-md-3 col-6">
@@ -801,7 +801,7 @@
                                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(129, 140, 248, 0.15) 100%);">
                                                         <i class="bi bi-file-earmark-text fs-3 text-primary"></i>
                                                 </div>
-                                                <h2 class="fw-bold mb-1 counter" data-target="1000" id="totalPapers">0
+                                                <h2 class="fw-bold mb-1 counter" data-target="0" id="totalPapers">0
                                                 </h2>
                                                 <p class="text-muted mb-0">Question Papers</p>
                                         </div>
@@ -812,7 +812,7 @@
                                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);">
                                                         <i class="bi bi-people fs-3 text-success"></i>
                                                 </div>
-                                                <h2 class="fw-bold mb-1 counter" data-target="5000" id="totalUsers">0
+                                                <h2 class="fw-bold mb-1 counter" data-target="0" id="totalUsers">0
                                                 </h2>
                                                 <p class="text-muted mb-0">Active Users</p>
                                         </div>
@@ -823,7 +823,7 @@
                                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(249, 115, 22, 0.15) 100%);">
                                                         <i class="bi bi-download fs-3 text-warning"></i>
                                                 </div>
-                                                <h2 class="fw-bold mb-1 counter" data-target="50000"
+                                                <h2 class="fw-bold mb-1 counter" data-target="0"
                                                         id="totalDownloads">0</h2>
                                                 <p class="text-muted mb-0">Downloads</p>
                                         </div>
@@ -834,14 +834,14 @@
                                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);">
                                                         <i class="bi bi-building fs-3 text-danger"></i>
                                                 </div>
-                                                <h2 class="fw-bold mb-1 counter" data-target="50"
+                                                <h2 class="fw-bold mb-1 counter" data-target="0"
                                                         id="totalUniversities">0</h2>
-                                                <p class="text-muted mb-0">Universities</p>
+                                                <p class="text-muted mb-0">Subjects</p>
                                         </div>
                                 </div>
                         </div>
                 </div>
-        </section>
+        </section> -->
 
         <!-- How It Works Section -->
         <section class="how-it-works-section py-5">
@@ -898,7 +898,7 @@
         </section>
 
         <!-- Recent Papers Section -->
-        <section class="recent-papers-section py-5">
+        <!-- <section class="recent-papers-section py-5">
                 <div class="container">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div>
@@ -911,15 +911,15 @@
                                                 class="bi bi-arrow-right ms-1"></i></a>
                         </div>
                         <div class="row g-4" id="recentPapers">
-                                <!-- Papers will be loaded dynamically -->
-                                <div class="col-12 text-center py-5">
+                                 Papers will be loaded dynamically -->
+                                <!-- <div class="col-12 text-center py-5">
                                         <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                         </div>
                                 </div>
                         </div>
                 </div>
-        </section>
+        </section> --> 
 
         <!-- Features Section -->
         <section class="features-section py-5 bg-light">
@@ -971,88 +971,7 @@
                 </div>
         </section>
 
-        <!-- Testimonials Section -->
-        <section class="testimonials-section py-5">
-                <div class="container">
-                        <div class="text-center mb-5">
-                                <span
-                                        class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3 reveal">Testimonials</span>
-                                <h2 class="fw-bold reveal delay-1">What Students Say</h2>
-                                <p class="text-muted reveal delay-2">Trusted by RGUKT students across all campuses</p>
-                        </div>
-                        <div class="row g-4">
-                                <div class="col-md-4">
-                                        <div class="testimonial-card">
-                                                <div class="d-flex align-items-center mb-3">
-                                                        <img src="https://i.pravatar.cc/100?img=1" alt="Student"
-                                                                class="testimonial-avatar me-3">
-                                                        <div>
-                                                                <h6 class="fw-semibold mb-0">Rahul Reddy</h6>
-                                                                <small class="text-muted">B.Tech CSE · RGUKT RK
-                                                                        Valley</small>
-                                                        </div>
-                                                </div>
-                                                <p class="text-muted mb-3">"PaperVault helped me score 9.5 GPA in my
-                                                        end semester exams! All CSE papers organized by semester — super
-                                                        helpful."</p>
-                                                <div class="text-warning">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                        <div class="testimonial-card">
-                                                <div class="d-flex align-items-center mb-3">
-                                                        <img src="https://i.pravatar.cc/100?img=5" alt="Student"
-                                                                class="testimonial-avatar me-3">
-                                                        <div>
-                                                                <h6 class="fw-semibold mb-0">Priya Sree</h6>
-                                                                <small class="text-muted">PUC 2 · RGUKT Nuzvid</small>
-                                                        </div>
-                                                </div>
-                                                <p class="text-muted mb-3">"Found all PUC-2 Maths IIA and Physics papers
-                                                        here. Really helped me prepare for end sems — well-organized and
-                                                        authentic."
-                                                </p>
-                                                <div class="text-warning">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                        <div class="testimonial-card">
-                                                <div class="d-flex align-items-center mb-3">
-                                                        <img src="https://i.pravatar.cc/100?img=3" alt="Student"
-                                                                class="testimonial-avatar me-3">
-                                                        <div>
-                                                                <h6 class="fw-semibold mb-0">Amit Kumar</h6>
-                                                                <small class="text-muted">B.Tech ECE · RGUKT
-                                                                        Ongole</small>
-                                                        </div>
-                                                </div>
-                                                <p class="text-muted mb-3">"Best platform for RGUKT papers! I
-                                                        recommend PaperVault to all my batchmates — Mid-1, Mid-2, End
-                                                        Sem, everything is here."</p>
-                                                <div class="text-warning">
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-fill"></i>
-                                                        <i class="bi bi-star-half"></i>
-                                                </div>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-        </section>
+
 
         <!-- CTA Section -->
         <section class="cta-section py-5 position-relative"
@@ -1060,7 +979,7 @@
                 <div class="container text-center position-relative">
                         <h2 class="fw-bold mb-3 reveal" style="color: #0f172a;">Ready to Ace Your RGUKT Exams?</h2>
                         <p class="lead mb-4 reveal delay-1" style="color: #64748b;">Join RGUKT students across RK
-                                Valley, Nuzvid, Ongole, Srikakulam & Basar who trust PaperVault for exam prep.</p>
+                                Valley, Nuzvid, Ongole & Srikakulam who trust PaperVault for exam prep.</p>
                         <a href="register.html" class="btn btn-primary btn-lg px-5 ripple reveal delay-2"
                                 style="color: #fff;">
                                 <i class="bi bi-rocket-takeoff me-2"></i>Create Free Account

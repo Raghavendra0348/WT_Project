@@ -318,11 +318,16 @@ router.get('/stats', async (req, res, next) => {
       where: { userId: req.user.id }
     });
 
+    const uploadCount = await Paper.count({
+      where: { uploadedById: req.user.id }
+    });
+
     res.status(200).json({
       success: true,
       data: {
         bookmarks: bookmarkCount,
-        downloads: downloadCount
+        downloads: downloadCount,
+        uploads: uploadCount
       }
     });
   } catch (err) {

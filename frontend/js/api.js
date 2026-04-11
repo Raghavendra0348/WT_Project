@@ -38,7 +38,7 @@ const API = {
                                 if (response.status === 401) {
                                         localStorage.removeItem(CONFIG.STORAGE_KEYS.TOKEN);
                                         localStorage.removeItem(CONFIG.STORAGE_KEYS.USER);
-                                        window.location.href = '/login.html';
+                                        window.location.href = 'login.html';
                                 }
                                 throw new Error(data.message || 'Something went wrong');
                         }
@@ -132,7 +132,7 @@ const AuthService = {
         logout() {
                 localStorage.removeItem(CONFIG.STORAGE_KEYS.TOKEN);
                 localStorage.removeItem(CONFIG.STORAGE_KEYS.USER);
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
         },
 
         // Get current user

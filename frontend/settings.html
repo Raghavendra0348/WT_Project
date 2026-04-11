@@ -166,7 +166,16 @@
   </div>
 </div>
 
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin/role-nav.js"></script>
 <script>
+// Auth check
+if (!AuthService.isLoggedIn()) {
+  window.location.href = 'login.html';
+}
+
 function toggleSwitch(element) {
   element.classList.toggle('active');
 }
@@ -179,15 +188,14 @@ function deleteAccount() {
   if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
     if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
       alert('Account deletion request submitted. You will be logged out.');
-      logout();
+      AuthService.logout();
     }
   }
 }
 
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
-    localStorage.clear();
-    window.location.href = 'login.html';
+    AuthService.logout();
   }
 }
 </script>

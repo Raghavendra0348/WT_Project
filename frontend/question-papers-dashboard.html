@@ -157,37 +157,37 @@
         <a class="branch-card" data-branch="cse" href="#">
           <i class="bi bi-cpu" style="color:#6366f1;"></i>
           <div class="branch-name">CSE</div>
-          <div class="branch-count">420+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="ece" href="#">
           <i class="bi bi-broadcast-pin" style="color:#0891b2;"></i>
           <div class="branch-name">ECE</div>
-          <div class="branch-count">380+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="eee" href="#">
           <i class="bi bi-lightning-charge" style="color:#d97706;"></i>
           <div class="branch-name">EEE</div>
-          <div class="branch-count">350+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="me" href="#">
           <i class="bi bi-gear-wide-connected" style="color:#059669;"></i>
           <div class="branch-name">ME</div>
-          <div class="branch-count">310+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="ce" href="#">
           <i class="bi bi-building" style="color:#7c3aed;"></i>
           <div class="branch-name">CE</div>
-          <div class="branch-count">290+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="che" href="#">
           <i class="bi bi-droplet-half" style="color:#e11d48;"></i>
           <div class="branch-name">CHE</div>
-          <div class="branch-count">260+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
         <a class="branch-card" data-branch="mme" href="#">
           <i class="bi bi-hexagon" style="color:#ca8a04;"></i>
           <div class="branch-name">MME</div>
-          <div class="branch-count">220+ papers</div>
+          <div class="branch-count">Papers</div>
         </a>
       </div>
       <!-- Year/Sem Filters for Engineering -->
@@ -212,6 +212,7 @@
           <div class="chip active" data-filter="all">All</div>
           <div class="chip" data-filter="mid1">Mid-1</div>
           <div class="chip" data-filter="mid2">Mid-2</div>
+          <div class="chip" data-filter="mid3">Mid-3</div>
           <div class="chip" data-filter="endsem">End Sem</div>
           <div class="chip" data-filter="supply">Supply</div>
           <div class="chip" data-filter="2025">2024–25</div>
@@ -248,32 +249,9 @@
         <div class="card-box">
           <div class="section-header" style="margin-bottom:8px;">
             <div class="section-title">Saved Papers</div>
-            <a class="see-all" href="#">See all</a>
+            <a class="see-all" href="bookmarks.html">See all</a>
           </div>
-          <div class="bookmark-item">
-            <div class="bm-icon"><i class="bi bi-file-earmark-text"></i></div>
-            <div>
-              <div class="bm-name">Data Structures – End Sem 2024</div>
-              <div class="bm-sub">B.Tech · CSE · Sem 3</div>
-            </div>
-            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
-          </div>
-          <div class="bookmark-item">
-            <div class="bm-icon" style="background:#D1FAE5;color:#065F46;"><i class="bi bi-file-earmark-text"></i></div>
-            <div>
-              <div class="bm-name">Mathematics IIA – End Sem 2024</div>
-              <div class="bm-sub">PUC 2 · March 2024</div>
-            </div>
-            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
-          </div>
-          <div class="bookmark-item">
-            <div class="bm-icon" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-file-earmark-text"></i></div>
-            <div>
-              <div class="bm-name">Signals & Systems – Mid-2</div>
-              <div class="bm-sub">B.Tech · ECE · Sem 4</div>
-            </div>
-            <button class="bm-dl" title="Download"><i class="bi bi-download"></i></button>
-          </div>
+          <div style="font-size:13px;color:var(--muted);padding:10px;">Loading saved papers...</div>
         </div>
 
       </div>
@@ -373,6 +351,22 @@
 
           document.getElementById('totalPapersCount').textContent = res.data.length;
 
+          // Update branch card counts dynamically
+          const branchCounts = {};
+          allLivePapers.engg.forEach(p => {
+            const b = String(p.course).toLowerCase();
+            branchCounts[b] = (branchCounts[b] || 0) + 1;
+          });
+          document.querySelectorAll('.branch-card').forEach(card => {
+            const branch = card.dataset.branch;
+            const countEl = card.querySelector('.branch-count');
+            if (countEl && branchCounts[branch]) {
+              countEl.textContent = branchCounts[branch] + ' papers';
+            } else if (countEl) {
+              countEl.textContent = '0 papers';
+            }
+          });
+
           // Build Trends
           allLiveTrends.all = generateTrends(allLivePapers.all);
           allLiveTrends.puc1 = generateTrends(allLivePapers.puc1);
@@ -391,15 +385,16 @@
       try {
         const res = await UserService.getBookmarks();
         if (res.success && res.data) {
-          // Find the parent of .bookmark-item elements. It's the sibling of the h4 header with 'Saved Papers'
           const headers = Array.from(document.querySelectorAll('.section-title'));
           const savedHeader = headers.find(h => h.textContent.includes('Saved Papers'));
           if (savedHeader) {
             const container = savedHeader.parentElement.parentElement;
 
-            // Keep the header, drop the items
-            const items = container.querySelectorAll('.bookmark-item');
-            items.forEach(i => i.remove());
+            // Remove everything except the header row
+            const headerRow = savedHeader.parentElement;
+            Array.from(container.children).forEach(child => {
+              if (child !== headerRow) child.remove();
+            });
 
             if (res.data.length === 0) {
               const div = document.createElement('div');

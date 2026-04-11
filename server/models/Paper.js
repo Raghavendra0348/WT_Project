@@ -55,7 +55,7 @@ const Paper = sequelize.define('Paper', {
     }
   },
   examType: {
-    type: DataTypes.ENUM('midterm', 'final', 'model'),
+    type: DataTypes.ENUM('midterm', 'mid1', 'mid2', 'mid3', 'final', 'model'),
     allowNull: false,
     validate: {
       notEmpty: { msg: 'Please specify exam type' }

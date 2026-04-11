@@ -11,7 +11,65 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <!-- Custom CSS -->
         <link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/premium.css">
+        <style>
+                /* Override premium.css conflicting styles for this page */
+                body {
+                        display: block !important;
+                }
+
+                .nav-item {
+                        display: list-item !important;
+                        padding: 0 !important;
+                        margin-bottom: 0 !important;
+                        background: transparent !important;
+                        color: inherit !important;
+                        font-size: inherit !important;
+                        cursor: default !important;
+                        transform: none !important;
+                        border-left: none !important;
+                }
+
+                .nav-item:hover {
+                        transform: none !important;
+                }
+
+                /* White theme navbar */
+                .navbar-custom {
+                        background: #ffffff !important;
+                        box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06) !important;
+                }
+
+                .navbar-custom .navbar-brand {
+                        background: linear-gradient(135deg, #0f172a, #6366f1) !important;
+                        -webkit-background-clip: text !important;
+                        -webkit-text-fill-color: transparent !important;
+                        background-clip: text !important;
+                }
+
+                .navbar-custom .nav-link {
+                        color: #475569 !important;
+                }
+
+                .navbar-custom .nav-link:hover,
+                .navbar-custom .nav-link.active {
+                        color: #6366f1 !important;
+                        background: transparent !important;
+                        text-decoration: none !important;
+                }
+
+                /* Page header */
+                .page-header {
+                        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+                        padding: 3rem 0 !important;
+                        margin-bottom: 0 !important;
+                }
+
+                /* Footer */
+                .footer {
+                        background: #ffffff !important;
+                        border-top: 1px solid #e2e8f0;
+                }
+        </style>
 </head>
 
 <body>
@@ -19,7 +77,8 @@
         <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
                 <div class="container">
                         <a class="navbar-brand fw-bold" href="index.html">
-                                <i class="bi bi-journal-bookmark-fill me-2"></i>PaperVault
+                                <i class="bi bi-journal-bookmark-fill me-2"
+                                        style="-webkit-text-fill-color: #6366f1;"></i>PaperVault
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarNav">
@@ -31,9 +90,6 @@
                                                 <a class="nav-link" href="index.html">Home</a>
                                         </li>
                                         <li class="nav-item">
-                                                <a class="nav-link" href="papers.html">Papers</a>
-                                        </li>
-                                        <li class="nav-item">
                                                 <a class="nav-link" href="about.html">About</a>
                                         </li>
                                         <li class="nav-item">
@@ -42,12 +98,13 @@
                                 </ul>
                                 <!-- Auth Buttons -->
                                 <div id="authButtons">
-                                        <a href="login.html" class="btn btn-outline-light me-2">Login</a>
-                                        <a href="register.html" class="btn btn-light">Register</a>
+                                        <a href="login.html" class="btn btn-outline-primary me-2">Login</a>
+                                        <a href="register.html" class="btn btn-primary"
+                                                style="color: #fff;">Register</a>
                                 </div>
                                 <!-- User Menu -->
                                 <div id="userMenu" class="dropdown d-none">
-                                        <button class="btn btn-outline-light dropdown-toggle" type="button"
+                                        <button class="btn btn-outline-primary dropdown-toggle" type="button"
                                                 data-bs-toggle="dropdown">
                                                 <i class="bi bi-person-circle me-1"></i>
                                                 <span id="userName">User</span>
@@ -178,8 +235,8 @@
                                                                 </div>
                                                                 <div class="flex-grow-1 ms-3">
                                                                         <h6 class="mb-1">Address</h6>
-                                                                        <p class="text-muted mb-0 small">123 Education
-                                                                                Street, Tech Park, Bangalore - 560001
+                                                                        <p class="text-muted mb-0 small">RGUKT RK
+                                                                                Valley, Idupulapaya, Kadapa, AP - 516330
                                                                         </p>
                                                                 </div>
                                                         </div>
@@ -313,8 +370,8 @@
                                                         data-bs-parent="#faqAccordion">
                                                         <div class="accordion-body">
                                                                 Absolutely! Use the contact form above to request
-                                                                specific papers. Include details like university name,
-                                                                subject, and year, and we'll try our best to source it
+                                                                specific papers. Include details like subject, semester,
+                                                                and year, and we'll try our best to source it
                                                                 for you.
                                                         </div>
                                                 </div>
@@ -325,11 +382,11 @@
         </section>
 
         <!-- Footer -->
-        <footer class="footer bg-dark text-white py-4">
+        <footer class="footer py-5" style="background: #ffffff !important; border-top: 1px solid #e2e8f0;">
                 <div class="container">
                         <div class="row">
                                 <div class="col-md-6 text-center text-md-start">
-                                        <p class="mb-0">&copy; 2024 PaperVault. All rights reserved.</p>
+                                        <p class="text-muted mb-0">&copy; 2026 PaperVault. All rights reserved.</p>
                                 </div>
                                 <div class="col-md-6 text-center text-md-end">
                                         <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>

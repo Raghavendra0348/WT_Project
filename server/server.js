@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -60,6 +61,45 @@ app.use('/api/papers', require('./routes/papers'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/upload', require('./routes/upload'));
+
+// Serve locally uploaded papers as static files
+app.use('/papers/uploads', express.static(path.join(__dirname, '../frontend/papers/uploads')));
+
+// Public stats route (for homepage - no auth required)
+app.get('/api/stats', async (req, res) => {
+  try {
+    const Paper = require('./models/Paper');
+    const User = require('./models/User');
+    const { sequelize } = require('./config/db');
+
+    const totalPapers = await Paper.count({ where: { status: 'approved' } });
+    const totalUsers = await User.count();
+
+    const downloadResult = await Paper.findAll({
+      attributes: [[sequelize.fn('SUM', sequelize.col('downloads')), 'total']],
+      raw: true
+    });
+    const totalDownloads = parseInt(downloadResult[0]?.total) || 0;
+
+    const subjectResult = await Paper.findAll({
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('subject')), 'subject']],
+      where: { status: 'approved' },
+      raw: true
+    });
+    const totalSubjects = subjectResult.length;
+
+    res.status(200).json({
+      success: true,
+      data: { totalPapers, totalUsers, totalDownloads, totalSubjects }
+    });
+  } catch (err) {
+    console.error('Stats error:', err.message);
+    res.status(200).json({
+      success: true,
+      data: { totalPapers: 0, totalUsers: 0, totalDownloads: 0, totalSubjects: 0 }
+    });
+  }
+});
 
 // Health check route
 app.get('/api/health', (req, res) => {
