@@ -263,9 +263,19 @@ exports.downloadPaper = async (req, res, next) => {
       });
     }
 
-    // If the fileUrl is a local relative path, construct a full URL via the Express server
     let downloadUrl = paper.fileUrl;
-    if (downloadUrl && !downloadUrl.startsWith('http')) {
+
+    // If it's a Cloudinary URL, generate a signed URL to bypass 401
+    if (downloadUrl && downloadUrl.includes('cloudinary.com') && paper.filePublicId) {
+      const cloudinary = require('../config/cloudinary');
+      downloadUrl = cloudinary.url(paper.filePublicId, {
+        resource_type: 'raw',
+        type: 'upload',
+        sign_url: true,
+        secure: true
+      });
+    } else if (downloadUrl && !downloadUrl.startsWith('http')) {
+      // Local file — construct full URL via Express server
       const protocol = req.protocol;
       const host = req.get('host');
       downloadUrl = `${protocol}://${host}/${downloadUrl}`;

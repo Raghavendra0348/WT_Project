@@ -144,7 +144,8 @@ Aiven MySQL requires an SSL certificate. On Render:
 
 | Key | Value |
 |-----|-------|
-| `DB_SSL_CA` | `/etc/secrets/ca.pem` |
+| `DB_SSL_CA` | `
+` |
 
 ### 3.6 — Deploy
 
