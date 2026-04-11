@@ -265,15 +265,46 @@ exports.downloadPaper = async (req, res, next) => {
 
     let downloadUrl = paper.fileUrl;
 
-    // If it's a Cloudinary URL, generate a signed URL to bypass 401
+    // If it's a Cloudinary URL, proxy the download through our server to bypass 401
     if (downloadUrl && downloadUrl.includes('cloudinary.com') && paper.filePublicId) {
       const cloudinary = require('../config/cloudinary');
-      downloadUrl = cloudinary.url(paper.filePublicId, {
-        resource_type: 'raw',
-        type: 'upload',
-        sign_url: true,
-        secure: true
-      });
+      try {
+        // Generate a time-limited signed URL for server-side fetch
+        const signedUrl = cloudinary.url(paper.filePublicId, {
+          resource_type: 'raw',
+          type: 'upload',
+          sign_url: true,
+          secure: true,
+          flags: 'attachment'
+        });
+
+        // Fetch from Cloudinary and pipe to client
+        const https = require('https');
+        const fileName = paper.title ? paper.title.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf' : 'paper.pdf';
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        
+        https.get(signedUrl, (cloudRes) => {
+          if (cloudRes.statusCode === 200) {
+            cloudRes.pipe(res);
+          } else {
+            // Fallback: try direct URL with API credentials
+            const directUrl = cloudinary.utils.private_download_url(paper.filePublicId, 'pdf', {
+              resource_type: 'raw',
+              expires_at: Math.floor(Date.now() / 1000) + 3600
+            });
+            res.removeHeader('Content-Type');
+            res.removeHeader('Content-Disposition');
+            res.status(200).json({ success: true, url: directUrl });
+          }
+        }).on('error', () => {
+          res.status(500).json({ success: false, message: 'Download failed' });
+        });
+        return;
+      } catch (e) {
+        console.error('Cloudinary proxy error:', e.message);
+      }
     } else if (downloadUrl && !downloadUrl.startsWith('http')) {
       // Local file — construct full URL via Express server
       const protocol = req.protocol;

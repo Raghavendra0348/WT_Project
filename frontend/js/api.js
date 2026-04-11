@@ -200,7 +200,29 @@ const PaperService = {
 
         // Download paper
         async downloadPaper(id) {
-                return API.get(`/papers/${id}/download`);
+                const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
+                const url = `${this.baseURL || API.baseURL}/papers/${id}/download`;
+                try {
+                        const response = await fetch(url, {
+                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                        });
+                        const contentType = response.headers.get('content-type') || '';
+                        if (contentType.includes('application/pdf')) {
+                                // Server is streaming the PDF directly
+                                const blob = await response.blob();
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                window.open(blobUrl, '_blank');
+                                return { success: true };
+                        } else {
+                                // Server returned a JSON URL (local files)
+                                const data = await response.json();
+                                if (data.url) window.open(data.url, '_blank');
+                                return data;
+                        }
+                } catch (err) {
+                        console.error('Download error:', err);
+                        throw err;
+                }
         },
 
         // Search papers
