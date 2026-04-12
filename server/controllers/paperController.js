@@ -239,7 +239,7 @@ exports.deletePaper = async (req, res, next) => {
 
 // @desc    Download paper
 // @route   GET /api/papers/:id/download
-// @access  Public
+// @access  Public (optionalAuth tracks logged-in users)
 exports.downloadPaper = async (req, res, next) => {
   try {
     const paper = await Paper.findByPk(req.params.id);
@@ -263,49 +263,59 @@ exports.downloadPaper = async (req, res, next) => {
       });
     }
 
-    let downloadUrl = paper.fileUrl;
+    const fileUrl = paper.fileUrl;
 
-    // If it's a Cloudinary URL, proxy download with API credentials to bypass 401
-    if (downloadUrl && downloadUrl.includes('cloudinary.com')) {
-      const https = require('https');
-      const fileName = paper.title ? paper.title.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf' : 'paper.pdf';
-
-      // Use Basic Auth: embed API_KEY:API_SECRET in the URL
-      const authUrl = downloadUrl.replace(
-        'https://res.cloudinary.com',
-        `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@res.cloudinary.com`
-      );
-
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-
-      https.get(authUrl, (cloudRes) => {
-        if (cloudRes.statusCode === 200) {
-          cloudRes.pipe(res);
-        } else {
-          res.removeHeader('Content-Type');
-          res.removeHeader('Content-Disposition');
-          res.status(cloudRes.statusCode).json({
-            success: false,
-            message: 'Cloud download failed with status ' + cloudRes.statusCode
+    // --- Cloudinary files: use generate_archive which bypasses ACL restriction ---
+    if (fileUrl && fileUrl.includes('cloudinary.com')) {
+      if (paper.filePublicId) {
+        try {
+          const cloudinary = require('../config/cloudinary');
+          // generate_archive creates a signed URL that works even in restricted mode
+          const zipUrl = cloudinary.utils.download_zip_url({
+            public_ids: [paper.filePublicId],
+            resource_type: 'raw'
           });
+
+          const https = require('https');
+          const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
+          res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+          res.setHeader('Content-Type', 'application/pdf');
+
+          https.get(zipUrl, (cloudRes) => {
+            if (cloudRes.statusCode === 200) {
+              cloudRes.pipe(res);
+            } else {
+              console.error('Archive download failed status:', cloudRes.statusCode);
+              res.removeHeader('Content-Type');
+              res.removeHeader('Content-Disposition');
+              res.status(500).json({ success: false, message: 'File download failed. Please contact admin.' });
+            }
+          }).on('error', () => {
+            res.status(500).json({ success: false, message: 'Failed to stream file from cloud' });
+          });
+
+          return;
+        } catch (cloudErr) {
+          console.error('generate_archive error:', cloudErr.message);
+          // Fall through to return raw URL as last resort
         }
-      }).on('error', (err) => {
-        res.status(500).json({ success: false, message: 'Download failed' });
-      });
-      return;
-    } else if (downloadUrl && !downloadUrl.startsWith('http')) {
-      // Local file — construct full URL via Express server
+      }
+
+      // Fallback: return raw URL (may show 401 in browser)
+      return res.status(200).json({ success: true, url: fileUrl });
+    }
+
+    // --- Local or other remote files: return URL to frontend ---
+    let downloadUrl = fileUrl;
+    if (downloadUrl && !downloadUrl.startsWith('http')) {
       const protocol = req.protocol;
       const host = req.get('host');
       downloadUrl = `${protocol}://${host}/${downloadUrl}`;
     }
 
-    res.status(200).json({
-      success: true,
-      url: downloadUrl
-    });
+    res.status(200).json({ success: true, url: downloadUrl || null });
   } catch (err) {
     next(err);
   }
 };
+
