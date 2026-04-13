@@ -263,12 +263,22 @@ const UserService = {
 
         // Add bookmark
         async addBookmark(paperId) {
-                return API.post('/users/bookmarks', { paperId });
+                return API.post(`/users/bookmarks/${paperId}`);
         },
 
         // Remove bookmark
         async removeBookmark(paperId) {
                 return API.delete(`/users/bookmarks/${paperId}`);
+        },
+
+        // Toggle bookmark (add if not exists, remove if exists)
+        async toggleBookmark(paperId) {
+                return API.put(`/users/bookmarks/${paperId}`);
+        },
+
+        // Check if paper is bookmarked
+        async checkBookmark(paperId) {
+                return API.get(`/users/bookmarks/${paperId}/check`);
         },
 
         // Get download history

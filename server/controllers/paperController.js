@@ -305,15 +305,34 @@ exports.downloadPaper = async (req, res, next) => {
       return res.status(200).json({ success: true, url: fileUrl });
     }
 
-    // --- Local or other remote files: return URL to frontend ---
-    let downloadUrl = fileUrl;
-    if (downloadUrl && !downloadUrl.startsWith('http')) {
-      const protocol = req.protocol;
-      const host = req.get('host');
-      downloadUrl = `${protocol}://${host}/${downloadUrl}`;
+    // --- Local files: stream directly from disk ---
+    if (fileUrl && !fileUrl.startsWith('http')) {
+      const fs = require('fs');
+      const pathModule = require('path');
+
+      // fileUrl is like: papers/uploads/paper-xxx.pdf
+      const localPath = pathModule.join(__dirname, '../../frontend', fileUrl);
+
+      if (!fs.existsSync(localPath)) {
+        return res.status(404).json({
+          success: false,
+          message: 'File not found on server. It may have been moved or deleted.'
+        });
+      }
+
+      const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+      const fileStream = fs.createReadStream(localPath);
+      fileStream.on('error', () => {
+        res.status(500).json({ success: false, message: 'Failed to read file from disk' });
+      });
+      fileStream.pipe(res);
+      return;
     }
 
-    res.status(200).json({ success: true, url: downloadUrl || null });
+    res.status(404).json({ success: false, message: 'No file associated with this paper' });
   } catch (err) {
     next(err);
   }

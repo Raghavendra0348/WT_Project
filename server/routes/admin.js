@@ -289,29 +289,55 @@ router.delete('/papers/:id', async (req, res, next) => {
       });
     }
 
-    // Delete from Cloudinary if configured
-    try {
-      const cloudinary = require('../config/cloudinary');
-      if (paper.filePublicId) {
-        await cloudinary.uploader.destroy(paper.filePublicId);
+    const fs = require('fs');
+    const path = require('path');
+
+    // --- Delete local file from disk if it's a local upload ---
+    if (paper.fileUrl && !paper.fileUrl.startsWith('http')) {
+      const localPath = path.join(__dirname, '../../frontend', paper.fileUrl);
+      if (fs.existsSync(localPath)) {
+        try {
+          fs.unlinkSync(localPath);
+          console.log('Deleted local file:', localPath);
+        } catch (fsErr) {
+          console.log('Could not delete local file (non-critical):', fsErr.message);
+        }
       }
-      if (paper.solutionPublicId) {
-        await cloudinary.uploader.destroy(paper.solutionPublicId);
-      }
-    } catch (cloudErr) {
-      console.log('Cloudinary delete error (non-critical):', cloudErr.message);
     }
 
+    // --- Delete from Cloudinary if it was a cloud upload ---
+    if (paper.fileUrl && paper.fileUrl.startsWith('http')) {
+      try {
+        const cloudinary = require('../config/cloudinary');
+        if (paper.filePublicId && !paper.filePublicId.startsWith('local-')) {
+          await cloudinary.uploader.destroy(paper.filePublicId, { resource_type: 'raw' });
+        }
+        if (paper.solutionPublicId && !paper.solutionPublicId.startsWith('local-')) {
+          await cloudinary.uploader.destroy(paper.solutionPublicId, { resource_type: 'raw' });
+        }
+      } catch (cloudErr) {
+        console.log('Cloudinary delete error (non-critical):', cloudErr.message);
+      }
+    }
+
+    // Clean up related records first (bookmarks and download history)
+    const Bookmark = require('../models/Bookmark');
+    const DownloadHistoryModel = require('../models/DownloadHistory');
+    await Bookmark.destroy({ where: { paperId: paper.id } });
+    await DownloadHistoryModel.destroy({ where: { paperId: paper.id } });
+
+    // Now delete the paper record
     await paper.destroy();
 
     res.status(200).json({
       success: true,
-      message: 'Paper deleted successfully'
+      message: 'Paper and associated file deleted successfully'
     });
   } catch (err) {
     next(err);
   }
 });
+
 
 // @desc    Get recent activity
 // @route   GET /api/admin/activity

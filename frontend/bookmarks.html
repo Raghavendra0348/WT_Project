@@ -487,10 +487,9 @@
 
                 async function downloadPaper(id) {
                     try {
-                        const res = await PaperService.downloadPaper(id);
-                        if(res.url) window.open(res.url, '_blank');
+                        await PaperService.downloadPaper(id);
                     } catch(e) {
-                        alert('Could not download paper.');
+                        alert('Could not download paper: ' + (e.message || 'Unknown error'));
                     }
                 }
 
