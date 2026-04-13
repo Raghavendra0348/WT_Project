@@ -132,20 +132,28 @@ function truncateText(text, maxLength = 100) {
 
 // Generate paper card HTML
 function generatePaperCard(paper) {
+        const isLoggedIn = AuthService.isLoggedIn();
+        const bookmarkBtn = isLoggedIn
+                ? `<button class="bookmark-card-btn" id="bm-${paper.id}" onclick="toggleBookmarkCard(${paper.id}, this)" title="Bookmark">
+                        <i class="bi bi-bookmark"></i>
+                   </button>`
+                : '';
+
         return `
         <div class="col-lg-4 col-md-6">
             <div class="card paper-card h-100">
-                <div class="card-img-top d-flex align-items-center justify-content-center">
+                <div class="card-img-top d-flex align-items-center justify-content-center" style="position:relative;">
                     <i class="bi bi-file-earmark-pdf"></i>
+                    ${bookmarkBtn}
                 </div>
                 <div class="card-body">
                     <span class="badge bg-primary mb-2">${paper.category || 'General'}</span>
                     <h5 class="card-title">${truncateText(paper.title, 50)}</h5>
                     <p class="text-muted small mb-2">
-                        <i class="bi bi-building me-1"></i>${paper.university || 'N/A'} • 
-                        <i class="bi bi-calendar me-1"></i>${paper.year || 'N/A'}
+                        <i class="bi bi-building me-1"></i>${paper.university || paper.course || 'N/A'} &bull;
+                        <i class="bi bi-calendar me-1"></i>${paper.examYear || paper.year || 'N/A'}
                     </p>
-                    <p class="card-text small text-muted">${truncateText(paper.description || '', 80)}</p>
+                    <p class="card-text small text-muted">${truncateText(paper.description || paper.subject || '', 80)}</p>
                 </div>
                 <div class="card-footer bg-white border-top-0">
                     <div class="d-flex justify-content-between align-items-center">
@@ -160,6 +168,29 @@ function generatePaperCard(paper) {
             </div>
         </div>
     `;
+}
+
+// Toggle bookmark from card button
+async function toggleBookmarkCard(paperId, btn) {
+        if (!AuthService.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+        }
+        try {
+                const res = await UserService.toggleBookmark(paperId);
+                const icon = btn.querySelector('i');
+                if (res.bookmarked) {
+                        icon.className = 'bi bi-bookmark-fill';
+                        btn.style.color = '#4F35D2';
+                        showToast('Bookmarked!', 'success');
+                } else {
+                        icon.className = 'bi bi-bookmark';
+                        btn.style.color = '';
+                        showToast('Bookmark removed', 'info');
+                }
+        } catch (e) {
+                showToast('Could not update bookmark', 'error');
+        }
 }
 
 // Initialize auth on page load

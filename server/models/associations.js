@@ -68,6 +68,16 @@ DownloadHistory.belongsTo(Paper, {
         as: 'paper'
 });
 
+// Bookmark direct associations (needed for include queries)
+Bookmark.belongsTo(Paper, {
+        foreignKey: 'paperId',
+        as: 'paper'
+});
+Bookmark.belongsTo(User, {
+        foreignKey: 'userId',
+        as: 'user'
+});
+
 module.exports = {
         User,
         Paper,

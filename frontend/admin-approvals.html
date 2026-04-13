@@ -186,6 +186,30 @@
             transform: translateY(-1px);
         }
 
+        .btn-delete {
+            background: #1e293b;
+            color: #fca5a5;
+            border: 1.5px solid #ef4444;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239,68,68,0.35);
+        }
+
         .btn-view {
             background: #06b6d4;
             color: white;
@@ -260,6 +284,8 @@
         .pv-toast.error { background: #ef4444; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
+
+
 
         @media (max-width: 768px) {
             .main-content {
@@ -339,6 +365,7 @@
         </div>
     </div>
 
+
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
@@ -410,9 +437,17 @@
             container.innerHTML = papers.map(paper => {
                 const uploaderName = paper.uploadedBy ? paper.uploadedBy.name : 'Unknown';
                 const uploaderEmail = paper.uploadedBy ? paper.uploadedBy.email : '';
+                // Build preview URL:
+                //   - Local files  → API server (X-Frame-Options removed for /papers/uploads)
+                //   - Remote files → use as-is (Cloudinary etc.)
+                const fileUrl = paper.fileUrl || '';
+                const apiBase = CONFIG.API_URL.replace('/api', '');
+                const previewUrl = fileUrl.startsWith('http')
+                    ? fileUrl
+                    : `${apiBase}/${fileUrl}`;
 
                 return `
-                <div class="paper-card">
+                <div class="paper-card" id="card-${paper.id}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
                         <div class="paper-title">${paper.title}</div>
                         <span class="status-badge status-${paper.status}">${paper.status}</span>
@@ -442,8 +477,9 @@
                                 <i class="bi bi-x-lg"></i> Reject
                             </button>
                         `}
-                        <button class="btn-view" onclick="deletePaperAdmin(${paper.id})" style="background:#ef4444;">
-                            <i class="bi bi-trash"></i> Delete
+                        <button class="btn-delete" onclick="deletePaperAdmin(${paper.id}, '${paper.title.replace(/'/g, "\\'")}')"
+                            title="Permanently delete this paper and its file">
+                            <i class="bi bi-trash3-fill"></i> Delete
                         </button>
                     </div>
                 </div>
@@ -452,12 +488,12 @@
         }
 
         // Approve paper
-        async function approvePaper(paperId) {
-            if (!confirm('Approve this paper?')) return;
+        async function approvePaper(paperId, skipConfirm = false) {
+            if (!skipConfirm && !confirm('Approve this paper?')) return;
             try {
                 const response = await API.put(`/admin/papers/${paperId}`, { status: 'approved' });
                 if (response.success) {
-                    showToastSimple('Paper approved!', 'success');
+                    showToastSimple('Paper approved! ✅', 'success');
                     loadPapers();
                 }
             } catch (error) {
@@ -466,8 +502,8 @@
         }
 
         // Reject paper
-        async function rejectPaper(paperId) {
-            if (!confirm('Reject this paper?')) return;
+        async function rejectPaper(paperId, skipConfirm = false) {
+            if (!skipConfirm && !confirm('Reject this paper?')) return;
             try {
                 const response = await API.put(`/admin/papers/${paperId}`, { status: 'rejected' });
                 if (response.success) {
@@ -480,13 +516,17 @@
         }
 
         // Delete paper
-        async function deletePaperAdmin(paperId) {
-            if (!confirm('Delete this paper permanently? This cannot be undone.')) return;
+        async function deletePaperAdmin(paperId, paperTitle) {
+            const title = paperTitle || 'this paper';
+            if (!confirm(`⚠️ PERMANENTLY DELETE\n\n"${title}"\n\nThis will delete the paper record AND the file from disk.\nThis action CANNOT be undone.`)) return;
             try {
                 const response = await API.delete(`/admin/papers/${paperId}`);
                 if (response.success) {
-                    showToastSimple('Paper deleted', 'success');
+                    showToastSimple('Paper and file deleted permanently', 'success');
+                    // Remove card from DOM immediately for instant feedback
                     loadPapers();
+                } else {
+                    showToastSimple(response.message || 'Delete failed', 'error');
                 }
             } catch (error) {
                 showToastSimple(error.message || 'Error deleting paper', 'error');

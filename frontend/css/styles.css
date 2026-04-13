@@ -356,6 +356,36 @@ img {
         color: rgba(255, 255, 255, 0.8);
 }
 
+/* Bookmark button on paper card */
+.bookmark-card-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.25);
+        border: none;
+        border-radius: 8px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 16px;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(4px);
+        z-index: 2;
+}
+
+.bookmark-card-btn:hover {
+        background: rgba(255, 255, 255, 0.5);
+        transform: scale(1.1);
+}
+
+.bookmark-card-btn .bi-bookmark-fill {
+        color: #fff;
+}
+
 /* Stat Cards */
 /* Stat Cards - Modern Glassmorphism */
 .stat-card {

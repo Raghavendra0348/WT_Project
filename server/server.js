@@ -64,7 +64,14 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/upload', require('./routes/upload'));
 
 // Serve locally uploaded papers as static files
-app.use('/papers/uploads', express.static(path.join(__dirname, '../frontend/papers/uploads')));
+// Allow cross-origin iframe embedding + fetch (admin preview on different port)
+app.use('/papers/uploads', (req, res, next) => {
+  res.removeHeader('X-Frame-Options');
+  res.removeHeader('Content-Security-Policy');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  next();
+}, express.static(path.join(__dirname, '../frontend/papers/uploads')));
 
 // Public stats route (for homepage - no auth required)
 app.get('/api/stats', async (req, res) => {

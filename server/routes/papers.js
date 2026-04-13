@@ -9,7 +9,7 @@ const {
   getPendingPapers,
   approvePaper
 } = require('../controllers/paperController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -29,6 +29,6 @@ router.route('/:id')
   .delete(protect, authorize('admin'), deletePaper);
 
 router.route('/:id/download')
-  .get(downloadPaper);
+  .get(optionalAuth, downloadPaper);
 
 module.exports = router;

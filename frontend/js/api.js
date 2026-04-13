@@ -198,24 +198,35 @@ const PaperService = {
                 return API.delete(`/papers/${id}`);
         },
 
-        // Download paper
+        // Download paper — server streams file (PDF or ZIP) for Cloudinary, returns JSON URL for local files
         async downloadPaper(id) {
                 const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
-                const url = `${this.baseURL || API.baseURL}/papers/${id}/download`;
+                const url = `${API.baseURL}/papers/${id}/download`;
                 try {
                         const response = await fetch(url, {
                                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
                         });
+
                         const contentType = response.headers.get('content-type') || '';
-                        if (contentType.includes('application/pdf')) {
-                                // Server is streaming the PDF directly
+
+                        if (contentType.includes('application/pdf') || contentType.includes('application/zip') || contentType.includes('application/octet-stream')) {
+                                // Server is streaming the file — trigger browser download
                                 const blob = await response.blob();
                                 const blobUrl = window.URL.createObjectURL(blob);
-                                window.open(blobUrl, '_blank');
+                                const a = document.createElement('a');
+                                a.href = blobUrl;
+                                // Use .zip extension if it's a zip, otherwise .pdf
+                                const ext = contentType.includes('zip') ? '.zip' : '.pdf';
+                                a.download = `paper-${id}${ext}`;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                setTimeout(() => window.URL.revokeObjectURL(blobUrl), 10000);
                                 return { success: true };
                         } else {
-                                // Server returned a JSON URL (local files)
+                                // Server returned JSON { success, url }
                                 const data = await response.json();
+                                if (!response.ok) throw new Error(data.message || 'Download failed');
                                 if (data.url) window.open(data.url, '_blank');
                                 return data;
                         }
@@ -252,12 +263,22 @@ const UserService = {
 
         // Add bookmark
         async addBookmark(paperId) {
-                return API.post('/users/bookmarks', { paperId });
+                return API.post(`/users/bookmarks/${paperId}`);
         },
 
         // Remove bookmark
         async removeBookmark(paperId) {
                 return API.delete(`/users/bookmarks/${paperId}`);
+        },
+
+        // Toggle bookmark (add if not exists, remove if exists)
+        async toggleBookmark(paperId) {
+                return API.put(`/users/bookmarks/${paperId}`);
+        },
+
+        // Check if paper is bookmarked
+        async checkBookmark(paperId) {
+                return API.get(`/users/bookmarks/${paperId}/check`);
         },
 
         // Get download history
