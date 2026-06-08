@@ -495,11 +495,58 @@
       }
     }
 
-    async function downloadDashboardPaper(id) {
+    async function downloadDashboardPaper(id, btnEl) {
+      // Find the clicked button if not passed directly
+      const btn = btnEl || document.querySelector(`#pcard-${id} .btn-view`) ||
+                          document.querySelector(`[onclick="downloadDashboardPaper(${id})"]`);
+
+      // Immediately show loading state — user knows it's working
+      const originalHTML = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split" style="animation:spin 1s linear infinite"></i> Preparing…';
+        btn.style.opacity = '0.75';
+      }
+
+      // Show a toast immediately
+      showDownloadToast();
+
       try {
         const res = await PaperService.downloadPaper(id);
-        if (res.url) window.open(res.url, '_blank');
-      } catch (e) { alert('Download failed'); }
+        if (res && res.url) window.open(res.url, '_blank');
+      } catch (e) {
+        alert('Download failed: ' + (e.message || 'Please try again'));
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+          btn.style.opacity = '';
+        }
+      }
+    }
+
+    function showDownloadToast() {
+      // Remove existing toast
+      const old = document.getElementById('dl-toast');
+      if (old) old.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'dl-toast';
+      toast.style.cssText = `
+        position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+        background:#1e293b; color:#fff; padding:12px 22px; border-radius:99px;
+        font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.4); z-index:9999;
+        animation:slideUp 0.3s ease; pointer-events:none;
+      `;
+      toast.innerHTML = `
+        <i class="bi bi-cloud-download" style="color:#6366f1;font-size:16px;"></i>
+        <span>Preparing your download… <span style="color:#94a3b8;font-size:12px">(may take a few seconds)</span></span>
+      `;
+      document.body.appendChild(toast);
+
+      // Auto-remove after 8 seconds
+      setTimeout(() => { if (toast.parentNode) toast.remove(); }, 8000);
     }
 
     // ─── RENDER FUNCTIONS ───
