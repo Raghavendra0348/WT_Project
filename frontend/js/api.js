@@ -198,8 +198,8 @@ const PaperService = {
                 return API.delete(`/papers/${id}`);
         },
 
-        // Download paper — server streams the PDF directly (no Cloudinary redirect)
-        // Using fetch+blob gives us a named download with progress feedback
+        // Download paper — server fetches from Cloudinary and streams a ZIP to us.
+        // (Cloudinary's only working download method for restricted accounts is download_zip_url)
         async downloadPaper(id) {
                 const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
                 const url = `${API.baseURL}/papers/${id}/download`;
@@ -214,11 +214,13 @@ const PaperService = {
                                 throw new Error(data.message || `Download failed (${response.status})`);
                         }
 
+                        const contentType = response.headers.get('content-type') || '';
                         const blob = await response.blob();
                         const blobUrl = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = blobUrl;
-                        a.download = `paper-${id}.pdf`;
+                        // ZIP contains the PDF — name it .zip so browser opens it correctly
+                        a.download = `paper-${id}.zip`;
                         document.body.appendChild(a);
                         a.click();
                         a.remove();

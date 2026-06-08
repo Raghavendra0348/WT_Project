@@ -260,35 +260,46 @@ exports.downloadPaper = async (req, res, next) => {
     const fileUrl = paper.fileUrl;
     const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
 
-    // --- Cloudinary files: stream through our server (avoids 401/CORS/mixed-content issues) ---
+    // --- Cloudinary files: use download_zip_url which works with restricted accounts ---
+    // private_download_url returns 404, direct URL returns 401.
+    // download_zip_url is the only Cloudinary API method that returns 200.
+    // We stream the archive through our server so the browser doesn't need to touch Cloudinary at all.
     if (fileUrl && fileUrl.includes('cloudinary.com')) {
-      const https = require('https');
+      try {
+        const cloudinary = require('../config/cloudinary');
+        const https = require('https');
 
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-      res.setHeader('Access-Control-Allow-Origin', '*');
+        const zipUrl = cloudinary.utils.download_zip_url({
+          public_ids: [paper.filePublicId],
+          resource_type: 'raw'
+        });
 
-      const request = https.get(fileUrl, (cloudRes) => {
-        if (cloudRes.statusCode === 200) {
-          // Stream Cloudinary response directly to the client
-          cloudRes.pipe(res);
-        } else {
-          console.error('Cloudinary fetch failed, status:', cloudRes.statusCode);
-          res.status(502).json({
-            success: false,
-            message: 'File temporarily unavailable. Please try again.'
-          });
-        }
-      });
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        res.setHeader('Content-Type', 'application/zip');
 
-      request.on('error', (err) => {
-        console.error('Cloudinary stream error:', err.message);
-        if (!res.headersSent) {
-          res.status(500).json({ success: false, message: 'Failed to stream file from cloud' });
-        }
-      });
+        const request = https.get(zipUrl, (cloudRes) => {
+          if (cloudRes.statusCode === 200) {
+            cloudRes.pipe(res);
+          } else {
+            console.error('Cloudinary zip failed, status:', cloudRes.statusCode);
+            if (!res.headersSent) {
+              res.status(502).json({ success: false, message: 'File temporarily unavailable.' });
+            }
+          }
+        });
 
-      return;
+        request.on('error', (err) => {
+          console.error('Cloudinary zip stream error:', err.message);
+          if (!res.headersSent) {
+            res.status(500).json({ success: false, message: 'Failed to stream file from cloud.' });
+          }
+        });
+
+        return;
+      } catch (cloudErr) {
+        console.error('Cloudinary download_zip_url error:', cloudErr.message);
+        return res.status(500).json({ success: false, message: 'Could not generate download link.' });
+      }
     }
 
     // --- Local files: stream from disk ---
