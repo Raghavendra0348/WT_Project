@@ -271,12 +271,13 @@ exports.downloadPaper = async (req, res, next) => {
       try {
         const cloudinary = require('../config/cloudinary');
 
-        // Build a signed download URL (works regardless of delivery mode)
+        // Build a signed download URL — secure:true forces HTTPS (required on HTTPS pages)
         const signedUrl = cloudinary.url(paper.filePublicId, {
           resource_type: 'raw',
           type: 'upload',
+          secure: true,            // ← HTTPS only (prevents mixed content errors)
           sign_url: true,
-          attachment: true,       // forces Content-Disposition: attachment
+          attachment: true,        // forces Content-Disposition: attachment
           expires_at: Math.floor(Date.now() / 1000) + 3600  // 1 hour expiry
         });
 

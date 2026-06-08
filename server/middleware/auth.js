@@ -45,9 +45,14 @@ exports.protect = async (req, res, next) => {
 exports.optionalAuth = async (req, res, next) => {
   let token;
 
-  // Check for token in headers
+  // Check Authorization header first
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+  }
+
+  // Also accept token from query string (used by browser anchor-tag downloads)
+  if (!token && req.query.token) {
+    token = req.query.token;
   }
 
   if (!token) {
@@ -55,16 +60,12 @@ exports.optionalAuth = async (req, res, next) => {
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Get user from token
     req.user = await User.findByPk(decoded.id);
   } catch (err) {
-    // Ignore error, just don't set user
     req.user = null;
   }
-  
+
   next();
 };
 

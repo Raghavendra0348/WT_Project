@@ -198,42 +198,30 @@ const PaperService = {
                 return API.delete(`/papers/${id}`);
         },
 
-        // Download paper — server streams file (PDF or ZIP) for Cloudinary, returns JSON URL for local files
+        // Download paper — triggers a browser-native download via hidden anchor
+        // The server returns a 302 redirect to a signed Cloudinary HTTPS URL.
+        // We use a hidden <a> tag so the browser follows the redirect natively
+        // (fetch() blocks HTTP→HTTPS redirects as "mixed content").
         async downloadPaper(id) {
                 const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
-                const url = `${API.baseURL}/papers/${id}/download`;
-                try {
-                        const response = await fetch(url, {
-                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                        });
+                const downloadUrl = `${API.baseURL}/papers/${id}/download`;
 
-                        const contentType = response.headers.get('content-type') || '';
+                // Build URL with token as query param so server can track download
+                // (auth header not sent by browser on anchor click)
+                const urlWithAuth = token
+                        ? `${downloadUrl}?token=${encodeURIComponent(token)}`
+                        : downloadUrl;
 
-                        if (contentType.includes('application/pdf') || contentType.includes('application/zip') || contentType.includes('application/octet-stream')) {
-                                // Server is streaming the file — trigger browser download
-                                const blob = await response.blob();
-                                const blobUrl = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = blobUrl;
-                                // Use .zip extension if it's a zip, otherwise .pdf
-                                const ext = contentType.includes('zip') ? '.zip' : '.pdf';
-                                a.download = `paper-${id}${ext}`;
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-                                setTimeout(() => window.URL.revokeObjectURL(blobUrl), 10000);
-                                return { success: true };
-                        } else {
-                                // Server returned JSON { success, url }
-                                const data = await response.json();
-                                if (!response.ok) throw new Error(data.message || 'Download failed');
-                                if (data.url) window.open(data.url, '_blank');
-                                return data;
-                        }
-                } catch (err) {
-                        console.error('Download error:', err);
-                        throw err;
-                }
+                // Create a hidden <a> and click it — browser handles redirect + download natively
+                const a = document.createElement('a');
+                a.href = downloadUrl;        // No token needed; download is public
+                a.target = '_blank';         // Open in new tab so page isn't disrupted
+                a.rel = 'noopener noreferrer';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => a.remove(), 1000);
+
+                return { success: true };
         },
 
         // Search papers
