@@ -271,7 +271,9 @@ exports.downloadPaper = async (req, res, next) => {
 
         const zipUrl = cloudinary.utils.download_zip_url({
           public_ids: [paper.filePublicId],
-          resource_type: 'raw'
+          resource_type: 'raw',
+          flatten_folders: true,          // PDF sits at root of ZIP, no nested folders
+          use_original_filename: true     // uses the original uploaded filename
         });
 
         res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
