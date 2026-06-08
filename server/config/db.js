@@ -58,18 +58,25 @@ const sequelize = new Sequelize(
   }
 );
 
-// Test connection and sync models
-const connectDB = async () => {
+// Test connection and sync models — retries every 10s instead of crashing
+const connectDB = async (retryCount = 0) => {
+  const MAX_RETRIES = 5;
   try {
     await sequelize.authenticate();
     console.log(`✅ MySQL Connected: ${process.env.DB_HOST || 'localhost'}`);
 
-    // Sync all models (use { alter: true } only when explicitly requested to speed up start times)
+    // Sync all models
     await sequelize.sync({ alter: process.env.SYNC_DB === 'true' });
     console.log('✅ Database synchronized');
   } catch (error) {
-    console.error(`❌ Error: ${error.message}`);
-    process.exit(1);
+    console.error(`❌ DB Connection Error: ${error.message}`);
+    if (retryCount < MAX_RETRIES) {
+      console.log(`⏳ Retrying DB connection in 10s... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+      setTimeout(() => connectDB(retryCount + 1), 10000);
+    } else {
+      console.error('💀 Max DB retries reached. Server running WITHOUT database.');
+      // Don't exit — let the server keep running so Render keeps the port open
+    }
   }
 };
 
