@@ -198,30 +198,36 @@ const PaperService = {
                 return API.delete(`/papers/${id}`);
         },
 
-        // Download paper — triggers a browser-native download via hidden anchor
-        // The server returns a 302 redirect to a signed Cloudinary HTTPS URL.
-        // We use a hidden <a> tag so the browser follows the redirect natively
-        // (fetch() blocks HTTP→HTTPS redirects as "mixed content").
+        // Download paper — server streams the PDF directly (no Cloudinary redirect)
+        // Using fetch+blob gives us a named download with progress feedback
         async downloadPaper(id) {
                 const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
-                const downloadUrl = `${API.baseURL}/papers/${id}/download`;
+                const url = `${API.baseURL}/papers/${id}/download`;
 
-                // Build URL with token as query param so server can track download
-                // (auth header not sent by browser on anchor click)
-                const urlWithAuth = token
-                        ? `${downloadUrl}?token=${encodeURIComponent(token)}`
-                        : downloadUrl;
+                try {
+                        const response = await fetch(url, {
+                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                        });
 
-                // Create a hidden <a> and click it — browser handles redirect + download natively
-                const a = document.createElement('a');
-                a.href = downloadUrl;        // No token needed; download is public
-                a.target = '_blank';         // Open in new tab so page isn't disrupted
-                a.rel = 'noopener noreferrer';
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => a.remove(), 1000);
+                        if (!response.ok) {
+                                const data = await response.json().catch(() => ({}));
+                                throw new Error(data.message || `Download failed (${response.status})`);
+                        }
 
-                return { success: true };
+                        const blob = await response.blob();
+                        const blobUrl = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = `paper-${id}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 10000);
+                        return { success: true };
+                } catch (err) {
+                        console.error('Download error:', err);
+                        throw err;
+                }
         },
 
         // Search papers

@@ -245,51 +245,53 @@ exports.downloadPaper = async (req, res, next) => {
     const paper = await Paper.findByPk(req.params.id);
 
     if (!paper) {
-      return res.status(404).json({
-        success: false,
-        message: 'Paper not found'
-      });
+      return res.status(404).json({ success: false, message: 'Paper not found' });
     }
 
     // Increment downloads
     await paper.incrementDownloads();
 
-    // If user is logged in, add to download history
+    // Track download history if user is logged in
     if (req.user) {
       const DownloadHistory = require('../models/DownloadHistory');
-      await DownloadHistory.create({
-        userId: req.user.id,
-        paperId: paper.id
-      });
+      await DownloadHistory.create({ userId: req.user.id, paperId: paper.id });
     }
 
     const fileUrl = paper.fileUrl;
     const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
 
-    // --- Cloudinary files ---
+    // --- Cloudinary files: stream through our server (avoids 401/CORS/mixed-content issues) ---
     if (fileUrl && fileUrl.includes('cloudinary.com')) {
-      try {
-        const cloudinary = require('../config/cloudinary');
+      const https = require('https');
 
-        // Build a signed download URL — secure:true forces HTTPS (required on HTTPS pages)
-        const signedUrl = cloudinary.url(paper.filePublicId, {
-          resource_type: 'raw',
-          type: 'upload',
-          secure: true,            // ← HTTPS only (prevents mixed content errors)
-          sign_url: true,
-          attachment: true,        // forces Content-Disposition: attachment
-          expires_at: Math.floor(Date.now() / 1000) + 3600  // 1 hour expiry
-        });
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Access-Control-Allow-Origin', '*');
 
-        return res.redirect(signedUrl);
-      } catch (cloudErr) {
-        console.error('Cloudinary signed URL error:', cloudErr.message);
-        // Fallback: return the raw URL so the browser can try
-        return res.status(200).json({ success: true, url: fileUrl });
-      }
+      const request = https.get(fileUrl, (cloudRes) => {
+        if (cloudRes.statusCode === 200) {
+          // Stream Cloudinary response directly to the client
+          cloudRes.pipe(res);
+        } else {
+          console.error('Cloudinary fetch failed, status:', cloudRes.statusCode);
+          res.status(502).json({
+            success: false,
+            message: 'File temporarily unavailable. Please try again.'
+          });
+        }
+      });
+
+      request.on('error', (err) => {
+        console.error('Cloudinary stream error:', err.message);
+        if (!res.headersSent) {
+          res.status(500).json({ success: false, message: 'Failed to stream file from cloud' });
+        }
+      });
+
+      return;
     }
 
-    // --- Local files: stream directly from disk ---
+    // --- Local files: stream from disk ---
     if (fileUrl && !fileUrl.startsWith('http')) {
       const fs = require('fs');
       const pathModule = require('path');
@@ -298,7 +300,7 @@ exports.downloadPaper = async (req, res, next) => {
       if (!fs.existsSync(localPath)) {
         return res.status(404).json({
           success: false,
-          message: 'File not found on server. It may have been moved or deleted.'
+          message: 'File not found on server.'
         });
       }
 
