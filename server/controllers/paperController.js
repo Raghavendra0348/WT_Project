@@ -264,53 +264,34 @@ exports.downloadPaper = async (req, res, next) => {
     }
 
     const fileUrl = paper.fileUrl;
+    const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
 
-    // --- Cloudinary files: use generate_archive which bypasses ACL restriction ---
+    // --- Cloudinary files ---
     if (fileUrl && fileUrl.includes('cloudinary.com')) {
-      if (paper.filePublicId) {
-        try {
-          const cloudinary = require('../config/cloudinary');
-          // generate_archive creates a signed URL that works even in restricted mode
-          const zipUrl = cloudinary.utils.download_zip_url({
-            public_ids: [paper.filePublicId],
-            resource_type: 'raw'
-          });
+      try {
+        const cloudinary = require('../config/cloudinary');
 
-          const https = require('https');
-          const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
-          res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-          res.setHeader('Content-Type', 'application/pdf');
+        // Build a signed download URL (works regardless of delivery mode)
+        const signedUrl = cloudinary.url(paper.filePublicId, {
+          resource_type: 'raw',
+          type: 'upload',
+          sign_url: true,
+          attachment: true,       // forces Content-Disposition: attachment
+          expires_at: Math.floor(Date.now() / 1000) + 3600  // 1 hour expiry
+        });
 
-          https.get(zipUrl, (cloudRes) => {
-            if (cloudRes.statusCode === 200) {
-              cloudRes.pipe(res);
-            } else {
-              console.error('Archive download failed status:', cloudRes.statusCode);
-              res.removeHeader('Content-Type');
-              res.removeHeader('Content-Disposition');
-              res.status(500).json({ success: false, message: 'File download failed. Please contact admin.' });
-            }
-          }).on('error', () => {
-            res.status(500).json({ success: false, message: 'Failed to stream file from cloud' });
-          });
-
-          return;
-        } catch (cloudErr) {
-          console.error('generate_archive error:', cloudErr.message);
-          // Fall through to return raw URL as last resort
-        }
+        return res.redirect(signedUrl);
+      } catch (cloudErr) {
+        console.error('Cloudinary signed URL error:', cloudErr.message);
+        // Fallback: return the raw URL so the browser can try
+        return res.status(200).json({ success: true, url: fileUrl });
       }
-
-      // Fallback: return raw URL (may show 401 in browser)
-      return res.status(200).json({ success: true, url: fileUrl });
     }
 
     // --- Local files: stream directly from disk ---
     if (fileUrl && !fileUrl.startsWith('http')) {
       const fs = require('fs');
       const pathModule = require('path');
-
-      // fileUrl is like: papers/uploads/paper-xxx.pdf
       const localPath = pathModule.join(__dirname, '../../frontend', fileUrl);
 
       if (!fs.existsSync(localPath)) {
@@ -320,7 +301,6 @@ exports.downloadPaper = async (req, res, next) => {
         });
       }
 
-      const fileName = (paper.title || 'paper').replace(/[^a-zA-Z0-9 _-]/g, '_') + '.pdf';
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
 
