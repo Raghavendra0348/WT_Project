@@ -38,7 +38,8 @@ app.use(cors({
       'http://127.0.0.1:8000',
       'http://0.0.0.0:3000',
       'http://127.0.0.1:3000',
-      'https://wt-project-grw7.onrender.com',   // Render backend (self)
+      'https://rgukt-question-papers.vercel.app',  // ← Production frontend
+      'https://wt-project-grw7.onrender.com',       // ← Render backend (self)
       process.env.CLIENT_URL || 'http://localhost:3000'
     ];
 
